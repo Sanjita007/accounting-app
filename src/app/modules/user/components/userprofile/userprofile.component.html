@@ -1,0 +1,139 @@
+<form [formGroup]="profileForm">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="col-md-6 col-sm-6 col-xs-6">
+        <div class="form-group">
+          <label>Name <sup>*</sup></label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="Name"
+            accSwiftFormValidator
+          />
+        </div>
+        <div class="form-group">
+          <label>Address </label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="Address"
+            accSwiftFormValidator
+          />
+        </div>
+        <div class="form-group">
+          <label>Phone </label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="Contact"
+            accSwiftFormValidator
+          />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input class="form-control" formControlName="Email" />
+        </div>
+        <div class="form-group">
+          <label>Department</label>
+          <input
+            class="form-control"
+            formControlName="Department"
+            [disabled]="isDisabled"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-6 col-xs-6">
+        <div class="form-group">
+          <label>Role<sup>*</sup></label>
+          <select
+            class="form-control"
+            formControlName="AccessRoleID"
+            [disabled]="isDisabled"
+            accSwiftFormValidator
+          >
+            <option [ngValue]="null">Choose option..</option>
+            <option
+              *ngFor="let role of userService.accessRoles"
+              [ngValue]="role.ID"
+            >
+              {{ role.Name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Account Class</label>
+          <select
+            class="form-control"
+            formControlName="AccClassID"
+            [disabled]="isDisabled"
+          >
+            <option
+              *ngFor="let account of userService.accountClass"
+              [ngValue]="account.ID"
+            >
+              {{ account.Name }}
+            </option>
+          </select>
+        </div>
+
+        <fieldset>
+          <legend>User Info</legend>
+          <div class="form-group">
+            <label>User Name<sup>*</sup></label>
+            <input
+              class="form-control"
+              formControlName="UserName"
+              id="username"
+              name="username"
+              [disabled]="isDisabled"
+              accSwiftFormValidator
+            />
+          </div>
+          <div class="form-group" style="position: relative">
+            <label>Password</label>
+            <input
+              class="form-control"
+              formControlName="Password"
+              [type]="fieldTextType ? 'text' : 'password'"
+              name="password"
+              accSwiftFormValidator
+            />
+            <i
+              style="position: absolute; top: 36px; right: 21px"
+              class="fa fa-eye-slash"
+              [ngClass]="{
+                'fa-eye-slash': !fieldTextType,
+                'fa-eye': fieldTextType
+              }"
+              (click)="togglePwFieldType()"
+            ></i>
+          </div>
+          <div class="form-group">
+            <label>Retype Password</label>
+            <input
+              class="form-control"
+              formControlName="VerifyPassword"
+              type="password"
+              name="verifypassword"
+              accSwiftFormValidator
+            />
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+  <div style="text-align: center; margin: 20px 0">
+    <button
+      class="btn btn-primary"
+      (click)="onSubmitUser()"
+      accSwiftFormSubmitValidationMsg
+      [validationControl]="profileForm"
+    >
+      Save
+    </button>
+    <button class="btn btn-secondary ml-2" type="button" (click)="close()">
+      Cancel
+    </button>
+  </div>
+</form>

@@ -1,0 +1,437 @@
+<form [formGroup]="accountLedgerForm" novalidate>
+  <kendo-tabstrip>
+    <kendo-tabstrip-tab [title]="'Ledger Details'" [selected]="true">
+      <ng-template kendoTabContent>
+        <div
+          class="box box-default"
+          [ngClass]="{
+            add_component: selectedItem == null,
+            edit_component: selectedItem != null
+          }"
+        >
+          <h5 class="form_heading">
+            {{ title }}
+            <span *ngIf="ledgerDetails">{{ ledgerDetails.Name }}</span>
+          </h5>
+          <div class="account_ledger" style="padding: 0 30px">
+            <div class="row">
+              <div class="col-md-4 col-sm-4 col-xs-6">
+                <div class="form-group">
+                  <label> Code <sup>*</sup> </label>
+                  <kendo-autocomplete
+                    [data]="suggestCodeList"
+                    class="form-control"
+                    formControlName="LedgerCode"
+                    [valueField]="'Code'"
+                    [suggest]="true"
+                    [placeholder]="'Code'"
+                    accSwiftFormValidator
+                  ></kendo-autocomplete>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 col-sm-6 col-xs-6">
+                <div class="form-group">
+                  <label> Name<sup>*</sup> </label>
+                  <input
+                    class="form-control"
+                    formControlName="Name"
+                    accSwiftFormValidator
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-6 col-sm-6 col-xs-6">
+                <div class="form-group">
+                  <label>Account Head <sup>*</sup></label>
+                  <kendo-dropdownlist
+                    class="form-control"
+                    [data]="ledgerGroup"
+                    [filterable]="true"
+                    [textField]="'CodeName'"
+                    [valueField]="'ID'"
+                    [valuePrimitive]="true"
+                    [formControl]="accountLedgerForm.get('GroupID')"
+                    (filterChange)="ledgerGroupDDFilter($event)"
+                    (valueChange)="changeAccountHead()"
+                  >
+                  </kendo-dropdownlist>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 col-sm-4 col-xs-4">
+                <div class="form-group">
+                  <label>Currency </label>
+
+                  <kendo-dropdownlist
+                    class="form-control"
+                    [data]="currency"
+                    [filterable]="true"
+                    [textField]="'Name'"
+                    [valueField]="'ID'"
+                    [valuePrimitive]="true"
+                    formControlName="Currency"
+                  >
+                  </kendo-dropdownlist>
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-4 col-xs-4">
+                <div class="form-group">
+                  <button
+                    style="margin-top: 24px"
+                    type="button"
+                    class="btn btn-secondory"
+                    data-toggle="modal"
+                    data-target="#previousYearBalanceModal"
+                  >
+                    Previous Year Balance <sup>*</sup>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-4 col-xs-4">
+                <div class="form-group">
+                  <button
+                    style="margin-top: 24px"
+                    type="button"
+                    class="btn btn-secondory"
+                    data-toggle="modal"
+                    data-target="#openingBalanceModal"
+                  >
+                    Opening Balance <sup>*</sup>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab [title]="'More Details'">
+      <ng-template kendoTabContent>
+        <accSwift-account-ledger-more-details
+          [moreDetailsLedger]="accountLedgerForm"
+          [ledgerDetails]="ledgerDetails"
+        ></accSwift-account-ledger-more-details>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab [title]="'Sub Ledger'">
+      <ng-template kendoTabContent>
+        <accSwift-sub-ledger
+          [subLedgerList]="accountLedgerForm.get('SubLedgerList')"
+          [balanceType]="balanceDrCr"
+        ></accSwift-sub-ledger>
+      </ng-template>
+    </kendo-tabstrip-tab>
+  </kendo-tabstrip>
+
+  <div class="box-footer" style="display: table; margin: auto">
+    <div class="mb-2">
+      <button
+        class="btn btn-primary"
+        [disabled]="accountLedgerForm.invalid"
+        (click)="save()"
+        accSwiftFormSubmitValidationMsg
+        [validationControl]="accountLedgerForm"
+      >
+        <i class="fas fa-save"></i>&nbsp;&nbsp;
+        <span *ngIf="editMode">Update</span>
+        <span *ngIf="addMode">Save</span>
+      </button>
+      <button
+        class="btn btn-danger ml-2"
+        [disabled]="!selectedLedgerId"
+        (click)="deleteAccountLedger()"
+      >
+        <i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;&nbsp;Delete
+      </button>
+      <button class="btn btn-secondary ml-2" (click)="cancel($event)">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <!--Modal PopUp Previous Year Balance-->
+  <div
+    class="modal fade bd-example-modal"
+    #previousYearBalanceModal
+    id="previousYearBalanceModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title pull-left">Previous Year Balance</h3>
+          <button
+            class="close"
+            type="button"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="row mt-2">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Previous Year Balance</label>
+                  <kendo-numerictextbox
+                    #ntb="popupAnchor"
+                    popupAnchor
+                    class="form-control"
+                    [formControl]="accountLedgerForm.get('PreviousYearBalance')"
+                  ></kendo-numerictextbox>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Balance Type</label>
+                  <kendo-dropdownlist
+                    [data]="balanceType"
+                    [textField]="'Name'"
+                    [valueField]="'type'"
+                    class="form-control"
+                    [formControl]="
+                      accountLedgerForm.get('PreviousYearBalanceDebitCredit')
+                    "
+                    [valuePrimitive]="true"
+                  >
+                  </kendo-dropdownlist>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="button" data-dismiss="modal">
+            OK
+          </button>
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Modal PopUp Opening Balance Modal-->
+  <div
+    class="modal fade bd-example-modal"
+    #openingBalanceModal
+    id="openingBalanceModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title pull-left">Opening Balance</h3>
+          <button
+            class="close"
+            type="button"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="row mt-2">
+              <kendo-grid
+                [data]="getOpeningBalanceList.value"
+                (add)="addHandler($event)"
+                (remove)="removeHandler($event)"
+              >
+                <!-- <ng-template kendoGridToolbarTemplate>
+                  <button kendoGridAddCommand>Add New</button>
+                </ng-template> -->
+                <kendo-grid-column field="AccClassID" title="Account Class">
+                  <ng-template
+                    kendoGridCellTemplate
+                    let-dataItem="dataItem"
+                    let-column="column"
+                    let-formGroup="formGroup"
+                    let-isNew="isNew"
+                    let-rowIndex="rowIndex"
+                  >
+                    <kendo-dropdownlist
+                      #dropDown
+                      [data]="ledgerService.accountClass"
+                      [textField]="'Name'"
+                      [valueField]="'ID'"
+                      class="form-control"
+                      [formControl]="
+                        getOpeningBalanceList.controls[rowIndex].get(
+                          'AccClassID'
+                        )
+                      "
+                      [valuePrimitive]="true"
+                    >
+                    </kendo-dropdownlist>
+
+                    <kendo-popup
+                      [anchor]="dropDown"
+                      *ngIf="
+                        getOpeningBalanceList.controls[rowIndex].get(
+                          'AccClassID'
+                        ).invalid &&
+                        rowSubmitted &&
+                        !(
+                          isNew &&
+                          getOpeningBalanceList.controls[rowIndex].get(
+                            'AccClassID'
+                          ).untouched
+                        )
+                      "
+                      popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg"
+                    >
+                      <span class="k-icon k-i-warning"></span>
+                      Account Class is required
+                    </kendo-popup>
+                  </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column field="OpenBal" title="Opening Balance">
+                  <ng-template
+                    kendoGridCellTemplate
+                    let-dataItem="dataItem"
+                    let-column="column"
+                    let-formGroup="formGroup"
+                    let-isNew="isNew"
+                    let-rowIndex="rowIndex"
+                  >
+                    <kendo-numerictextbox
+                      #ntb="popupAnchor"
+                      popupAnchor
+                      class="form-control"
+                      [formControl]="
+                        getOpeningBalanceList.controls[rowIndex].get(
+                          column.field
+                        )
+                      "
+                    ></kendo-numerictextbox>
+                    <kendo-popup
+                      [anchor]="popupAnchor"
+                      *ngIf="
+                        getOpeningBalanceList.controls[rowIndex].get(
+                          column.field
+                        ).invalid &&
+                        rowSubmitted &&
+                        !(
+                          isNew &&
+                          getOpeningBalanceList.controls[rowIndex].get(
+                            column.field
+                          ).untouched
+                        )
+                      "
+                      popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg"
+                    >
+                      <span class="k-icon k-i-warning"></span>
+                      Balance is required
+                    </kendo-popup>
+                  </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column field="OpenBalDrCr" title="Balance Type">
+                  <ng-template
+                    kendoGridCellTemplate
+                    let-dataItem="dataItem"
+                    let-column="column"
+                    let-formGroup="formGroup"
+                    let-isNew="isNew"
+                    let-rowIndex="rowIndex"
+                  >
+                    <kendo-dropdownlist
+                      [data]="balanceType"
+                      [textField]="'Name'"
+                      [valueField]="'type'"
+                      class="form-control"
+                      [formControl]="
+                        getOpeningBalanceList.controls[rowIndex].get(
+                          column.field
+                        )
+                      "
+                      [valuePrimitive]="true"
+                      s
+                    >
+                    </kendo-dropdownlist>
+                  </ng-template>
+                </kendo-grid-column>
+                <!-- <kendo-grid-command-column title="Action" width="80">
+                  <ng-template kendoGridCellTemplate>
+                    <button kendoGridRemoveCommand>
+                      <i
+                        class="fas fa-trash-alt mr-2 cursor-pointer"
+                        tooltip="Delete"
+                      ></i>
+                    </button>
+                  </ng-template>
+                </kendo-grid-command-column> -->
+              </kendo-grid>
+
+              <!-- <div formGroupName="OpeningBalance">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Account Class</label>
+
+                    <kendo-dropdownlist
+                      [data]="ledgerService.accountClass"
+                      [textField]="'Name'"
+                      [valueField]="'ID'"
+                      class="form-control"
+                      formControlName="AccClassID"
+                      [valuePrimitive]="true"
+                    >
+                    </kendo-dropdownlist>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Opening Balance</label>
+
+                    <kendo-numerictextbox
+                      #ntb="popupAnchor"
+                      popupAnchor
+                      class="form-control"
+                      formControlName="OpenBal"
+                    ></kendo-numerictextbox>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Balance Type</label>
+                    <kendo-dropdownlist
+                      [data]="balanceType"
+                      [textField]="'Name'"
+                      [valueField]="'type'"
+                      class="form-control"
+                      formControlName="OpenBalDrCr"
+                      [valuePrimitive]="true"
+                    ></kendo-dropdownlist>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="button" data-dismiss="modal">
+            OK
+          </button>
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

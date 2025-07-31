@@ -1,0 +1,278 @@
+<div class="box-header">
+  <button [routerLink]="['add']" class="btn btn-primary">
+    <i class="fa fa-plus pull-left" aria-hidden="true"></i>Add Sales Invoice
+  </button>
+</div>
+<div class="accordion" id="accordion">
+  <div class="box box-default">
+    <div
+      class="box-header with-border collapsed"
+      data-toggle="collapse"
+      href="#collapseOne"
+    >
+      <h3 class="box-title">Search Terms</h3>
+    </div>
+    <div id="collapseOne" class="box-body collapse" data-parent="#accordion">
+      <div class="row">
+        <form [formGroup]="salesInvoiceForm" novalidate>
+          <div class="col-md-12">
+            <div class="col-md-3 col-sm-6 col-xs-6">
+              <accSwift-series-forms
+                formControlName="SeriesID"
+                [voucherType]="'SALES'"
+              ></accSwift-series-forms>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-6">
+              <accSwift-project-forms
+                formControlName="ProjectID"
+              ></accSwift-project-forms>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-6">
+              <accSwift-sales-account
+                formControlName="SalesLedgerID"
+              ></accSwift-sales-account>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-6">
+              <accSwift-depot formControlName="DepotID"></accSwift-depot>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="col-md-3 col-sm-6 col-xs-6" style="margin-top: -15px">
+              <accSwift-cash-party-account
+                formControlName="CashPartyLedgerID"
+              ></accSwift-cash-party-account>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-6">
+              <div class="form-group">
+                <label>Order No.</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="OrderNo"
+                />
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-6">
+              <div class="form-group">
+                <label>Date</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="Date"
+                  bsDatepicker
+                />
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="box-footer">
+        <div class="mb-2">
+          <button class="btn btn-primary btn-flat" (click)="searchForm()">
+            Search
+          </button>
+          <button class="btn btn-secondary btn-flat" (click)="resetForm()">
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="box box-default">
+  <div class="box-body">
+    <div class="col-md-12 p-0">
+      <div class="grid-wrapper">
+        <kendo-grid
+          [data]="gridView"
+          [filterable]="false"
+          [filter]="filter"
+          [pageSize]="pageSize"
+          [resizable]="true"
+          [skip]="skip"
+          [sortable]="{
+            allowUnsort: allowUnsort,
+            mode: 'single'
+          }"
+          [sort]="sort"
+          (sortChange)="sortChange($event)"
+          [pageable]="true"
+          (pageChange)="pageChange($event)"
+        >
+          <kendo-grid-column field="VoucherNo" title="Voucher No" width="80">
+          </kendo-grid-column>
+          <kendo-grid-column title="Product Name" width="150">
+            <ng-template
+              kendoGridCellTemplate
+              let-dataItem="dataItem"
+              let-column="column"
+              let-formGroup="formGroup"
+              let-rowIndex="rowIndex"
+            >
+              <div class="col-sm-12">
+                <span>{{ dataItem.InvoiceDetails[0].ProductName }}</span>
+                <a
+                  class="pull-right"
+                  title="More Products..."
+                  (click)="openProductModal(openProductModalPopup, dataItem)"
+                  ><i
+                    class="fa fa-eye pull-right ledgerSelectIcon"
+                    aria-hidden="true"
+                  ></i>
+                </a>
+              </div>
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column title="Product Code" width="80">
+            <ng-template
+              kendoGridCellTemplate
+              let-dataItem="dataItem"
+              let-column="column"
+              let-formGroup="formGroup"
+              let-rowIndex="rowIndex"
+            >
+              <div class="col-sm-12">
+                <span>{{ dataItem.InvoiceDetails[0].ProductCode }}</span>
+              </div>
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column
+            field="CashPartName"
+            title="Cash Party"
+            width="130"
+          >
+          </kendo-grid-column>
+
+          <kendo-grid-column
+            field="SpecialDiscount"
+            title="Special Discount"
+            width="70"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              <span class="float-right">{{ dataItem.SpecialDiscount }}</span>
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column
+            field="TotalAmount"
+            title="Total Amount"
+            width="80"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              <span class="float-right">{{ dataItem.TotalAmount }}</span>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="NetAmount" title="Net Amount" width="70">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              <span class="float-right">{{ dataItem.NetAmount }}</span>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="Status" title="Status" width="70">
+            <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+              <span *ngIf="dataItem.Status == 'PAID'">
+                <span class="badge" style="background: green">Paid</span></span
+              >
+              <span *ngIf="dataItem.Status == 'UNPAID'"
+                ><span class="badge" style="background: red">Unpaid</span></span
+              >
+
+              <span *ngIf="dataItem.Status == 'DRAFT'"
+                ><span class="badge" style="background: yellow; color: #000"
+                  >Draft</span
+                ></span
+              >
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="Remarks" title="Remarks" width="80">
+          </kendo-grid-column>
+          <kendo-grid-command-column title="Action" width="120">
+            <ng-template
+              kendoGridCellTemplate
+              let-isNew="isNew"
+              let-dataItem="dataItem"
+            >
+              <button
+                kendoGridEditCommand
+                (click)="edit(dataItem)"
+                data-toggle="modal"
+                data-target="#viewModal"
+                [primary]="true"
+              >
+                Edit
+              </button>
+              <button
+                kendoGridRemoveCommand
+                (click)="openConfirmationDialogue(dataItem)"
+              >
+                Delete
+              </button>
+            </ng-template>
+          </kendo-grid-command-column>
+        </kendo-grid>
+
+        <div *ngIf="listLoading" class="k-i-loading"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #openProductModalPopup>
+  <div class="modal-header">
+    <h3 class="modal-title pull-left">Product List</h3>
+    <button
+      type="button"
+      class="close pull-right"
+      aria-label="Close"
+      (click)="modalRef.hide()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <kendo-grid
+          [data]="productList"
+          [filterable]="false"
+          [sortable]="{
+            allowUnsort: allowUnsort,
+            mode: 'single'
+          }"
+          [sort]="sort"
+          (sortChange)="sortChange($event)"
+        >
+          <kendo-grid-column
+            field="ProductName"
+            title="Product Name"
+            width="130"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="ProductCode"
+            title="Product Code"
+            width="120"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column field="Quantity" title="Quantity" width="120">
+          </kendo-grid-column>
+          <kendo-grid-column field="Amount" title="Amount" width="130">
+          </kendo-grid-column>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-primary" (click)="modalRef.hide()">OK</button>
+    <button
+      class="btn btn-secondary ml-2"
+      type="button"
+      (click)="modalRef.hide()"
+    >
+      Cancel
+    </button>
+  </div>
+</ng-template>
