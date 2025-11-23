@@ -1,5 +1,4 @@
 import {
-  Button,
   Modal,
   ModalBody,
   ModalFooter,
@@ -24,11 +23,11 @@ type Props = {
   isModalOpen: boolean;
   onClose: () => void;
   index: number,
-  onRowClick: (id: number) => void;
+  onRowClick: (index: number, id: number) => void;
 };
 
 export const ProductListModal = (props: Props) => {
-  const [openModal, setOpenModal] = useState(props.isModalOpen);
+  //const [openModal, setOpenModal] = useState(props.isModalOpen);
   const [products, setProducts] = useState<Product[] | null>(null);
 
   const configs: Config[] = [
@@ -53,7 +52,12 @@ export const ProductListModal = (props: Props) => {
             <TableCell
               key={config.label}
              className="whitespace-nowrap font-medium text-gray-900 dark:text-white"
-              onDoubleClick={() => {console.log(product.id); props.onRowClick(product.id); setOpenModal(false); }}
+              onDoubleClick={() => 
+                {
+                  console.log(product.id); 
+                  props.onRowClick(props.index, product.id);
+                  console.log("closing modal");
+                  props.onClose(); }}
             >
               {config.render(product)}
             </TableCell>
@@ -77,7 +81,9 @@ export const ProductListModal = (props: Props) => {
 
   return (
     <>
-      <Modal dismissible={true} show={props.isModalOpen} onClose={props.onClose}>
+      <Modal  dismissible
+      show={props.isModalOpen} 
+      onClose={props.onClose}>
         <ModalHeader>List of Products</ModalHeader>
         <ModalBody>
           <div className="bg-white rounded-lg p-4 sm:p-6 xl:p-8">

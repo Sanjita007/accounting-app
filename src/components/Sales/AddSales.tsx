@@ -134,10 +134,13 @@ const AddSalesInvoice = (props: Props) => {
 
   const handleProductChange = (index: number, value: any) => {
     console.log('value is ' + value);
+    console.log('index is ' + index);
+
+    debugger;
     const productID = parseInt(value);
     setSalesInvoice((prev) => {
       if (!prev) return prev; // nothing to update
-
+      debugger;
       const product = products?.find((r) => r.id == productID);
 
       const updatedDetails = prev.details.map((d, i) => {
@@ -424,7 +427,7 @@ const AddSalesInvoice = (props: Props) => {
           <div className="flex gap-4 w-50 overflow-hidden">
 
             {/* lets hide this one for now.. and will come back to it when everything else is done */}
-             {/* <button
+             <button
               onClick={() => {
                 setIndex(index);
                 setIsModalOpen(true);
@@ -433,13 +436,7 @@ const AddSalesInvoice = (props: Props) => {
             >
               ...
             </button> 
-             <ProductListModal
-              isModalOpen={isModalOpen}
-              index={index}
-              onClose={() => setIsModalOpen(false)}
-              onRowClick={(productID) => handleProductChange(index, productID)}
-            ></ProductListModal> */}
-
+             
             <Dropdown
               className="flex gap-4 w-full h-full"
               portal={document.body}
@@ -457,7 +454,7 @@ const AddSalesInvoice = (props: Props) => {
                     ) as Product[])
                   : []
               }
-              onChange={()=> {console.log(event)}}
+              onChange={(values)=> {handleProductChange(index, values ? values[0]?.id : null)}}
             />
            
           </div>
@@ -726,7 +723,13 @@ const AddSalesInvoice = (props: Props) => {
 
   return (
     <div className="rounded-xl dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray p-6 relative w-full break-words">
-      
+      <ProductListModal
+              isModalOpen={isModalOpen}
+              index={index}
+              onClose={() => setIsModalOpen(false)}
+              onRowClick={(index, productID) => handleProductChange(index, productID)}
+            ></ProductListModal>
+
       
       <h5 className="card-title">{id ? 'Edit' : 'Add'} a Sales Invoice</h5>
       <div className="mt-6">
@@ -774,7 +777,7 @@ const AddSalesInvoice = (props: Props) => {
             />
           </div>
           <div className="lg:col-span-6 col-span-12">
-            {/* lets hide this one for now.. and will come back to it when everything else is done */}
+            {/* lets hide this one for now.. and will come back to it when everything else is done 
              <button
               onClick={() => {
                 //setIndex(index);
@@ -800,8 +803,8 @@ const AddSalesInvoice = (props: Props) => {
               value={item ?? ''}
               onChange={handleCustomerNameChange}
             />
+            */}
           </div>
-
           <div className="col-span-12 flex gap-3">
             <div className="overflow-x-auto overflow-visible">
               <Table striped className="min-w-full divide-y divide-gray-200">
