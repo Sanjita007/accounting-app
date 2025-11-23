@@ -1,0 +1,204 @@
+<div class="box box-default">
+  <form [formGroup]="companyForm" novalidate>
+    <div class="col-md-12 mt-5 mr-2">
+      <div class="col-md-2 p-0">
+        <div class="logo-box">
+          <img [src]="companyLogo" />
+        </div>
+        <div class="clearfix">
+          <kendo-fileselect
+            [multiple]="false"
+            (select)="selectEventHandler($event)"
+            [restrictions]="myRestrictions"
+          >
+          </kendo-fileselect>
+        </div>
+      </div>
+      <div class="col-md-10">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Company Name<sup>*</sup></label>
+              <input
+                class="form-control"
+                formControlName="Name"
+                (blur)="suggestCode()"
+                accSwiftFormValidator
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Company Code<sup>*</sup></label>
+              <kendo-autocomplete
+                [data]="suggestion"
+                class="form-control"
+                formControlName="Code"
+                [valueField]="'SuggestedCompanyCode'"
+                [suggest]="true"
+                [placeholder]="'Code'"
+                accSwiftFormValidator
+              ></kendo-autocomplete>
+            </div>
+
+            <div class="form-group">
+              <label>Email<sup>*</sup></label>
+              <input
+                class="form-control"
+                formControlName="Email"
+                accSwiftFormValidator
+              />
+            </div>
+
+            <div class="form-group">
+              <label>WebSite</label>
+              <input
+                class="form-control"
+                formControlName="Website"
+                accSwiftFormValidator
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Phone<sup>*</sup></label>
+              <input
+                ng2TelInput
+                name="phoneNumber"
+                id="phoneNumber"
+                class="form-control"
+                phone
+                autocomplete="off"
+                maxlength="14"
+                formControlName="Phone"
+                accSwiftFormValidator
+              />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Telephone</label>
+              <input
+                class="form-control"
+                formControlName="Telephone"
+                accSwiftFormValidator
+              />
+            </div>
+            <div class="form-group">
+              <label>POBox No.</label>
+              <input
+                class="form-control"
+                formControlName="POBox"
+                accSwiftFormValidator
+              />
+            </div>
+
+            <div class="form-group">
+              <label>PAN No.</label>
+              <input
+                class="form-control"
+                formControlName="PAN"
+                accSwiftFormValidator
+              />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Fiscal Year Style</label>
+              <input
+                type="text"
+                placeholder="Fiscal Year Style"
+                class="form-control"
+                formControlName="FiscalYear"
+              />
+            </div>
+            <div class="form-group" style="position: relative">
+              <label>Fiscal Year From</label>
+              <input
+                type="text"
+                placeholder="Fiscal Year From"
+                class="form-control"
+                formControlName="FYFrom"
+                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                bsDatepicker
+              />
+              <span class="glyphicon glyphicon-calendar calendar-icon"></span>
+            </div>
+
+            <div class="form-group" style="position: relative">
+              <label>Books Beginning From</label>
+              <input
+                type="text"
+                placeholder="Books Beginning From"
+                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                class="form-control"
+                formControlName="BookBeginFrom"
+                bsDatepicker
+              />
+              <span class="glyphicon glyphicon-calendar calendar-icon"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <fieldset>
+            <legend>Address</legend>
+            <accSwift-address [addressForms]="companyForm"></accSwift-address>
+          </fieldset>
+        </div>
+        <div class="row">
+          <fieldset>
+            <legend>User Info</legend>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>User Name<sup>*</sup></label>
+                <kendo-autocomplete
+                  [data]="suggestion"
+                  [valueField]="'SuggestedUserName'"
+                  class="form-control"
+                  formControlName="UserName"
+                  [suggest]="true"
+                  accSwiftFormValidator
+                >
+                </kendo-autocomplete>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group" style="position: relative">
+                <label>Password</label>
+                <input
+                  class="form-control"
+                  formControlName="Password"
+                  [type]="fieldTextType ? 'text' : 'password'"
+                  name="password"
+                  accSwiftFormValidator
+                />
+                <i
+                  style="position: absolute; top: 36px; right: 21px"
+                  class="fa fa-eye-slash"
+                  [ngClass]="{
+                  'fa-eye-slash': !fieldTextType,
+                  'fa-eye': fieldTextType
+                }"
+                  (click)="togglePwFieldType()"
+                ></i>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="box-footer">
+  <div class="mb-2">
+    <button
+      class="btn btn-primary"
+      (click)="save()"
+      accSwiftFormSubmitValidationMsg
+      [validationControl]="companyForm"
+    >
+      <i class="fas fa-save"></i>&nbsp;&nbsp;Save
+    </button>
+    <button class="btn btn-secondary ml-2" (click)="cancel()">Cancel</button>
+  </div>
+</div>

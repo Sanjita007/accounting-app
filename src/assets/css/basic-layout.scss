@@ -1,0 +1,447 @@
+//basic-sales-invoice
+#basic_new_invoice_contents {
+  @import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap");
+  html,
+  body {
+    font-family: "Roboto Slab", serif;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  ul,
+  li,
+  span {
+    margin: 0;
+  }
+  b,
+  small {
+    display: block;
+  }
+  a,
+  img {
+    display: inline-block;
+  }
+  li {
+    list-style: none;
+  }
+  input,
+  select,
+  button {
+    border: none;
+    //background-color: transparent;
+  }
+  /*invoices.component.scss*/
+  .padding-top {
+    padding-top: 40px;
+  }
+  .padding-bottom {
+    padding-bottom: 40px;
+  }
+  .margin-top {
+    margin-top: 40px;
+  }
+  .margin-bottom {
+    margin-bottom: 40px;
+  }
+  .invoices_contents {
+    padding: 24px;
+  }
+  .top-bar {
+    padding-bottom: 20px;
+  }
+  .head-title {
+    font-size: 26px;
+    color: #1c252c;
+  }
+  .new-invoice-top-bar {
+    padding-top: 20px;
+  }
+  .top-buttons button {
+    border: 1px solid transparent;
+    border-radius: 500px;
+    padding: 8px 20px;
+  }
+  .new-btn {
+    color: #4d6575;
+    font-size: 16px;
+  }
+  .new-btn i {
+    padding-right: 6px;
+  }
+  .create-invoice-btn {
+    position: relative;
+    color: #fff;
+    font-size: 16px;
+    background: #136acd;
+  }
+  .payments-wrap {
+    border-radius: 8px;
+    border: 1px solid #b2c2cd;
+    background-color: #fff;
+    padding: 20px;
+  }
+  .invoice-insights .label {
+    color: #4d6575;
+    font-size: 14px;
+  }
+  .invoice-insights .value {
+    color: #1c252c;
+    font-size: 21px;
+    font-weight: 400;
+    line-height: 2.4;
+  }
+  .border-bottom-dotted {
+    border-bottom: 2px dotted;
+    width: 60px;
+  }
+  .invoice-insights .unit {
+    color: #849194;
+    font-size: 14px;
+  }
+  .pay-info {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  .invoice-refresh,
+  .pay-methods span,
+  a {
+    color: #4d6575;
+  }
+  .pay-methods {
+    padding: 7px 16px;
+    background: #e0f4fb;
+    border-radius: 24px;
+  }
+  .pay-icon {
+    margin-right: 10px;
+    font-size: 22px;
+  }
+  .pay-methods a {
+    color: #167fa2;
+  }
+  .light-title {
+    color: #4d6575;
+    font-size: 14px;
+    padding-bottom: 30px;
+  }
+  .active-counter {
+    background: #dfe6f1;
+    color: #3c5b8b;
+    font-weight: 600;
+    padding: 0 8px;
+    border-radius: 500px;
+    font-size: 14px;
+    line-height: 1.4;
+    display: inline-block;
+  }
+  .invoice-filter-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  .filter-box input,
+  select {
+    border: 1px solid #b2c2cd;
+    border-radius: 4px;
+    padding: 8px 10px 6px;
+    width: 100%;
+    color: #c6cccd;
+    font-style: italic;
+    padding-right: 26px;
+    background: white;
+  }
+  .filter-box {
+    position: relative;
+  }
+  .down-arrow {
+    position: absolute;
+    top: 4px;
+    right: 14px;
+    color: #4d6575;
+  }
+  .date-picker,
+  .search {
+    position: absolute;
+    top: 27px;
+    right: 17px;
+    background: #ecf0f3;
+    color: #b2c2cd;
+    border-left: 1px solid #b2c2cd;
+    text-align: center;
+    padding: 6px 13px;
+    font-size: 17px;
+  }
+  .invoice-list-tabs .active-counter {
+    margin-left: 10px;
+  }
+  .unpaid-contents {
+    margin: 70px 0;
+    text-align: center;
+  }
+  .unpaid-contents b {
+    color: #1c252c;
+  }
+  .unpaid-contents h4 {
+    font-size: 15px;
+    font-weight: 400;
+    padding: 20px 0;
+  }
+  .create-invoice-btm-btn {
+    color: #4d6575;
+    background: rgba(0, 0, 0, 0);
+    border: 1px solid #b2c2cd;
+    border-radius: 500px;
+    padding: 8px 20px;
+  }
+  /*new-invoice-component.scss*/
+  .new_invoice_contents {
+    padding: 24px;
+  }
+  .new-invoice-top-bar .down-arrow {
+    position: absolute;
+    top: 5px;
+    color: #fff;
+    height: 100%;
+  }
+  .new-invoice-top-bar .create-invoice-btn {
+    padding: 8px 35px;
+    float: right;
+  }
+  .new-invoice-top-bar .create-invoice-btn i {
+    padding-left: 6px;
+  }
+  .invoice-add-info {
+    border: 1px solid #d4dde3;
+    margin: 30px 0;
+    border-radius: 8px;
+  }
+  .add-title {
+    background: #ecf0f3;
+    color: #1c252c;
+    width: 100%;
+    margin: 0;
+    padding: 12px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    display: flex;
+    justify-content: space-between;
+  }
+  .add-title h4 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .business-details {
+    background: #fff;
+    border-radius: 0 0 8px 8px;
+    border-top: 1px solid #d4dde3;
+    padding: 16px;
+  }
+  .browse-logo {
+    cursor: pointer;
+    padding: 20px 0;
+    text-align: center;
+    border-radius: 5px;
+    background: #fff;
+    border: 1px dashed #136acd;
+  }
+  .browse-logo i {
+    font-size: 40px;
+    padding-bottom: 15px;
+    margin: auto;
+  }
+  .browse-info small {
+    color: #4d6575;
+    font-size: 14px;
+  }
+  .browse-info .browse {
+    color: #136acd;
+    font-weight: 700;
+  }
+  .business-address-details {
+    float: right;
+  }
+  .invoice-details-input input {
+    text-align: right;
+    line-height: normal;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background-color: #f6f6f6;
+    border-radius: 4px;
+    padding: 12px 14px 12px;
+    font-size: 14px;
+  }
+  .edit-business-details {
+    text-align: right;
+    line-height: 1.8em;
+  }
+  .edit-business-details b {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .edit-business-details small {
+    font-size: 15px;
+    font-weight: 400;
+  }
+  .edit-business-details a {
+    font-size: 14px;
+    font-weight: 500;
+    color: #136acd;
+  }
+  .invoice-highlight {
+    box-shadow: 0 8px 32px rgba(77, 101, 117, 0.35);
+    border-radius: 12px;
+    border-color: transparent;
+    padding: 20px;
+  }
+  .inner-details {
+    padding: 20px;
+  }
+  .add-customer {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    height: 160px;
+    border: 1px solid #b2c2cd;
+    border-radius: 8px;
+  }
+  .add-customer .user {
+    font-size: 46px;
+    color: #b2c2cd;
+    padding-right: 8px;
+  }
+  .add-customer-btn {
+    color: #136acd;
+    font-weight: 600;
+  }
+  .add-customer-btn .plus {
+    padding-right: 6px !important;
+  }
+  .new-customer-contact {
+    padding: 20px 0;
+  }
+  #addCustomerModal .modal-header .close {
+    position: absolute;
+    right: 14px;
+    top: 15px;
+  }
+  .cus-invoice-details input {
+    color: #656565;
+    background-color: #f6f6f6;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  .cus-input input {
+    border: 1px solid #b2c2cd;
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 8px 10px 6px;
+  }
+  .cus-input label {
+    padding-right: 10px;
+  }
+  .cus-btns button {
+    background-color: #5ea8d4;
+    border-radius: 500px;
+    padding: 4px 20px;
+    margin-right: 10px;
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .invoice-list-tabs .nav-item {
+    margin-right: 20px;
+  }
+  .edit-column {
+    padding: 10px;
+    background-color: #ecf0f3;
+    color: #136acd;
+    font-weight: 600;
+  }
+  .edit-column i {
+    padding-right: 8px;
+  }
+  .info-table .item-head {
+    background: #ecf0f3;
+  }
+  .info-table .item-head th {
+    padding: 10px;
+  }
+  .info-table input,
+  textarea {
+    background-color: #f6f6f6;
+    font-size: 14px;
+    width: 100%;
+    padding: 10px;
+  }
+  .info-table textarea {
+    height: 38px;
+  }
+  .tot-amount i {
+    padding-left: 8px;
+  }
+  .invoice-tax {
+    position: relative;
+  }
+  .invoice-tax label {
+    padding-right: 10px;
+  }
+  .invoice-tax .down-arrow {
+    top: 4px;
+    right: 14px;
+  }
+  .add-item-btn {
+    display: flex;
+    margin: 0 auto;
+    padding-top: 30px;
+    color: #136acd;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .add-item-btn i {
+    padding-right: 6px;
+  }
+  .invoice-add-details {
+    display: flex;
+    flex-direction: column;
+  }
+  .invoice-memo .notes {
+    padding-bottom: 10px;
+  }
+  .invoice-memo,
+  .invoice-add-footer textarea {
+    border: none;
+    width: 100%;
+  }
+  .foot-save-btn {
+    padding-bottom: 30px;
+  }
+  .item-details kendo-dropdownlist,
+  kendo-numerictextbox,
+  kendo-textbox {
+    margin-right: 15px;
+    margin-top: 15px;
+  }
+
+  @media only screen and (max-width: 768px) {
+    .head-title {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .top-buttons {
+      display: flex;
+    }
+    .create-invoice-btn {
+      margin: auto;
+    }
+    .add-customer {
+      margin-bottom: 30px;
+    }
+    .business-address-details {
+      float: left;
+    }
+    .browse-logo {
+      margin-bottom: 30px;
+    }
+  }
+}

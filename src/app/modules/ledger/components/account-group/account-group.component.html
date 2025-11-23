@@ -1,0 +1,103 @@
+<div
+  class="box box-default"
+  [ngClass]="{
+    add_component: selectedItem == null,
+    edit_component: selectedItem != null
+  }"
+>
+  <h5 class="form_heading">
+    {{ title }}
+    <span *ngIf="ledgerGroupDetails">{{ ledgerGroupDetails.Name }}</span>
+  </h5>
+
+  <form [formGroup]="accountGroupForm" novalidate>
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <div class="col-md-7 col-sm-6 col-xs-6">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Group Code<sup>*</sup></label>
+              <kendo-autocomplete
+                [data]="suggestCodeList"
+                class="form-control"
+                formControlName="LedgerCode"
+                [valueField]="'Code'"
+                [suggest]="true"
+                [placeholder]="'Code'"
+                accSwiftFormValidator
+              ></kendo-autocomplete>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Group Name <sup>*</sup></label>
+              <input
+                class="form-control"
+                formControlName="Name"
+                accSwiftFormValidator
+              />
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Remarks</label>
+              <textarea
+                class="form-control"
+                formControlName="Remarks"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-5 col-sm-6 col-xs-6">
+          <div class="form-group">
+            <label>Parent Group <sup>*</sup></label>
+            <kendo-dropdownlist
+              class="form-control"
+              [data]="ledgerGroup"
+              [filterable]="true"
+              [textField]="'CodeName'"
+              [valueField]="'ID'"
+              [valuePrimitive]="true"
+              [formControl]="accountGroupForm.get('ParentGroupID')"
+              (filterChange)="ledgerGroupDDFilter($event)"
+              (valueChange)="changeAccountHead()"
+            >
+            </kendo-dropdownlist>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div
+    class="box-footer"
+    style="
+      display: table;
+      margin: auto;
+      background: gainsboro;
+      border-top: 1px solid gainsboro;
+    "
+  >
+    <div class="mb-2">
+      <button
+        class="btn btn-primary"
+        (click)="saveAccountGroup()"
+        accSwiftFormSubmitValidationMsg
+        [validationControl]="accountGroupForm"
+      >
+        <i class="fas fa-save"></i>&nbsp;&nbsp;
+        <span *ngIf="editMode">Update</span>
+        <span *ngIf="addMode">Save</span>
+      </button>
+      <button
+        class="btn btn-danger ml-2"
+        [disabled]="!selectedLedgerGroupId"
+        (click)="deleteLedgerGroup()"
+      >
+        <i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;&nbsp;Delete
+      </button>
+      <button class="btn btn-secondary ml-2" (click)="cancelAccountGroup()">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

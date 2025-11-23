@@ -1,0 +1,428 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "~ngx-toastr/toastr.css";
+@import "./assets/scss/main.scss";
+@import "./assets/css/basic-layout.scss";
+$color_1: red;
+$color_2: #6c7178;
+$color_3: #007bff;
+$font_family_1: Roboto, "Helvetica Neue", sans-serif;
+$background_color_1: #007bff;
+$background_color_2: #fff;
+
+sup {
+  color: $color_1;
+}
+
+// input box red when validation fails.
+.form-control.ng-touched.ng-invalid {
+  border-color: red !important;
+}
+
+.calendar-icon {
+  position: absolute;
+  top: 35px;
+  right: 25px;
+}
+
+.box-footer {
+  margin: auto;
+  display: table;
+}
+
+.error-msg {
+  color: red;
+  font-size: 13px;
+}
+
+.edit_button {
+  background: green;
+  color: #fff;
+  margin: 2px;
+}
+
+.delete_button {
+  background: red;
+  margin: 2px;
+}
+
+.a_link {
+  color: #007bff !important;
+  cursor: pointer;
+}
+.a_link:hover {
+  text-decoration: underline !important;
+}
+
+.searchBar {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 5px;
+  background-color: #b1afaf;
+  font-size: 16px;
+  color: #fff;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  word-spacing: 3px;
+  margin-bottom: 10px;
+  text-decoration: none;
+}
+.btn-link {
+  font-weight: 400;
+  color: #007bff !important;
+  text-decoration: none;
+}
+
+/* breadcrumbs */
+breadcrumb {
+  .fluid-bread {
+    background-color: inherit;
+  }
+
+  .container-fluid {
+    height: unset;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 0px;
+    margin-bottom: 1rem;
+  }
+
+  .container {
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 0px;
+    width: 100%;
+  }
+
+  .breadcrumb {
+    background-color: inherit;
+    float: right;
+  }
+}
+
+.form-control {
+  background-color: #f7f9fc !important;
+  color: #1a2138;
+}
+
+.form-control[disabled],
+.form-control[readonly],
+fieldset[disabled] .form-control {
+  background-color: #eee !important;
+  opacity: 1;
+}
+
+//kendo input text overFlow Css
+.k-numeric-wrap .k-input {
+  text-overflow: inherit !important;
+  text-align: right;
+}
+
+.k-grid th,
+.k-grid td {
+  text-overflow: inherit !important;
+}
+
+.ledgerSelectIcon {
+  position: absolute;
+  right: 16px;
+  top: 8px;
+}
+
+//collapsed and uncollapsed css
+.accordion .box-header:after {
+  font-family: "FontAwesome";
+  content: "\f068";
+  float: right;
+}
+
+.accordion .box-header.collapsed:after {
+  /* symbol for "collapsed" panels */
+  content: "\f067";
+}
+
+.control-label {
+  top: 5px;
+}
+
+.content {
+  min-height: 500px;
+  padding: 0px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
+}
+
+.tree-node {
+  color: $background_color_1;
+}
+.tree-child {
+  color: black;
+}
+
+.grid-wrapper {
+  position: relative;
+}
+
+.contentPopup {
+  min-height: 120px;
+  padding: 12px;
+  background: #f3e0c2;
+  margin-right: auto;
+}
+
+.small_text {
+  margin-bottom: 0;
+  display: flex;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 700;
+}
+
+.k-i-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 64px;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #ff6757 !important;
+}
+
+.box-header.with-border {
+  border-bottom: 1px solid #c0c4cc;
+}
+
+.form_heading {
+  color: #555;
+  // margin: 24px 0 16px 0;
+  padding: 10px 0;
+  font-size: 20px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.modal-header .close {
+  font-size: 30px;
+  font-weight: 900;
+  color: #fff !important;
+  opacity: 1;
+}
+
+.modal-header {
+  border-bottom-color: #f4f4f4;
+  border: 1px solid #fff;
+  color: #fff;
+  background: #446e88;
+}
+
+.modal-footer {
+  background: #446e88 !important;
+  padding: -15px;
+  text-align: right;
+  text-align: center;
+  width: 100%;
+  display: inline-block;
+  border-top: 1px solid #e5e5e5;
+}
+
+//For fieldsets and legends
+fieldset {
+  border: 1px solid #ddd !important;
+  padding: 0 1.4em 1.4em 1.4em !important;
+  margin: 0 0 1.5em 0 !important;
+  -webkit-box-shadow: 0px 0px 0px 0px #000;
+  box-shadow: 0px 0px 0px 0px #000;
+}
+
+legend {
+  font-size: 1.2em !important;
+  font-weight: bold !important;
+  text-align: left !important;
+  width: 100%;
+  background-color: #5ea8d4;
+  border: 1px solid #e2e2e2;
+  padding: 10px 20px;
+  border-radius: 0.25rem;
+  color: #fff !important;
+}
+
+.logo-box {
+  width: 150px;
+  height: 150px;
+  border: 2px solid #6c7178;
+  display: flex;
+  align-items: center;
+
+  & img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.flex-item {
+  flex: 1;
+  margin-right: 15px;
+  margin-left: 15px;
+}
+
+.current-balance {
+  font-size: 13px;
+  font-family: cursive;
+}
+
+.k-tabstrip > .k-content.k-state-active {
+  overflow-x: hidden !important;
+}
+
+.move-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+//Reports Table Css
+/*.table-striped > th {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+th {
+  border: 1px solid #ddd;
+  padding: 5px;
+  text-align: right;
+  font-size: 16px;
+}
+
+.table-striped td {
+  border: 1px solid black !important;
+}
+
+.table-striped td {
+  border: 1px !important;
+}
+
+.table-striped tbody {
+  height: 230px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.table-fixed > tbody > tr {
+  cursor: pointer;
+}
+
+tfoot > tr > td {
+  font-size: 16px;
+  font-weight: 700;
+}*/
+
+.group_name {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.ledger_name {
+  padding-left: 50px;
+  color: blue;
+  font-weight: 700;
+  max-width: fit-content;
+}
+.balance {
+  text-align: right;
+}
+
+.table-box {
+  width: 100%;
+  max-height: 600px;
+  overflow-y: scroll;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+#header-fixed thead th {
+  background-color: #fff;
+  color: #000;
+  position: sticky;
+  top: 0;
+}
+
+#header-fixed tfoot td {
+  background-color: #fff;
+  color: #000;
+  position: sticky;
+  top: 0;
+}
+
+::-webkit-scrollbar {
+  width: 8px !important;
+  background-color: rgb(236, 235, 235);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 5px;
+}
+
+#header-fixed tfoot th {
+  position: sticky;
+  bottom: 0;
+  background-color: rgb(233, 233, 233);
+}
+
+/* #header-fixed         { overflow-y: auto; height: 100px; }
+
+
+#header-fixed thead th { position: sticky; top: 0; }
+*/
+
+.add_component {
+  background-color: gainsboro;
+}
+
+.edit_component {
+  background-color: #a6e49b;
+}
+
+.paid_status {
+  background: green;
+  padding: 6px 20px;
+  font-weight: 700;
+  margin-top: 7px !important;
+  margin-left: 18px !important;
+  font-size: 15px;
+  border-radius: 20px;
+}
+
+.unpaid_status {
+  background: red;
+  padding: 6px 20px;
+  font-weight: 700;
+  font-size: 15px;
+  margin-top: 7px !important;
+  margin-left: 18px !important;
+  border-radius: 20px;
+}
+
+.draft_status {
+  background: yellow;
+  padding: 6px 20px;
+  font-weight: 700;
+  margin-top: 7px !important;
+  margin-left: 18px !important;
+  font-size: 15px;
+  border-radius: 20px;
+  color: #000;
+}

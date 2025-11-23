@@ -1,0 +1,105 @@
+<div class="box box-default">
+  <form [formGroup]="salesOrderForm" novalidate>
+    <div class="col-md-12 mt-3">
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <accSwift-series-forms
+          formControlName="SeriesID"
+          [voucherType]="'SLS_ORDER'"
+        ></accSwift-series-forms>
+      </div>
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="form-group">
+          <label>Order No. <sup>*</sup></label>
+          <input
+            class="form-control"
+            type="text"
+            formControlName="OrderNo"
+            accSwiftFormValidator
+          />
+          <span
+            *ngIf="IsAutomatic"
+            style="
+              top: 32px;
+              margin-left: 172px;
+              display: inline-block;
+              position: absolute;
+            "
+            >Automatic</span
+          >
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <accSwift-project-forms
+          formControlName="ProjectID"
+        ></accSwift-project-forms>
+      </div>
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="form-group">
+          <label>Date</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="Date"
+            bsDatepicker
+            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+          />
+          <span class="glyphicon glyphicon-calendar calendar-icon"></span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <accSwift-cash-party-account
+          formControlName="CashPartyLedgerID"
+        ></accSwift-cash-party-account>
+      </div>
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="form-group">
+          <label>Remarks</label>
+          <input class="form-control" formControlName="Remarks" />
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-12 p-0">
+      <div class="box-body">
+        <accSwift-details-entry-grid
+          [entryArray]="salesOrderForm.controls.OrderDetails"
+          [voucherType]="'SLS_ORDER'"
+        ></accSwift-details-entry-grid>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <table
+        class="table"
+        width="60%"
+        style="float: right; width: 65%; text-align: right"
+      >
+        <tfoot>
+          <tr>
+            <td></td>
+            <td></td>
+
+            <td class="total_amount">Grand Total</td>
+            <td class="total_amount">
+              <span [innerHTML]="totalAmount | currencyFormat "></span>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </form>
+  <div class="box-footer">
+    <div class="mb-2">
+      <button
+        class="btn btn-primary"
+        (click)="save()"
+        accSwiftFormSubmitValidationMsg
+        [validationControl]="salesOrderForm"
+      >
+        <i class="fas fa-save"></i>&nbsp;&nbsp;Save
+      </button>
+      <button class="btn btn-secondary ml-2" (click)="cancel()">Cancel</button>
+    </div>
+  </div>
+</div>

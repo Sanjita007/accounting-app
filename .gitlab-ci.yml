@@ -1,0 +1,47 @@
+image: node:10.18.0
+
+cache:
+  paths:
+    - node_modules/
+before_script:
+  - apt-get update -qq
+  - apt-get install -qq git
+  - "which ssh-agent || ( apt-get install -qq openssh-client )"
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$SSH_PRIVATE_KEY")
+  - mkdir -p ~/.ssh
+  - touch ~/.ssh/known_hosts
+  - ssh-keyscan -H 44.227.154.72 >> ~/.ssh/known_hosts
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+deploy_stage:
+  stage: deploy
+  environment: Staging
+  only:
+    - master
+  script:
+    - rm ./package-lock.json
+    - rm -rf node_modules
+    - node -v
+    - npm install
+    - npm rebuild node-sass
+    - node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build --prod --build-optimizer
+    - cd dist/accswift/
+    - ls
+    - scp -o StrictHostKeyChecking=no -r *  accswift@44.227.154.72:/home/accswift/public_html/
+
+deploy_production:
+  stage: deploy
+  environment: production
+  only:
+    - tags
+  script:
+    - rm ./package-lock.json
+    - rm -rf node_modules
+    - node -v
+    - npm install
+    - npm rebuild node-sass
+    - node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build --prod --build-optimizer
+    - cd dist/accswift/
+    - ls
+    - scp -o StrictHostKeyChecking=no -r *  accswift@44.227.154.72:/home/accswift/public_html/

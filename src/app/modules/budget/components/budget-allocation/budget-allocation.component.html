@@ -1,0 +1,127 @@
+<section id="budget-allocation-contents">
+  <div class="budget-alc-search-box box box-default">
+    <fieldset>
+      <legend>Search Box:</legend>
+      <form>
+        <div class="search-box d-flex">
+          <div class="form-group pr-3" style="width: 20%">
+            <label for="">Search In</label>
+            <kendo-dropdownlist
+              [data]="search"
+              textField="text"
+              valueField="value"
+              class="form-control"
+            >
+            </kendo-dropdownlist>
+          </div>
+          <div class="form-group pr-3" style="width: 20%">
+            <label for="">Operator</label>
+            <kendo-dropdownlist [data]="operator" class="form-control">
+            </kendo-dropdownlist>
+          </div>
+          <div class="form-group pr-3" style="width: 20%">
+            <label for="">Parameter</label>
+            <kendo-autocomplete class="form-control"> </kendo-autocomplete>
+          </div>
+          <div class="form-group pr-3" style="width: 20%">
+            <label for="">Operator</label>
+            <kendo-dropdownlist class="form-control"> </kendo-dropdownlist>
+          </div>
+          <div class="form-group pr-3" style="width: 20%">
+            <label for="">Parameter</label>
+            <kendo-autocomplete class="form-control"> </kendo-autocomplete>
+          </div>
+        </div>
+      </form>
+      <div class="budget-alc-btns d-flex">
+        <button class="btn btn-primary mr-3">
+          <i class="fas fa-search" aria-hidden="true"></i>Search
+        </button>
+        <button class="btn btn-danger mr-3">
+          <i class="fas fa-times" aria-hidden="true"></i>&nbsp;&nbsp;Forget
+        </button>
+      </div>
+    </fieldset>
+  </div>
+  <div class="budget-alc-details">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="tree-list-tabstrip box box-solid">
+          <kendo-tabstrip (tabSelect)="onTabSelect($event)">
+            <!-- <kendo-tabstrip-tab [title]="'Tree View'">
+              <ng-template kendoTabContent>
+                <div class="treeview-wrapper">
+                  <button class="btn btn-secondary" (click)="expandAllNode()">
+                    Expand All
+                  </button>
+                  <button
+                    class="btn btn-secondary ml-2"
+                    (click)="collapseAllNode()"
+                  >
+                    Collapse All
+                  </button>
+                  <kendo-treeview
+                    [nodes]="Budget"
+                    textField="text"
+                    kendoTreeViewExpandable
+                    kendoTreeViewSelectable
+                    kendoTreeViewHierarchyBinding
+                    childrenField="items"
+                    [expandBy]="'Budget'"
+                    [(expandedKeys)]="expandedKeys"
+                  >
+                  </kendo-treeview>
+                </div>
+              </ng-template>
+            </kendo-tabstrip-tab> -->
+            <kendo-tabstrip-tab [title]="'List View'" [selected]="true">
+              <ng-template kendoTabContent>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="grid-wrapper-listView">
+                      <kendo-grid
+                        [data]="BudgetMinListView"
+                        [height]="495"
+                        (cellClick)="selectedNode($event)"
+                      >
+                        <kendo-grid-column field="ID" title="S.NO">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="Name" title="Budget Name">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="StartDate" title="Start Date">
+                          <ng-template
+                            kendoGridCellTemplate
+                            let-dataItem="dataItem"
+                          >
+                            {{ dataItem.StartDate | date: "yyyy-MM-dd" }}
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="EndDate" title="End Date">
+                          <ng-template
+                            kendoGridCellTemplate
+                            let-dataItem="dataItem"
+                          >
+                            {{ dataItem.EndDate | date: "yyyy-MM-dd" }}
+                          </ng-template>
+                        </kendo-grid-column>
+                      </kendo-grid>
+                      <div *ngIf="listViewLoading" class="k-i-loading"></div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </kendo-tabstrip-tab>
+          </kendo-tabstrip>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <button class="btn btn-primary m-2" (click)="addNewBudget()">
+          <i class="fa fa-plus" aria-hidden="true"></i> Create New Budget
+        </button>
+        <div class="col-md-12 mt-5">
+          <div #dynamicContentDiv></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
