@@ -116,6 +116,31 @@ const SidebarContent: MenuItem[] = [
       },
     ],
   },
+   {
+    heading: 'System',
+    children: [
+      {
+        name: 'Tax',
+        id: uniqueId(),
+        icon: 'solar:home-angle-linear',
+        isPro: false,
+        children: [
+          {
+            name: 'New',
+            id: uniqueId(),
+            url: '/tax/new',
+            isPro: false,
+          },
+          {
+            name: 'List',
+            id: uniqueId(),
+            url: '/tax',
+            isPro: false,
+          },
+        ],
+      }
+    ],
+  },
   // {
   //   heading: 'Utilities',
   //   children: [

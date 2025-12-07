@@ -10,7 +10,7 @@ import {
   TableHeadCell,
   TableRow,
 } from 'flowbite-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef  } from 'react';
 import { getProducts } from 'src/api';
 import { Product } from 'src/Models/Model';
 
@@ -24,11 +24,14 @@ type Props = {
   onClose: () => void;
   index: number,
   onRowClick: (index: number, id: number) => void;
+   //onSelect: (id: number) => void;
 };
 
 export const ProductListModal = (props: Props) => {
   //const [openModal, setOpenModal] = useState(props.isModalOpen);
-  const [products, setProducts] = useState<Product[] | null>(null);
+  const [products, setProducts] = useState<Product[]>([])
+  const refTable = useRef<HTMLTableElement>(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const configs: Config[] = [
     { label: 'id', render: (p) => p.id },
@@ -44,6 +47,33 @@ export const ProductListModal = (props: Props) => {
     };
     fetchData();
   }, []);
+
+   // Focus first row when modal opens
+  useEffect(() => {
+    if (refTable.current) {
+      const firstRow = refTable.current.querySelector("tr");
+      firstRow?.focus();
+    }
+  }, []);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!products?.length) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedIndex((prev) => Math.min(prev + 1, products?.length??0 - 1));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedIndex((prev) => Math.max(prev - 0, 0));
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const selectedProduct = products??[selectedIndex][0];
+      if(selectedProduct) {
+      props.onRowClick(props.index, selectedProduct[0]?.id);
+      }
+      props.onClose();
+    }
+  };
 
   const renderRows = products
     ? products.map((product) => (
@@ -86,8 +116,8 @@ export const ProductListModal = (props: Props) => {
       onClose={props.onClose}>
         <ModalHeader>List of Products</ModalHeader>
         <ModalBody>
-          <div className="bg-white rounded-lg p-4 sm:p-6 xl:p-8">
-            <Table striped className="min-w-full divide-y divide-gray-200">
+          <div className="bg-white rounded-lg p-4 sm:p-6 xl:p-8" tabIndex={-1}>
+            <Table striped className="min-w-full divide-y divide-gray-200" ref = {refTable} tabIndex={0}>
               <TableHead>{renderHeaders}</TableHead>
               <TableBody className="divide-y">{renderRows}</TableBody>
             </Table>

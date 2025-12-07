@@ -5,7 +5,6 @@ import { Navigate, createBrowserRouter } from "react-router";
 import AboutUs from 'src/components/AboutUs/AboutUs';
 import ContactUs from 'src/components/ContactUs/ContactUs';
 import Home from 'src/components/Home/Home';
-
 import Loadable from 'src/layouts/full/shared/loadable/Loadable';
 
 
@@ -21,8 +20,14 @@ const Dashboard = Loadable(lazy(() => import('../views/dashboards/Dashboard')));
 // For Products
 const AddProduct = Loadable(lazy(() => import('src/components/Product/AddProduct')));
 const ListProduct = Loadable(lazy(() => import('src/components/Product/ListProduct')));
+
+// For sales invoice
 const AddSalesInvoice = Loadable(lazy(() => import('src/components/Sales/AddSales')));
 const ListSalesInvoice = Loadable(lazy(() => import('src/components/Sales/ListSales'))); 
+
+// For tax
+const AddTax = Loadable(lazy(() => import('src/components/Tax/AddTax')));
+const ListTax = Loadable(lazy(() => import('src/components/Tax/ListTax'))); 
 
 // utilities
 const Typography = Loadable(lazy(() => import("../views/typography/Typography")));
@@ -59,6 +64,11 @@ const Router = [
       { path: '/product/new/', exact: true, element: <AddProduct/> },
       { path: '/product', exact: true, element: <ListProduct/> },
       { path: '/product/edit/:id', exact: true, element: <AddProduct/> },
+
+      // for Products
+      { path: '/tax/new/', exact: true, element: <AddTax/> },
+      { path: '/tax', exact: true, element: <ListTax/> },
+      { path: '/tax/edit/:id', exact: true, element: <AddTax/> },
 
       // for Sales
       { path: '/sales-invoice/new', exact: true, element: <AddSalesInvoice/> },

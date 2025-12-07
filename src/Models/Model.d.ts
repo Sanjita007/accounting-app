@@ -7,6 +7,8 @@ export interface Product {
   depotID: number;
   remarks: string;
   unitID: number;
+  unitName: string;
+  unitSymbol: string,
   salesRate: number;
   purchaseRate: number;
   purchaseDiscount: number;
@@ -28,16 +30,22 @@ export interface Product {
   city: string;
   taxID: number;
   companyID: number;
+  conversionRate: number;
 
   //         public int CompanyID { get; set; } = 1;
   //         public string ParentProductID { get; set; }
   //         public string Size { get; set; }
   //         public int TaxID { get; set; }
+
+  units: RelatedUnit[];
 }
 
 export interface ProductGroup{
   id: number,
-  name: string
+  name: string,
+  parentGroupId: number,
+  level: number,
+  isBuiltIn: int
 }
 
 export interface Unit{
@@ -45,10 +53,18 @@ export interface Unit{
   name: string
 }
 
+export interface RelatedUnit {
+  id: number;
+  name: string; // ISO Date string
+  conversionRate: number; // ISO Date string
+ 
+}
+
 export interface Tax{
   id: number,
   name: string,
   code: string,
+  remarks: string,
   rate: float
 }
 
@@ -90,6 +106,9 @@ export interface SalesInvoiceDetail {
   discount: number;
   netAmount: number;
   qtyUnitID: number;
+  defaultUnitID: number;
+  defaultUnitName: string;
+  defaultUnitSymbol: string;
   taxID: number;
   taxPercent: float;
   taxAmount: float;
@@ -99,32 +118,35 @@ export interface SalesInvoiceDetail {
   totalAmount: float;
   // this is just for the tracking
   uid: string;
+
+   units: RelatedUnit[];
 }
 
 export interface SalesInvoiceMaster extends Base {
-  seriesID: number;
-  cashLedgerID: number;
-  salesLedgerID: number;
-  depotID: number;
+  seriesID?: number | null;
+  cashLedgerID?: number | null;
+  salesLedgerID?: number | null;
+  depotID?: number | null;
   orderNo?: string | null;
   voucherNo?: string | null;
   customerName?: string | null;
-  date: Date; // ISO Date string
+  date?: Date; // ISO Date string
   projectID?: number | null;
   totalQty: number;
   grossAmount: number;
   specialDiscount: number;
   netAmount: number;
-  tax1: number;
-  tax2: number;
-  tax3: number;
-  vat: number;
+  tax1?: number;
+  tax2?: number;
+  tax3?: number;
+  vat?: number;
   totalAmount: number;
-  salesDueDate: string; // ISO Date string
-  tableNumber: number;
+  salesDueDate?: string; // ISO Date string
+  tableNumber?: number;
   totalTCAmount: float;
-  tenderAmount: number;
-  changeAmount: number;
-  adjustmentAmount: number;
+  tenderAmount?: number;
+  changeAmount?: number;
+  adjustmentAmount?: number;
   details: SalesInvoiceDetail[];
 }
+

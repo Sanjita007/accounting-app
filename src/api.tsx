@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Product, SalesInvoiceMaster, UserLogin } from './Models/Model';
+import { Product, ProductGroup, SalesInvoiceMaster, Tax, UserLogin } from './Models/Model';
 
 export const getProducts = async () => {
   try {
@@ -85,7 +85,49 @@ export const getProductGroups = async () => {
   }
 };
 
+export const postProductGroup = async (group: ProductGroup) => {
+  try {
+    const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`, group);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
 
+export const putProductGroup  = async (group: ProductGroup) => {
+  try {
+    const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`, group);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const deleteProductGroup = async (id: number) => {
+  try {
+    const data = await axios.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup/${id}`);
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+// for Depot
 export const getDepots = async () => {
   try {
     const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Depot`);
@@ -113,6 +155,8 @@ export const getDepot = async (id: number) => {
     return null;
   }
 };
+
+// related to units
 
 export const getUnits = async () => {
   try {
@@ -142,6 +186,35 @@ export const getUnit = async (id: number) => {
   }
 };
 
+export const convertUnits = async (defaultUnitID: number, currentUnitID: number, valueToConvert: number) => {
+  try {
+    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/Convert?defaultUnitID=${defaultUnitID}&currentUnitID=${currentUnitID}&valueToConvert=${valueToConvert}`);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const getRelatedUnits = async (baseUnitID: number) => {
+  try {
+    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/Related?baseUnitID=${baseUnitID}`);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+// related to invoice
 export const getSalesInvoices = async () => {
   try {
     const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice`);
@@ -226,6 +299,7 @@ export const putSalesInvoice = async (salesInvoice: SalesInvoiceMaster) => {
   }
 };
 
+// for Taxes
 export const getTaxes = async () => {
   try {
     const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Tax`);
@@ -254,6 +328,47 @@ export const getTax = async (id: number) => {
   }
 };
 
+export const postTax = async (tax: Tax) => {
+  try {
+    const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}Tax`, tax);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const putTax = async (tax: Tax) => {
+  try {
+    const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}Tax`, tax);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const deleteTax = async (id: number) => {
+  try {
+    const data = await axios.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Tax/${id}`);
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
 
 //related to user login and authetication   
 

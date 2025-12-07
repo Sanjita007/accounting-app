@@ -3,7 +3,6 @@ import {
   TextInput,
   Table,
   Button,
-  Checkbox,
   Datepicker,
   TableRow,
   TableCell,
@@ -16,8 +15,9 @@ import { useNavigate, useParams } from 'react-router';
 import Dropdown from 'react-dropdown-select';
 
 import {
-  getDepots,
+  convertUnits,
   getProducts,
+  getRelatedUnits,
   getSalesInvoice,
   getTaxes,
   getUnits,
@@ -25,17 +25,9 @@ import {
   putSalesInvoice,
 } from 'src/api';
 
-import {
-  Depot,
-  Product,
-  SalesInvoiceDetail,
-  SalesInvoiceMaster,
-  Tax,
-  Unit,
-} from 'src/Models/Model';
+import { Product, SalesInvoiceDetail, SalesInvoiceMaster, Tax, Unit } from 'src/Models/Model';
 import { NumberInput } from '../shared/CustomNumberInput';
 import { useCustomAlertBox } from '../shared/CustomAlertBox';
-import { update } from 'lodash';
 import { FormatIntoNumber } from 'src/utils/utils';
 import { ProductListModal } from '../Product/ProductListModal';
 
@@ -50,9 +42,8 @@ const AddSalesInvoice = (props: Props) => {
   const { apiWithToast } = useCustomAlertBox();
 
   const [products, setProducts] = useState<Product[] | null>(null);
-  const [units, setUnits] = useState<Unit[] | null>(null);
+  //const [units, setUnits] = useState<Unit[] | null>(null);
   const [taxes, setTaxes] = useState<Tax[] | null>(null);
-  const [item, setItem] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [index, setIndex] = useState(0);
@@ -121,30 +112,69 @@ const AddSalesInvoice = (props: Props) => {
     });
   };
 
-  const handleUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const res = parseInt(e.target.value);
-    setSalesInvoice(
-      (prev) =>
-        ({
-          ...(prev ?? {}),
-          unitID: res,
-        } as SalesInvoiceMaster),
+  const handleUnitChange = (index: number, value: any) => {
+    const taxId = parseInt(value);
+    console.log(taxes);
+    console.log(
+      'found:',
+      taxes?.find((t) => String(t.id) === String(taxId)),
     );
+
+    setSalesInvoice((prev) => {
+      if (!prev) return prev; // nothing to update
+
+      const updatedDetails = prev.details.map((d, i) => {
+        return i === index ? { ...d, taxID: taxId, ...calculateTax(taxId, d.netAmount) } : d;
+      });
+
+      console.log(updatedDetails);
+
+      const updatedInvoice = { ...prev, details: updatedDetails };
+
+      // Recalculate invoice totals based on UPDATED details
+      return {
+        ...updatedInvoice,
+        ...calculateAllAmounts(updatedDetails),
+      };
+    });
   };
 
-  const handleProductChange = (index: number, value: any) => {
+  const handleProductChange = async (index: number, value: any) => {
     console.log('value is ' + value);
     console.log('index is ' + index);
 
     debugger;
     const productID = parseInt(value);
+
+    const product = products?.find((r) => r.id == productID);
+
+    const GetUnits = await getRelatedUnits(product?.unitID ?? 0);
+
+    setProducts((prevProducts) => {
+      if (!prevProducts) {
+        return [];
+      }
+
+      return prevProducts.map((product) => {
+        if (product.id === productID) {
+          return {
+            ...product,
+            units: GetUnits,
+          };
+        }
+        return product;
+      });
+    });
+
     setSalesInvoice((prev) => {
       if (!prev) return prev; // nothing to update
       debugger;
-      const product = products?.find((r) => r.id == productID);
 
       const updatedDetails = prev.details.map((d, i) => {
-        let amt = d.quantity * (product?.salesRate ? product?.salesRate : 0);
+        console.log('price of the product: ' + product?.salesRate);
+        let amt = d.quantity * (product?.salesRate ?? 0);
+        console.log('quantity of the product: ' + d.quantity);
+
         let disc = (amt * d.discPercent) / 100;
         let netAmt = amt - disc;
 
@@ -157,6 +187,12 @@ const AddSalesInvoice = (props: Props) => {
               amount: amt,
               salesPrice: product?.salesRate ?? 0,
               taxID: product?.taxID ?? 0,
+              units: GetUnits,
+              defaultUnitID: product?.unitID ?? 0,
+              defaultUnitName: product?.unitName ?? '',
+              defaultUnitSymbol: product?.unitSymbol ?? '',
+
+              qtyUnitID: product?.unitID ?? 0,
             }
           : d;
       });
@@ -195,9 +231,12 @@ const AddSalesInvoice = (props: Props) => {
       if (!prev) return prev; // nothing to update
 
       const updatedDetails = prev.details.map((d, i) => {
+        const convRate = products
+          ?.filter((r) => r.id == d.productID)[0]
+          .units.filter((r) => r.id == d.qtyUnitID)[0].conversionRate;
         console.log('changes in the price:' + d.quantity);
         let qty = value ? parseFloat(value) : 0;
-        let amt = qty * d.salesPrice;
+        let amt = qty * d.salesPrice * (convRate ?? 0);
         let disc = (amt * d.discPercent) / 100;
         let netAmt = amt - disc;
 
@@ -220,6 +259,45 @@ const AddSalesInvoice = (props: Props) => {
         ...updatedInvoice,
         ...calculateAllAmounts(updatedDetails),
       };
+    });
+  };
+
+  const handleUnitChanges = async (index: number, value: number | null) => {
+    if (!salesInvoice) return;
+    let copyDetail = salesInvoice?.details ?? [];
+    const d = copyDetail[index];
+
+    // const actualQty = await convertUnit(
+    //           d?.defaultUnitID??0,
+    //           value??0,
+    //           d?.quantity??0
+    //         );
+    const unit = d.units.filter((r) => r.id == value);
+
+    if (unit == null) {
+      alert('No relation between the units');
+      return d; // return original row
+    }
+
+    let qty = d?.quantity;
+    let amt = qty * (unit[0]?.conversionRate ?? 0) * d?.salesPrice;
+
+    const disc = (amt * (d?.discPercent ?? 0)) / 100;
+    const netAmt = amt - disc;
+    copyDetail[index] = {
+      ...d,
+      quantity: qty,
+      amount: amt,
+      discount: disc,
+      netAmount: netAmt,
+      qtyUnitID: value ?? 0,
+      ...calculateTax(d.taxID, netAmt),
+    };
+
+    setSalesInvoice({
+      ...salesInvoice,
+      details: copyDetail,
+      ...calculateAllAmounts(copyDetail),
     });
   };
 
@@ -309,10 +387,11 @@ const AddSalesInvoice = (props: Props) => {
           productCode: '',
           productName: '',
           qtyUnitID: 0,
+          defaultUnitID: 0,
           taxID: 0,
           vatAmount: 0,
           productID: 0,
-          quantity: 0,
+          quantity: 1,
           salesPrice: 0,
           amount: 0,
           discPercent: 0,
@@ -324,6 +403,7 @@ const AddSalesInvoice = (props: Props) => {
           generalName: '',
           uid: uid,
           totalAmount: 0,
+          units: [],
           // add any other default props here
         };
 
@@ -348,10 +428,13 @@ const AddSalesInvoice = (props: Props) => {
         productCode: '',
         productName: '',
         qtyUnitID: 0,
+        defaultUnitID: 0,
+        defaultUnitSymbol: '',
+        defaultUnitName: '',
         taxID: 0,
         vatAmount: 0,
         productID: 0,
-        quantity: 0,
+        quantity: 1,
         salesPrice: 0,
         amount: 0,
         discPercent: 0,
@@ -363,6 +446,7 @@ const AddSalesInvoice = (props: Props) => {
         generalName: '',
         uid: '',
         totalAmount: 0,
+        units: [],
         // add any other default props here
       };
       const updatedDetails = [...prev.details, newItem];
@@ -403,7 +487,6 @@ const AddSalesInvoice = (props: Props) => {
     );
   };
 
-
   interface Config {
     label: string;
     render: (salesInvoiceDetails: SalesInvoiceDetail, index: number) => React.ReactNode;
@@ -425,9 +508,8 @@ const AddSalesInvoice = (props: Props) => {
       render: (p, index) => {
         return (
           <div className="flex gap-4 w-50 overflow-hidden">
-
             {/* lets hide this one for now.. and will come back to it when everything else is done */}
-             <button
+            <button
               onClick={() => {
                 setIndex(index);
                 setIsModalOpen(true);
@@ -435,8 +517,8 @@ const AddSalesInvoice = (props: Props) => {
               className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-grey-600"
             >
               ...
-            </button> 
-             
+            </button>
+
             <Dropdown
               className="flex gap-4 w-full h-full"
               portal={document.body}
@@ -454,11 +536,11 @@ const AddSalesInvoice = (props: Props) => {
                     ) as Product[])
                   : []
               }
-              onChange={(values)=> {handleProductChange(index, values ? values[0]?.id : null)}}
+              onChange={(values) => {
+                handleProductChange(index, values ? values[0]?.id : null);
+              }}
             />
-           
           </div>
-
         );
       },
     },
@@ -477,11 +559,34 @@ const AddSalesInvoice = (props: Props) => {
               value={p.quantity ?? ''}
               onChange={(value) => handleQuantityChanges(index, value)}
             />
-            
           </div>
         );
       },
     },
+    {
+      label: 'Unit',
+      render: (p, index) => {
+        return (
+          <div className="flex gap-4 w-20 overflow-hidden">
+            <Dropdown
+              portal={document.body}
+              dropdownGap={5}
+              dropdownPosition="auto"
+              options={p.units ?? []}
+              labelField="name"
+              valueField="id"
+              values={
+                p.units
+                  ? ([p.units?.find((prod) => prod.id === p.qtyUnitID)].filter(Boolean) as Unit[])
+                  : []
+              }
+              onChange={(values) => handleUnitChanges(index, values ? values[0]?.id : null)}
+            />
+          </div>
+        );
+      },
+    },
+
     {
       label: 'Price',
       render: (p, index) => {
@@ -496,7 +601,7 @@ const AddSalesInvoice = (props: Props) => {
               value={p?.salesPrice ?? 0.0}
               onChange={(value) => handlePriceChanges(index, value)}
             />
-             
+            <span>{p.defaultUnitSymbol === '' ? '' : '/' + p.defaultUnitSymbol}</span>
           </div>
         );
       },
@@ -538,7 +643,6 @@ const AddSalesInvoice = (props: Props) => {
               }
               onChange={(values) => handleTaxChange(index, values ? values[0]?.id : null)}
             />
-
           </div>
         );
       },
@@ -590,15 +694,11 @@ const AddSalesInvoice = (props: Props) => {
 
   useEffect(() => {
     const fetchAllData = async () => {
-      const [prodRes, unitRes, taxRes] = await Promise.all([
-        getProducts(),
-        getUnits(),
-        getTaxes(),
-      ]);
+      const [prodRes, unitRes, taxRes] = await Promise.all([getProducts(), getUnits(), getTaxes()]);
 
       setProducts(prodRes);
       setProductList(prodRes);
-      setUnits(unitRes);
+      //setUnits(unitRes);
       setTaxes(taxRes);
     };
     fetchAllData();
@@ -660,9 +760,12 @@ const AddSalesInvoice = (props: Props) => {
           productCode: '',
           productName: '',
           qtyUnitID: 0,
+          defaultUnitID: 0,
+          defaultUnitName: '',
+          defaultUnitSymbol: '',
           taxID: 0,
           vatAmount: 0,
-          quantity: 0,
+          quantity: 1,
           salesPrice: 0,
           amount: 0,
           discPercent: 0,
@@ -674,6 +777,7 @@ const AddSalesInvoice = (props: Props) => {
           generalName: '',
           uid: crypto.randomUUID(),
           totalAmount: 0,
+          units: [],
         },
       ],
     });
@@ -714,23 +818,15 @@ const AddSalesInvoice = (props: Props) => {
     </TableHead>
   );
 
-  const testRowClick = (item: number) =>{
-    const res = products?.find(r=> r.id == item);
-    setItem(res?.engName??"");
-  }
-
-  
-
   return (
     <div className="rounded-xl dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray p-6 relative w-full break-words">
       <ProductListModal
-              isModalOpen={isModalOpen}
-              index={index}
-              onClose={() => setIsModalOpen(false)}
-              onRowClick={(index, productID) => handleProductChange(index, productID)}
-            ></ProductListModal>
+        isModalOpen={isModalOpen}
+        index={index}
+        onClose={() => setIsModalOpen(false)}
+        onRowClick={(index, productID) => handleProductChange(index, productID)}
+      ></ProductListModal>
 
-      
       <h5 className="card-title">{id ? 'Edit' : 'Add'} a Sales Invoice</h5>
       <div className="mt-6">
         <div className="grid grid-cols-12 gap-6">
@@ -776,35 +872,7 @@ const AddSalesInvoice = (props: Props) => {
               onChange={handleCustomerNameChange}
             />
           </div>
-          <div className="lg:col-span-6 col-span-12">
-            {/* lets hide this one for now.. and will come back to it when everything else is done 
-             <button
-              onClick={() => {
-                //setIndex(index);
-                setIsModalOpen(true);
-              }}
-              className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-grey-600"
-            >
-              ...
-            </button> 
-             <ProductListModal
-              isModalOpen={isModalOpen}
-              index={index}
-              onClose={() => setIsModalOpen(false)}
-              onRowClick={(productID) => testRowClick(productID)}
-            ></ProductListModal>
-            
-              <TextInput
-              id="name"
-              type="text"
-              placeholder="Product Name"
-              required
-              className="form-control form-rounded-xl"
-              value={item ?? ''}
-              onChange={handleCustomerNameChange}
-            />
-            */}
-          </div>
+          <div className="lg:col-span-6 col-span-12"></div>
           <div className="col-span-12 flex gap-3">
             <div className="overflow-x-auto overflow-visible">
               <Table striped className="min-w-full divide-y divide-gray-200">
