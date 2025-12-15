@@ -388,6 +388,8 @@ const AddSalesInvoice = (props: Props) => {
           productName: '',
           qtyUnitID: 0,
           defaultUnitID: 0,
+          defaultUnitName:"",
+          defaultUnitSymbol: "",
           taxID: 0,
           vatAmount: 0,
           productID: 0,

@@ -81,7 +81,27 @@ const SidebarContent: MenuItem[] = [
           {
             name: 'List',
             id: uniqueId(),
-            url: '/product',
+            url: '/product-group',
+            isPro: false,
+          },
+        ],
+      },
+      {
+        name: 'Product Group',
+        id: uniqueId(),
+        icon: 'solar:home-angle-linear',
+        isPro: false,
+        children: [
+          {
+            name: 'New',
+            id: uniqueId(),
+            url: '/product-group/new',
+            isPro: false,
+          },
+          {
+            name: 'List',
+            id: uniqueId(),
+            url: '/product-group',
             isPro: false,
           },
         ],

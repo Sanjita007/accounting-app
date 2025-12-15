@@ -46,7 +46,7 @@ export const postProduct = async (product: Product) => {
 export const putProduct = async (product: Product) => {
   try {
     const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}Product`, product);
-    return data.data.data;
+    return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -71,9 +71,39 @@ export const deleteProduct = async (id: number) => {
   }
 };
 
+// product Group
+
 export const getProductGroups = async () => {
   try {
     const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const getProductTree = async () => {
+  try {
+    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Product/Tree`);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const getProductGroup = async (id: number) => {
+  try {
+    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup/${id}`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -102,7 +132,7 @@ export const postProductGroup = async (group: ProductGroup) => {
 export const putProductGroup  = async (group: ProductGroup) => {
   try {
     const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`, group);
-    return data.data.data;
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);

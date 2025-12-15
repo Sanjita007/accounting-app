@@ -15,7 +15,6 @@ import {
 import { Depot, Product, ProductGroup, Tax, Unit } from 'src/Models/Model';
 import { NumberInput } from '../shared/CustomNumberInput';
 import { useCustomAlertBox } from '../shared/CustomAlertBox';
-import { FormatIntoNumber } from 'src/utils/utils';
 
 type Props = {
   //product: Product;
@@ -395,7 +394,7 @@ const AddProduct = (props: Props) => {
                       key={group.id}
                       value={group.id}
                     >
-                      {group.name}
+                      {group.engName}
                     </option>
                   ))}
                 </Select>

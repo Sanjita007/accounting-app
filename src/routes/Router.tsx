@@ -21,6 +21,10 @@ const Dashboard = Loadable(lazy(() => import('../views/dashboards/Dashboard')));
 const AddProduct = Loadable(lazy(() => import('src/components/Product/AddProduct')));
 const ListProduct = Loadable(lazy(() => import('src/components/Product/ListProduct')));
 
+// For Product groups
+const AddProductGroup = Loadable(lazy(() => import('src/components/ProductGroup/AddProductGroup')));
+const ListProductGroup = Loadable(lazy(() => import('src/components/ProductGroup/ListProductGroup')));
+
 // For sales invoice
 const AddSalesInvoice = Loadable(lazy(() => import('src/components/Sales/AddSales')));
 const ListSalesInvoice = Loadable(lazy(() => import('src/components/Sales/ListSales'))); 
@@ -65,7 +69,12 @@ const Router = [
       { path: '/product', exact: true, element: <ListProduct/> },
       { path: '/product/edit/:id', exact: true, element: <AddProduct/> },
 
-      // for Products
+      // for Product group
+      { path: '/product-group/new/', exact: true, element: <AddProductGroup/> },
+      { path: '/product-group', exact: true, element: <ListProductGroup/> },
+      { path: '/product-group/edit/:id', exact: true, element: <AddProductGroup/> },
+
+      // for tax
       { path: '/tax/new/', exact: true, element: <AddTax/> },
       { path: '/tax', exact: true, element: <ListTax/> },
       { path: '/tax/edit/:id', exact: true, element: <AddTax/> },

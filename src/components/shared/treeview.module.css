@@ -1,0 +1,67 @@
+/* src/components/TreeView.module.css */
+
+/* --- BASE LIST RESET --- */
+
+/* Base style for the list item (li) */
+.treeNode {
+  list-style: none; /* Remove default bullets/numbers */
+  margin: 0;
+}
+
+/* Wrapper to hold the icon and label */
+.nodeContentWrapper {
+  display: flex;
+  align-items: center;
+  padding: 3px 0;
+  cursor: pointer;
+  user-select: none; /* Prevents text selection when clicking the toggle */
+  font-size: 15px;
+}
+
+/* --- HIERARCHY INDENTATION & STRUCTURE --- */
+
+/* Style for the nested list (ol) */
+.treeChildren {
+  list-style: none;
+  margin: 0;
+  /* Key style for indentation */
+  padding-left: 20px; 
+}
+
+/* --- COLLAPSE/EXPAND LOGIC --- */
+
+/* Hides the children list */
+.treeChildren.hidden {
+  display: none;
+}
+
+/* Shows the children list */
+.treeChildren.visible {
+  display: block;
+}
+
+/* --- TOGGLE ICON STYLING --- */
+
+.toggleIcon {
+  display: inline-block;
+  width: 15px; /* Ensures consistent alignment */
+  text-align: center;
+  margin-right: 5px;
+  color: #333;
+}
+
+/* Style for leaf nodes (no children) to align text with nodes that have an icon */
+.treeNode > .nodeContentWrapper:not(:has(.toggleIcon)) {
+  padding-left: 15px;
+}
+
+/* Optional: Label styling */
+.nodeLabel {
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.leaf{
+  font-weight: 430;
+  color: #322471;
+}

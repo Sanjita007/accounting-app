@@ -1,19 +1,24 @@
 import { toast } from 'react-toastify';
 
-export const useCustomAlertBox = () => {
-  const apiWithToast = 
-  async (promise: Promise<any>, message: any) => {
-    const id = toast.loading(message.loading);
-    try {
-      const res = await promise;
-      toast.update(id, { render: message.success, type: 'success', isLoading: false });
-      return res;
-    } catch (err: any) {
-      toast.update(id, { render: message.error, type: 'error', isLoading: false });
+  export const useCustomAlertBox = () => {
+    const apiWithToast = 
+    async (promise: Promise<any>, message: any) => {
+      const id = toast.loading(message.loading);
+      try {
+        const res = await promise;
+        debugger;
+        if(res){
+        toast.update(id, { render: message.success, type: 'success', isLoading: false, autoClose: 5000 });
+        //toast.dismiss(id);
+        }
+        return res;
 
-      throw err;
-    }
+      } catch (err: any) {
+        toast.update(id, { render: message.error, type: 'error', isLoading: false, autoClose: 5000 });
+        //toast.dismiss(id);
+        throw err;
+      }
+    };
+
+    return {apiWithToast}
   };
-
-  return {apiWithToast}
-};

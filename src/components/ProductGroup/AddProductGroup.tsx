@@ -1,175 +1,303 @@
-import { Label, TextInput, Select, Button, Checkbox } from 'flowbite-react';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { Label, TextInput, Select, Button, Tabs, TabItem, TabsRef } from 'flowbite-react';
+import { useEffect, useRef, useState } from 'react';
 
-import { getTax, postTax, putTax } from 'src/api';
+import {
+  deleteProductGroup,
+  getProductGroup,
+  getProductGroups,
+  getProductTree,
+  postProductGroup,
+  putProductGroup,
+} from 'src/api';
 
-import { ProductGroup, Tax } from 'src/Models/Model';
-import { NumberInput } from '../shared/CustomNumberInput';
+import { ProductGroup, Tree } from 'src/Models/Model';
 import { useCustomAlertBox } from '../shared/CustomAlertBox';
+import TreeView from '../shared/TreeView';
+import ProductAddEdit from '../Product/EditProduct';
+import { useConfirmation } from '../shared/useConfirmation';
 
 type Props = {
   //product: Product;
 };
 
 const AddProductGroup = (props: Props) => {
-  let { id } = useParams();
-  const navigate = useNavigate();
+  //let { id } = useParams();
+  //const navigate = useNavigate();
 
   const { apiWithToast } = useCustomAlertBox();
+  const [groupId, setGroupId] = useState(0);
+  const [productId, setProductId] = useState(0);
+  const [activeTab, setActiveTab] = useState(0);
+  const tabsRef = useRef<TabsRef>(null);
 
-  const [group, setgroup] = useState<ProductGroup | null>(null);
+  const { showConfirmation, ConfirmationModal } = useConfirmation();
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const [group, setGroup] = useState<ProductGroup | null>(null);
+  const [productGroups, setProductGroups] = useState<ProductGroup[] | null>(null);
+  const [productTree, setProductTree] = useState<Tree[] | null>(null);
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    //e.preventDefault();
+
     if (group) {
-      if (group.id) {
-        apiWithToast(putProductGroup(group), {
-          loading: 'Updating tax..',
-          success: 'Tax updated successfully!',
-          error: 'Failed to update a tax.',
-        });
-      } else {
-        apiWithToast(postTax(tax), {
-          loading: 'Creating tax..',
-          success: 'Tax created successfully!',
-          error: 'Failed to create a tax.',
-        });
-      }
+      try {
+        if (group.id) {
+          await apiWithToast(putProductGroup(group), {
+            loading: 'Updating product group..',
+            success: 'Product Group updated successfully!',
+            error: 'Failed to update a product group.',
+          });
+        } else {
+          await apiWithToast(postProductGroup(group), {
+            loading: 'Creating product group..',
+            success: 'Product Group created successfully!',
+            error: 'Failed to create a product group.',
+          });
+        }
 
-      navigate('/tax');
+        // Navigate only if the API call succeeded
+        //navigate('/product-group');
+        setGroupId(0);
+        setGroup(null);
+      } catch (error) {
+        // Error handled by apiWithToast, no navigation on failure
+        console.error('Submission failed:', error);
+      }
     }
   };
 
-  const handleRateChange = (value: any) => {
+  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (group?.id) {
+      console.log("deleting..");
+      // lets just comment this one for now.. we will fix it later
+      const res = true; //await showConfirmation("Delete item", "Are you sure you want to delete the item?");
+      if(res){
+        console.log("test...");
+      apiWithToast(deleteProductGroup(group.id), {
+        loading: 'Deleting group..',
+        success: 'Group deleted successfully!',
+        error: 'Failed to delte the group.',
+      });
+    }
+    }
+
+    setGroup(null);
+  };
+
+  const handleNew = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setGroup(null);
+  };
+
+  const handleParentGroupChange = (value: any) => {
     let res = parseFloat(value);
-    setTax(
+    setGroup(
       (prev) =>
         ({
           ...(prev ?? {}),
-          rate: res,
-        } as Tax),
+          parentGroupId: res,
+        } as ProductGroup),
     );
   };
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEngNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const res = e.target.value;
-    setTax(
+    setGroup(
       (prev) =>
         ({
           ...(prev ?? {}),
-          name: res,
-        } as Tax),
+          engName: res,
+        } as ProductGroup),
     );
   };
 
-  
   const handleRemarksChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const res = e.target.value;
-    setTax(
+    setGroup(
       (prev) =>
         ({
           ...(prev ?? {}),
           remarks: res,
-        } as Tax),
+        } as ProductGroup),
     );
   };
 
-  const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onNodeClick = (id: number, isProduct: boolean) => {
+    debugger;
+    if (isProduct) {
+      tabsRef.current?.setActiveTab(1);
+      setProductId(id);
+      setGroupId(0);
+      setGroup(null);
+    } else {
+      tabsRef.current?.setActiveTab(0);
+      setGroupId(id);
+      setProductId(0);
+    }
+  };
+
+  const handleNepNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const res = e.target.value;
-    setTax(
+    setGroup(
       (prev) =>
         ({
           ...(prev ?? {}),
-          code: res,
-        } as Tax),
+          nepName: res,
+        } as ProductGroup),
     );
   };
 
   useEffect(() => {
-    console.log('tax fetch from Id: ' + id);
-    if (id) {
+    const fetchAllData = async () => {
+      const [groupRes, treeRes] = await Promise.all([getProductGroups(), getProductTree()]);
+
+      setProductGroups(groupRes);
+      setProductTree(treeRes);
+      // if (id) {
+      // 	const result = await getProduct(parseInt(id));
+      // 	setProduct(result);
+      // };
+    };
+    fetchAllData();
+  }, [groupId]);
+
+  useEffect(() => {
+    console.log('group fetch from Id: ' + groupId);
+    if (groupId > 0) {
       const fetchTaxData = async () => {
-        const result = await getTax(parseInt(id));
-        setTax(result);
+        const result = await getProductGroup(groupId);
+        setGroup(result);
       };
       fetchTaxData();
     }
-  }, [id]);
+  }, [groupId]);
 
   return (
     <div className="rounded-xl dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray p-6 relative w-full break-words">
-      <h5 className="card-title">{id ? 'Edit' : 'Add'} a new Product</h5>
       <div className="mt-6">
+        {/* Main 12-Column Grid Container */}
         <div className="grid grid-cols-12 gap-6">
+          {/* COLUMN 1: TABS (Form/Group Section) */}
           <div className="lg:col-span-6 col-span-12">
-            <div className="flex  flex-col gap-4">
-              <div>
-                <div className="mb-2 block">
-                  <Label>Name</Label>
+            <Tabs
+              aria-label="Default tabs"
+              variant="default"
+              className="w-full"
+              ref={tabsRef}
+              onActiveTabChange={(tab) => {
+                setActiveTab(tab);
+              }}
+            >
+              <TabItem title="Group" active={activeTab == 0}>
+                <h5 className="card-title">{groupId ? 'Edit' : 'Add'} a new Product Group</h5>
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <div className="mb-2 block">
+                      <Label>English Name</Label>
+                    </div>
+                    <TextInput
+                      id="engName"
+                      type="text"
+                      placeholder="English Name"
+                      required
+                      className="form-control form-rounded-xl"
+                      value={group?.engName ?? ''}
+                      onChange={handleEngNameChange}
+                    />
+                  </div>
+                  <div></div>
                 </div>
-                <TextInput
-                  id="name"
-                  type="text"
-                  placeholder="Name"
-                  required
-                  className="form-control form-rounded-xl"
-                  value={tax?.name ?? ''}
-                  onChange={handleNameChange}
-                />
-              </div>
-              <div></div>
-              <div>
-                <div className="mb-2 block">
-                  <Label>Tax Code</Label>
-                </div>
-                <TextInput
-                  id="name"
-                  type="text"
-                  placeholder="Product Code"
-                  required
-                  className="form-control form-rounded-xl"
-                  value={tax?.code ?? ''}
-                  onChange={handleCodeChange}
-                />
-              </div>
 
-              <div>
-                <div className="mb-2 block">
-                  <Label>Rate</Label>
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <div className="mb-2 block">
+                      <Label>Nepali Name</Label>
+                    </div>
+                    <TextInput
+                      id="nepName"
+                      type="text"
+                      placeholder="Nepali Name"
+                      required
+                      className="form-control form-rounded-xl"
+                      value={group?.nepName ?? ''}
+                      onChange={handleNepNameChange}
+                    />
+                  </div>
+                  <div></div>
                 </div>
-                <NumberInput
-                  decimalPrecision={{ integerDigits: 5, decimalDigits: 2 }} //defaultValue: product?.purchaseRate ?? 0.00}}
-                  defaultValue={tax?.rate ?? 0.0}
-                  id="rate"
-                  placeholder="Rate"
-                  required
-                  className="form-control form-rounded-xl"
-                  value={tax?.rate ?? 0.0}
-                  //onChange={handlePurchaseRateChange}
-                  onChange={(value) => handleRateChange(value)}
-                />
-              </div>
-              <div>
-                <div className="mb-2 block">
-                  <Label>Remarks</Label>
+
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <div className="mb-2 block">
+                      <Label>Product Group</Label>
+                    </div>
+                    <Select
+                      id="parentGroupId"
+                      required
+                      className="select-md"
+                      value={group?.parentGroupID ?? ''}
+                      onChange={handleParentGroupChange}
+                    >
+                      <option>Select Product Group</option>
+                      {productGroups?.map((group) => (
+                        <option
+                          // className="p-4 text-left text-xs font-medium text-grey-500 uppercase tracking wider"
+                          key={group.id}
+                          value={group.id}
+                        >
+                          {group.engName}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
                 </div>
-                <TextInput
-                  id="remarks"
-                  type="text"
-                  placeholder="Remarks"
-                  required
-                  className="form-control form-rounded-xl"
-                  value={tax?.remarks ?? ''}
-                  onChange={handleRemarksChange}
-                />
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <div className="mb-2 block">
+                      <Label>Remarks</Label>
+                    </div>
+                    <TextInput
+                      id="remarks"
+                      type="text"
+                      placeholder="Remarks"
+                      required
+                      className="form-control form-rounded-xl"
+                      value={group?.remarks ?? ''}
+                      onChange={handleRemarksChange}
+                    />
+                  </div>
+                  <div></div>
+                </div>
+                <div className="col-span-12 flex gap-3 justify-end mt-4">
+                  <Button color={'green'} onClick={handleNew}>
+                    New
+                  </Button>
+                  <Button color={'primary'} onClick={handleSubmit}>
+                    Save
+                  </Button>
+                  <Button color={'red'} onClick={handleDelete}>
+                    Delete
+                  </Button>
+                  <Button color={'error'}>Cancel</Button>
+                </div>
+              </TabItem>
+              <TabItem title="Product" active={activeTab == 1}>
+                <ProductAddEdit id={productId}></ProductAddEdit>
+              </TabItem>
+            </Tabs>
+          </div>
+
+          {/* COLUMN 2: TREE VIEW */}
+          <div className="lg:col-span-6 col-span-12">
+            <div className="col-span-12 flex gap-3">
+              <div className="overflow-y-auto overflow-x-auto max-h-96 w-full">
+                <ol className="min-w-full divide-x divide-gray-200">
+                  <TreeView
+                    treeData={productTree ? productTree[0] : null}
+                    onNodeClick={onNodeClick}
+                  ></TreeView>
+                </ol>
               </div>
             </div>
-          </div>
-          <div className="col-span-12 flex gap-3">
-            <Button color={'primary'} onClick={handleSubmit}>
-              Submit
-            </Button>
-            <Button color={'error'}>Cancel</Button>
           </div>
         </div>
       </div>
@@ -177,4 +305,4 @@ const AddProductGroup = (props: Props) => {
   );
 };
 
-export default AddProduct;
+export default AddProductGroup;

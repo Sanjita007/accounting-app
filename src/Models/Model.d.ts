@@ -42,10 +42,12 @@ export interface Product {
 
 export interface ProductGroup{
   id: number,
-  name: string,
-  parentGroupId: number,
+  engName: string,
+  nepName: string,
+  parentGroupID: number,
   level: number,
-  isBuiltIn: int
+  isBuiltIn: int,
+  remarks: string
 }
 
 export interface Unit{
@@ -150,3 +152,12 @@ export interface SalesInvoiceMaster extends Base {
   details: SalesInvoiceDetail[];
 }
 
+export interface Tree {
+  id: number;
+  level: int;
+  name: string;
+  parentId: string;
+  isProduct: boolean;
+  children?: Tree[];
+}
+ 
