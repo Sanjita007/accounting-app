@@ -52,7 +52,9 @@ export interface ProductGroup{
 
 export interface Unit{
   id: number,
-  name: string
+  name: string,
+  symbol: string,
+  remarks: string
 }
 
 export interface RelatedUnit {
@@ -121,7 +123,7 @@ export interface SalesInvoiceDetail {
   // this is just for the tracking
   uid: string;
 
-   units: RelatedUnit[];
+   unitDetails: RelatedUnit[];
 }
 
 export interface SalesInvoiceMaster extends Base {

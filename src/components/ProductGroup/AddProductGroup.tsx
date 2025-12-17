@@ -15,22 +15,17 @@ import { useCustomAlertBox } from '../shared/CustomAlertBox';
 import TreeView from '../shared/TreeView';
 import ProductAddEdit from '../Product/EditProduct';
 import { useConfirmation } from '../shared/useConfirmation';
+import CustomButtons from '../shared/CustomButtons';
 
-type Props = {
-  //product: Product;
-};
-
-const AddProductGroup = (props: Props) => {
-  //let { id } = useParams();
-  //const navigate = useNavigate();
-
+const AddProductGroup = () => {
   const { apiWithToast } = useCustomAlertBox();
   const [groupId, setGroupId] = useState(0);
   const [productId, setProductId] = useState(0);
   const [activeTab, setActiveTab] = useState(0);
   const tabsRef = useRef<TabsRef>(null);
+  const [mode, setMode] = useState(0);
 
-  const { showConfirmation, ConfirmationModal } = useConfirmation();
+  //const { showConfirmation, ConfirmationModal } = useConfirmation();
 
   const [group, setGroup] = useState<ProductGroup | null>(null);
   const [productGroups, setProductGroups] = useState<ProductGroup[] | null>(null);
@@ -68,23 +63,24 @@ const AddProductGroup = (props: Props) => {
 
   const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
     if (group?.id) {
-      console.log("deleting..");
+      console.log('deleting..');
       // lets just comment this one for now.. we will fix it later
       const res = true; //await showConfirmation("Delete item", "Are you sure you want to delete the item?");
-      if(res){
-        console.log("test...");
-      apiWithToast(deleteProductGroup(group.id), {
-        loading: 'Deleting group..',
-        success: 'Group deleted successfully!',
-        error: 'Failed to delte the group.',
-      });
-    }
+      if (res) {
+        console.log('test...');
+        apiWithToast(deleteProductGroup(group.id), {
+          loading: 'Deleting group..',
+          success: 'Group deleted successfully!',
+          error: 'Failed to delte the group.',
+        });
+      }
     }
 
     setGroup(null);
   };
 
   const handleNew = (e: React.MouseEvent<HTMLButtonElement>) => {
+    alert('new click');
     setGroup(null);
   };
 
@@ -163,13 +159,20 @@ const AddProductGroup = (props: Props) => {
   useEffect(() => {
     console.log('group fetch from Id: ' + groupId);
     if (groupId > 0) {
-      const fetchTaxData = async () => {
+      const fetchGroupData = async () => {
         const result = await getProductGroup(groupId);
         setGroup(result);
       };
-      fetchTaxData();
+      fetchGroupData();
+      setMode(1);
+    } else {
+      setMode(0);
     }
   }, [groupId]);
+
+  const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setGroup(null);
+  };
 
   return (
     <div className="rounded-xl dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray p-6 relative w-full break-words">
@@ -188,7 +191,7 @@ const AddProductGroup = (props: Props) => {
               }}
             >
               <TabItem title="Group" active={activeTab == 0}>
-                <h5 className="card-title">{groupId ? 'Edit' : 'Add'} a new Product Group</h5>
+                <h5 className="card-title">{mode == 1 ? 'Edit' : 'Add'} a new Product Group</h5>
                 <div className="flex flex-col gap-4">
                   <div>
                     <div className="mb-2 block">
@@ -267,7 +270,7 @@ const AddProductGroup = (props: Props) => {
                   </div>
                   <div></div>
                 </div>
-                <div className="col-span-12 flex gap-3 justify-end mt-4">
+                {/* <div className="col-span-12 flex gap-3 justify-end mt-4">
                   <Button color={'green'} onClick={handleNew}>
                     New
                   </Button>
@@ -278,7 +281,15 @@ const AddProductGroup = (props: Props) => {
                     Delete
                   </Button>
                   <Button color={'error'}>Cancel</Button>
-                </div>
+                </div> */}
+                <CustomButtons
+                  mode={mode}
+                  setMode={setMode}
+                  handleNew={handleNew}
+                  handleSubmit={handleSubmit}
+                  handleDelete={handleDelete}
+                  handleCancel={handleCancel}
+                />
               </TabItem>
               <TabItem title="Product" active={activeTab == 1}>
                 <ProductAddEdit id={productId}></ProductAddEdit>

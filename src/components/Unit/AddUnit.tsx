@@ -1,98 +1,82 @@
-import { Label, TextInput, Select, Button, Checkbox } from 'flowbite-react';
+import { Label, TextInput, Button } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
-import { getTax, postTax, putTax } from 'src/api';
+import { getTax, getUnit, postUnit, putUnit } from 'src/api';
 
-import { Tax } from 'src/Models/Model';
-import { NumberInput } from '../shared/CustomNumberInput';
+import { Unit } from 'src/Models/Model';
 import { useCustomAlertBox } from '../shared/CustomAlertBox';
 
-type Props = {
-  //product: Product;
-};
-
-const AddTax = (props: Props) => {
+const AddUnit = () => {
   let { id } = useParams();
   const navigate = useNavigate();
 
   const { apiWithToast } = useCustomAlertBox();
 
-  const [tax, setTax] = useState<Tax | null>(null);
+  const [unit, setUnit] = useState<Unit | null>(null);
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (tax) {
-      if (tax.id) {
-        apiWithToast(putTax(tax), {
-          loading: 'Updating tax..',
-          success: 'Tax updated successfully!',
-          error: 'Failed to update a tax.',
+    if (unit) {
+      if (unit.id) {
+        apiWithToast(putUnit(unit), {
+          loading: 'Updating unit..',
+          success: 'Unit updated successfully!',
+          error: 'Failed to update a unit.',
         });
       } else {
-        apiWithToast(postTax(tax), {
-          loading: 'Creating tax..',
-          success: 'Tax created successfully!',
-          error: 'Failed to create a tax.',
+        apiWithToast(postUnit(unit), {
+          loading: 'Creating unit..',
+          success: 'Unit created successfully!',
+          error: 'Failed to create a unit.',
         });
       }
 
-      navigate('/tax');
+      navigate('/unit');
     }
   };
 
-  const handleRateChange = (value: any) => {
-    let res = parseFloat(value);
-    setTax(
-      (prev) =>
-        ({
-          ...(prev ?? {}),
-          rate: res,
-        } as Tax),
-    );
-  };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const res = e.target.value;
-    setTax(
+    setUnit(
       (prev) =>
         ({
           ...(prev ?? {}),
           name: res,
-        } as Tax),
-    );
+        } as Unit),
+    )
   };
-
-  
+ 
   const handleRemarksChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const res = e.target.value;
-    setTax(
+    setUnit(
       (prev) =>
         ({
           ...(prev ?? {}),
           remarks: res,
-        } as Tax),
+        } as Unit),
     );
   };
 
-  const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSymbolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const res = e.target.value;
-    setTax(
+    setUnit(
       (prev) =>
         ({
           ...(prev ?? {}),
-          code: res,
-        } as Tax),
+          symbol: res,
+        } as Unit),
     );
   };
 
   useEffect(() => {
-    console.log('tax fetch from Id: ' + id);
+    console.log('unit fetch from Id: ' + id);
     if (id) {
-      const fetchTaxData = async () => {
-        const result = await getTax(parseInt(id));
-        setTax(result);
+      const fetchUnitData = async () => {
+        const result = await getUnit(parseInt(id));
+        setUnit(result);
       };
-      fetchTaxData();
+      fetchUnitData();
     }
   }, [id]);
 
@@ -113,42 +97,26 @@ const AddTax = (props: Props) => {
                   placeholder="Name"
                   required
                   className="form-control form-rounded-xl"
-                  value={tax?.name ?? ''}
+                  value={unit?.name ?? ''}
                   onChange={handleNameChange}
                 />
               </div>
               <div></div>
               <div>
                 <div className="mb-2 block">
-                  <Label>Tax Code</Label>
+                  <Label>Symbol</Label>
                 </div>
                 <TextInput
                   id="name"
                   type="text"
-                  placeholder="Product Code"
+                  placeholder="Symbol"
                   required
                   className="form-control form-rounded-xl"
-                  value={tax?.code ?? ''}
-                  onChange={handleCodeChange}
+                  value={unit?.symbol ?? ''}
+                  onChange={handleSymbolChange}
                 />
               </div>
-
-              <div>
-                <div className="mb-2 block">
-                  <Label>Rate</Label>
-                </div>
-                <NumberInput
-                  decimalPrecision={{ integerDigits: 5, decimalDigits: 2 }} //defaultValue: product?.purchaseRate ?? 0.00}}
-                  defaultValue={tax?.rate ?? 0.0}
-                  id="rate"
-                  placeholder="Rate"
-                  required
-                  className="form-control form-rounded-xl"
-                  value={tax?.rate ?? 0.0}
-                  //onChange={handlePurchaseRateChange}
-                  onChange={(value) => handleRateChange(value)}
-                />
-              </div>
+            
               <div>
                 <div className="mb-2 block">
                   <Label>Remarks</Label>
@@ -159,7 +127,7 @@ const AddTax = (props: Props) => {
                   placeholder="Remarks"
                   required
                   className="form-control form-rounded-xl"
-                  value={tax?.remarks ?? ''}
+                  value={unit?.remarks ?? ''}
                   onChange={handleRemarksChange}
                 />
               </div>
@@ -177,4 +145,4 @@ const AddTax = (props: Props) => {
   );
 };
 
-export default AddTax;
+export default AddUnit;

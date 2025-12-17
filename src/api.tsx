@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Product, ProductGroup, SalesInvoiceMaster, Tax, UserLogin } from './Models/Model';
+import { Product, ProductGroup, SalesInvoiceMaster, Tax, Unit, UserLogin } from './Models/Model';
 
 export const getProducts = async () => {
   try {
@@ -233,6 +233,48 @@ export const convertUnits = async (defaultUnitID: number, currentUnitID: number,
 export const getRelatedUnits = async (baseUnitID: number) => {
   try {
     const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/Related?baseUnitID=${baseUnitID}`);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const deleteUnit = async (id: number) => {
+  try {
+    const data = await axios.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Unit/${id}`);
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const postUnit = async (unit: Unit) => {
+  try {
+    const data = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}Unit`, unit);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const putUnit = async (unit: Unit) => {
+  try {
+    const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}Unit`, unit);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

@@ -10,41 +10,37 @@ import {
   TableHeadCell,
   TableBody,
 } from 'flowbite-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import Dropdown from 'react-dropdown-select';
 
 import {
-  convertUnits,
   getProducts,
   getRelatedUnits,
   getSalesInvoice,
   getTaxes,
-  getUnits,
   postSalesInvoice,
   putSalesInvoice,
 } from 'src/api';
 
-import { Product, SalesInvoiceDetail, SalesInvoiceMaster, Tax, Unit } from 'src/Models/Model';
+import { Product, RelatedUnit, SalesInvoiceDetail, SalesInvoiceMaster, Tax, Unit } from 'src/Models/Model';
 import { NumberInput } from '../shared/CustomNumberInput';
 import { useCustomAlertBox } from '../shared/CustomAlertBox';
 import { FormatIntoNumber } from 'src/utils/utils';
 import { ProductListModal } from '../Product/ProductListModal';
 
-type Props = {
-  //product: Product;
-};
-
-const AddSalesInvoice = (props: Props) => {
+const AddSalesInvoice = () => {
   let { id } = useParams();
   const navigate = useNavigate();
-
+  const isInitialized = useRef(false);
+  
   const { apiWithToast } = useCustomAlertBox();
 
   const [products, setProducts] = useState<Product[] | null>(null);
   //const [units, setUnits] = useState<Unit[] | null>(null);
   const [taxes, setTaxes] = useState<Tax[] | null>(null);
-
+  const [isReady, setIsReady] = useState(false);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [index, setIndex] = useState(0);
 
@@ -74,6 +70,7 @@ const AddSalesInvoice = (props: Props) => {
   };
 
   const calculateTax = (taxId: number, netAmount: number) => {
+      if (!isInitialized.current) return;
     const rate = taxes?.find((r) => String(r.id) === String(taxId))?.rate ?? 0;
 
     let taxAmount = (netAmount * rate) / 100;
@@ -86,33 +83,7 @@ const AddSalesInvoice = (props: Props) => {
   };
 
   const handleTaxChange = (index: number, value: any) => {
-    const taxId = parseInt(value);
-    console.log(taxes);
-    console.log(
-      'found:',
-      taxes?.find((t) => String(t.id) === String(taxId)),
-    );
-
-    setSalesInvoice((prev) => {
-      if (!prev) return prev; // nothing to update
-
-      const updatedDetails = prev.details.map((d, i) => {
-        return i === index ? { ...d, taxID: taxId, ...calculateTax(taxId, d.netAmount) } : d;
-      });
-
-      console.log(updatedDetails);
-
-      const updatedInvoice = { ...prev, details: updatedDetails };
-
-      // Recalculate invoice totals based on UPDATED details
-      return {
-        ...updatedInvoice,
-        ...calculateAllAmounts(updatedDetails),
-      };
-    });
-  };
-
-  const handleUnitChange = (index: number, value: any) => {
+      if (!isInitialized.current) return;
     const taxId = parseInt(value);
     console.log(taxes);
     console.log(
@@ -142,7 +113,7 @@ const AddSalesInvoice = (props: Props) => {
   const handleProductChange = async (index: number, value: any) => {
     console.log('value is ' + value);
     console.log('index is ' + index);
-
+  if (!isInitialized.current) return;
     debugger;
     const productID = parseInt(value);
 
@@ -202,6 +173,7 @@ const AddSalesInvoice = (props: Props) => {
   };
 
   const calculateAllAmounts = (details: SalesInvoiceDetail[]) => {
+      if (!isInitialized.current) return;
     console.log('total calc');
     let total = details.reduce(
       (acc, item) => {
@@ -227,6 +199,7 @@ const AddSalesInvoice = (props: Props) => {
   };
 
   const handleQuantityChanges = (index: number, value: string | null) => {
+      if (!isInitialized.current) return;
     setSalesInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
@@ -263,6 +236,7 @@ const AddSalesInvoice = (props: Props) => {
   };
 
   const handleUnitChanges = async (index: number, value: number | null) => {
+    if (!isInitialized.current) return;
     if (!salesInvoice) return;
     let copyDetail = salesInvoice?.details ?? [];
     const d = copyDetail[index];
@@ -272,7 +246,7 @@ const AddSalesInvoice = (props: Props) => {
     //           value??0,
     //           d?.quantity??0
     //         );
-    const unit = d.units.filter((r) => r.id == value);
+    const unit = d.unitDetails.filter((r) => r.id == value);
 
     if (unit == null) {
       alert('No relation between the units');
@@ -302,6 +276,7 @@ const AddSalesInvoice = (props: Props) => {
   };
 
   const handlePriceChanges = (index: number, value: string | null) => {
+    if (!isInitialized.current) return;
     setSalesInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
@@ -335,6 +310,7 @@ const AddSalesInvoice = (props: Props) => {
   };
 
   const handleDiscountChanges = (index: number, value: string | null) => {
+    if (!isInitialized.current) return;
     setSalesInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
@@ -405,7 +381,7 @@ const AddSalesInvoice = (props: Props) => {
           generalName: '',
           uid: uid,
           totalAmount: 0,
-          units: [],
+          unitDetails: [],
           // add any other default props here
         };
 
@@ -448,7 +424,7 @@ const AddSalesInvoice = (props: Props) => {
         generalName: '',
         uid: '',
         totalAmount: 0,
-        units: [],
+        unitDetails: [],
         // add any other default props here
       };
       const updatedDetails = [...prev.details, newItem];
@@ -574,12 +550,12 @@ const AddSalesInvoice = (props: Props) => {
               portal={document.body}
               dropdownGap={5}
               dropdownPosition="auto"
-              options={p.units ?? []}
+              options={p.unitDetails ?? []}
               labelField="name"
               valueField="id"
               values={
-                p.units
-                  ? ([p.units?.find((prod) => prod.id === p.qtyUnitID)].filter(Boolean) as Unit[])
+                p.unitDetails
+                  ? ([p.unitDetails?.find((prod) => prod.id === p.qtyUnitID)].filter(Boolean) as RelatedUnit[])
                   : []
               }
               onChange={(values) => handleUnitChanges(index, values ? values[0]?.id : null)}
@@ -694,33 +670,67 @@ const AddSalesInvoice = (props: Props) => {
     },
   ];
 
+  // useEffect(() => {
+  //   const fetchAllData = async () => {
+  // isInitialized.current = false; 
+
+  //     const [prodRes, taxRes] = await Promise.all([getProducts(), getTaxes()]);
+
+  //     setProducts(prodRes);
+  //     setProductList(prodRes);
+  //     //setUnits(unitRes);
+  //     setTaxes(taxRes);
+
+  //     //isLoaded.current = true;
+  //   };
+  //   fetchAllData();
+  // }, []);
+
+  // const fetchSalesInvoiceData = async (id: string) => {
+  //   const result = await getSalesInvoice(parseInt(id));
+  //   setSalesInvoice(result);
+
+  //   console.log(salesInvoice);
+  // };
+
+  // useEffect(() => {
+  //   console.log('product fetch from Id: ' + id);
+  //   if (id) {
+  //     fetchSalesInvoiceData(id);
+  //   } else {
+  //     resetForm();
+  //   }
+  //   isInitialized.current = true; 
+  // }, [id]);
+
   useEffect(() => {
-    const fetchAllData = async () => {
-      const [prodRes, unitRes, taxRes] = await Promise.all([getProducts(), getUnits(), getTaxes()]);
+  const load = async () => {
+    setIsReady(false);
+    isInitialized.current = false;
 
-      setProducts(prodRes);
-      setProductList(prodRes);
-      //setUnits(unitRes);
-      setTaxes(taxRes);
-    };
-    fetchAllData();
-  }, []);
+    const [prodRes, taxRes] = await Promise.all([
+      getProducts(),
+      getTaxes(),
+    ]);
 
-  const fetchSalesInvoiceData = async (id: string) => {
-    const result = await getSalesInvoice(parseInt(id));
-    setSalesInvoice(result);
+    setProducts(prodRes);
+    setProductList(prodRes);
+    setTaxes(taxRes);
 
-    console.log(salesInvoice);
-  };
-
-  useEffect(() => {
-    console.log('product fetch from Id: ' + id);
     if (id) {
-      fetchSalesInvoiceData(id);
+      const invoice = await getSalesInvoice(Number(id));
+      setSalesInvoice(invoice);
     } else {
       resetForm();
     }
-  }, [id]);
+
+    isInitialized.current = true; // handlers allowed
+    setIsReady(true);                // UI allowed
+  };
+
+  load();
+}, [id]);
+
 
   const resetForm = () => {
     setSalesInvoice({
@@ -779,7 +789,7 @@ const AddSalesInvoice = (props: Props) => {
           generalName: '',
           uid: crypto.randomUUID(),
           totalAmount: 0,
-          units: [],
+          unitDetails: [],
         },
       ],
     });

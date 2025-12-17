@@ -66,8 +66,28 @@ const SidebarContent: MenuItem[] = [
   {
     heading: 'Inventory',
     children: [
+      // {
+      //   name: 'Products',
+      //   id: uniqueId(),
+      //   icon: 'solar:home-angle-linear',
+      //   isPro: false,
+      //   children: [
+      //     {
+      //       name: 'New',
+      //       id: uniqueId(),
+      //       url: '/product/new',
+      //       isPro: false,
+      //     },
+      //     {
+      //       name: 'List',
+      //       id: uniqueId(),
+      //       url: '/product-group',
+      //       isPro: false,
+      //     },
+      //   ],
+      // },
       {
-        name: 'Products',
+        name: 'Product/Group',
         id: uniqueId(),
         icon: 'solar:home-angle-linear',
         isPro: false,
@@ -75,35 +95,10 @@ const SidebarContent: MenuItem[] = [
           {
             name: 'New',
             id: uniqueId(),
-            url: '/product/new',
-            isPro: false,
-          },
-          {
-            name: 'List',
-            id: uniqueId(),
             url: '/product-group',
             isPro: false,
           },
-        ],
-      },
-      {
-        name: 'Product Group',
-        id: uniqueId(),
-        icon: 'solar:home-angle-linear',
-        isPro: false,
-        children: [
-          {
-            name: 'New',
-            id: uniqueId(),
-            url: '/product-group/new',
-            isPro: false,
-          },
-          {
-            name: 'List',
-            id: uniqueId(),
-            url: '/product-group',
-            isPro: false,
-          },
+          
         ],
       },
       {
@@ -155,6 +150,26 @@ const SidebarContent: MenuItem[] = [
             name: 'List',
             id: uniqueId(),
             url: '/tax',
+            isPro: false,
+          },
+        ],
+      },
+      {
+        name: 'Unit',
+        id: uniqueId(),
+        icon: 'solar:home-angle-linear',
+        isPro: false,
+        children: [
+          {
+            name: 'New',
+            id: uniqueId(),
+            url: '/unit/new',
+            isPro: false,
+          },
+          {
+            name: 'List',
+            id: uniqueId(),
+            url: '/unit',
             isPro: false,
           },
         ],

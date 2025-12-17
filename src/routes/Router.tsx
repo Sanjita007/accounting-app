@@ -33,8 +33,12 @@ const ListSalesInvoice = Loadable(lazy(() => import('src/components/Sales/ListSa
 const AddTax = Loadable(lazy(() => import('src/components/Tax/AddTax')));
 const ListTax = Loadable(lazy(() => import('src/components/Tax/ListTax'))); 
 
+// For unit
+const AddUnit = Loadable(lazy(() => import('src/components/Unit/AddUnit')));
+const ListUnit = Loadable(lazy(() => import('src/components/Unit/ListUnit'))); 
+
+
 // utilities
-const Typography = Loadable(lazy(() => import("../views/typography/Typography")));
 const Table = Loadable(lazy(() => import("../views/tables/Table")));
 const Form = Loadable(lazy(() => import("../views/forms/Form")));
 const Alert = Loadable(lazy(() => import("../views/alerts/Alerts")));
@@ -55,7 +59,6 @@ const Router = [
     element: <FullLayout />,
     children: [
       { path: '/', exact: true, element: <Dashboard/> },
-      { path: '/ui/typography', exact: true, element: <Typography/> },
       { path: '/ui/table', exact: true, element: <Table/> },
       { path: '/ui/form', exact: true, element: <Form/> },
       { path: '/ui/alert', exact: true, element: <Alert/> },
@@ -70,14 +73,17 @@ const Router = [
       { path: '/product/edit/:id', exact: true, element: <AddProduct/> },
 
       // for Product group
-      { path: '/product-group/new/', exact: true, element: <AddProductGroup/> },
-      { path: '/product-group', exact: true, element: <ListProductGroup/> },
-      { path: '/product-group/edit/:id', exact: true, element: <AddProductGroup/> },
-
+      { path: '/product-group', exact: true, element: <AddProductGroup/> },
+     
       // for tax
       { path: '/tax/new/', exact: true, element: <AddTax/> },
       { path: '/tax', exact: true, element: <ListTax/> },
       { path: '/tax/edit/:id', exact: true, element: <AddTax/> },
+
+      // for unit
+      { path: '/unit/new/', exact: true, element: <AddUnit/> },
+      { path: '/unit', exact: true, element: <ListUnit/> },
+      { path: '/unit/edit/:id', exact: true, element: <AddUnit/> },
 
       // for Sales
       { path: '/sales-invoice/new', exact: true, element: <AddSalesInvoice/> },

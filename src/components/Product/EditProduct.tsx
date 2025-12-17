@@ -16,13 +16,16 @@ import {
 import { Product, ProductGroup, Tax, Unit } from 'src/Models/Model';
 import { NumberInput } from '../shared/CustomNumberInput';
 import { useCustomAlertBox } from '../shared/CustomAlertBox';
+import CustomButtons from '../shared/CustomButtons';
 
 type Props = {
-  id: number
+  id: number;
+  setId: (mode: number) => void;
 };
 
 const ProductAddEdit = (props: Props) => {
-  let id  = props.id;
+  let id = props.id;
+
   const navigate = useNavigate();
 
   const { apiWithToast } = useCustomAlertBox();
@@ -30,6 +33,7 @@ const ProductAddEdit = (props: Props) => {
   const [productGroups, setProductGroups] = useState<ProductGroup[] | null>(null);
   const [units, setUnits] = useState<Unit[] | null>(null);
   const [taxes, setTaxes] = useState<Tax[] | null>(null);
+  const [mode, setMode] = useState(0);
 
   const [product, setProduct] = useState<Product | null>(null);
 
@@ -46,16 +50,21 @@ const ProductAddEdit = (props: Props) => {
 
   const handleNew = (e: React.MouseEvent<HTMLButtonElement>) => {
     setProduct(null);
+    props.setId(0);
+  };
+
+  const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setProduct(null);
+    props.setId(0);
   };
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
-   
-      if (product?.id) {
-        apiWithToast(deleteProduct(product.id), {
-          loading: 'Deleting product..',
-          success: 'Product deleted successfully!',
-          error: 'Failed to delte the product.',
-        });
+    if (product?.id) {
+      apiWithToast(deleteProduct(product.id), {
+        loading: 'Deleting product..',
+        success: 'Product deleted successfully!',
+        error: 'Failed to delte the product.',
+      });
       setProduct(null);
     }
   };
@@ -132,16 +141,6 @@ const ProductAddEdit = (props: Props) => {
         ({
           ...(prev ?? {}),
           isDecimalApplicable: e.target.checked,
-        } as Product),
-    );
-  };
-
-  const handleVATApplicableChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setProduct(
-      (prev) =>
-        ({
-          ...(prev ?? {}),
-          isVatApplicable: e.target.checked,
         } as Product),
     );
   };
@@ -243,9 +242,10 @@ const ProductAddEdit = (props: Props) => {
         console.log(product);
       };
       fetchProductData();
-    }
-    else{
+      setMode(1);
+    } else {
       setProduct(null);
+      setMode(0);
     }
   }, [id]);
 
@@ -253,7 +253,7 @@ const ProductAddEdit = (props: Props) => {
 
   return (
     <div className="rounded-xl dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray p-6 relative w-full break-words">
-      <h5 className="card-title">{id ? 'Edit' : 'Add'} a new Product</h5>
+      <h5 className="card-title">{mode == 1 ? 'Edit' : 'Add'} a new Product</h5>
       <div className="mt-6">
         <div className="grid grid-cols-12 gap-6">
           <div className="lg:col-span-12 col-span-12">
@@ -444,7 +444,7 @@ const ProductAddEdit = (props: Props) => {
             </div>
           </div>
           <div className="col-span-12 justify-end flex gap-3">
-            <Button color={'green'} onClick={handleNew}>
+            {/* <Button color={'green'} onClick={handleNew}>
               New
             </Button>
             <Button color={'primary'} onClick={handleSubmit}>
@@ -453,7 +453,15 @@ const ProductAddEdit = (props: Props) => {
             <Button color={'red'} onClick={handleDelete}>
               Delete
             </Button>
-            <Button color={'error'}>Cancel</Button>
+            <Button color={'error'}>Cancel</Button> */}
+            <CustomButtons
+              mode={mode}
+              setMode={setMode}
+              handleNew={handleNew}
+              handleSubmit={handleSubmit}
+              handleDelete={handleDelete}
+              handleCancel={handleCancel}
+            ></CustomButtons>
           </div>
         </div>
       </div>
