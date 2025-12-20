@@ -173,8 +173,46 @@ const SidebarContent: MenuItem[] = [
             isPro: false,
           },
         ],
+      },
+      {
+        name: 'Compound Unit',
+        id: uniqueId(),
+        icon: 'solar:home-angle-linear',
+        isPro: false,
+        children: [
+          {
+            name: 'New',
+            id: uniqueId(),
+            url: '/unit/compound/new',
+            isPro: false,
+          },
+          {
+            name: 'List',
+            id: uniqueId(),
+            url: '/unit/compound',
+            isPro: false,
+          },
+        ],
       }
     ],
+  },
+  {
+    heading: 'Reports',
+    
+        children: [
+          {
+            name: 'Profit Summary',
+            id: uniqueId(),
+            url: '/report/gross-profit',
+            isPro: false,
+          },
+          {
+            name: 'List',
+            id: uniqueId(),
+            url: '/tax',
+            isPro: false,
+          },
+        ]
   },
   // {
   //   heading: 'Utilities',

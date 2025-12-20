@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Product, ProductGroup, SalesInvoiceMaster, Tax, Unit, UserLogin } from './Models/Model';
+import { CompoundUnit, Product, ProductGroup, SalesInvoiceMaster, Tax, Unit, UserLogin } from './Models/Model';
 
 export const getProducts = async () => {
   try {
@@ -286,6 +286,78 @@ export const putUnit = async (unit: Unit) => {
   }
 };
 
+// related to units
+
+export const getCompoundUnits = async () => {
+  try {
+    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound`);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const getCompoundUnit = async (id: number) => {
+  try {
+    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound/${id}`);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const deleteCompoundUnit = async (id: number) => {
+  try {
+    const data = await axios.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound/${id}`);
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const postCompoundUnit = async (unit: CompoundUnit) => {
+  try {
+    const data = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound`, unit);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const putCompoundUnit = async (unit: CompoundUnit) => {
+  try {
+    const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound`, unit);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
 // related to invoice
 export const getSalesInvoices = async () => {
   try {
@@ -447,6 +519,21 @@ export const deleteTax = async (id: number) => {
 export const userLogin = async (userLogin: UserLogin) => {
   try {
     const data = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}Login`, userLogin);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+// for reports
+export const getProfitSummaryReport = async () => {
+  try {
+    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}GrossProfitSummary`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

@@ -23,11 +23,13 @@ const ListProduct = Loadable(lazy(() => import('src/components/Product/ListProdu
 
 // For Product groups
 const AddProductGroup = Loadable(lazy(() => import('src/components/ProductGroup/AddProductGroup')));
-const ListProductGroup = Loadable(lazy(() => import('src/components/ProductGroup/ListProductGroup')));
 
 // For sales invoice
 const AddSalesInvoice = Loadable(lazy(() => import('src/components/Sales/AddSales')));
 const ListSalesInvoice = Loadable(lazy(() => import('src/components/Sales/ListSales'))); 
+
+// for report
+const GrossProfitReport = Loadable(lazy(() => import('src/components/Reports/Profitability/GrossProfitSummary')));
 
 // For tax
 const AddTax = Loadable(lazy(() => import('src/components/Tax/AddTax')));
@@ -37,6 +39,9 @@ const ListTax = Loadable(lazy(() => import('src/components/Tax/ListTax')));
 const AddUnit = Loadable(lazy(() => import('src/components/Unit/AddUnit')));
 const ListUnit = Loadable(lazy(() => import('src/components/Unit/ListUnit'))); 
 
+// For compound unit
+const AddCompoundUnit = Loadable(lazy(() => import('src/components/CompoundUnit/AddCompoundUnit')));
+const ListCompoundUnit = Loadable(lazy(() => import('src/components/CompoundUnit/ListCompoundUnit'))); 
 
 // utilities
 const Table = Loadable(lazy(() => import("../views/tables/Table")));
@@ -75,6 +80,9 @@ const Router = [
       // for Product group
       { path: '/product-group', exact: true, element: <AddProductGroup/> },
      
+      // for reports
+      { path: '/report/gross-profit', exact: true, element: <GrossProfitReport/> },
+
       // for tax
       { path: '/tax/new/', exact: true, element: <AddTax/> },
       { path: '/tax', exact: true, element: <ListTax/> },
@@ -84,6 +92,11 @@ const Router = [
       { path: '/unit/new/', exact: true, element: <AddUnit/> },
       { path: '/unit', exact: true, element: <ListUnit/> },
       { path: '/unit/edit/:id', exact: true, element: <AddUnit/> },
+
+      // for compound unit
+      { path: '/unit/compound/new/', exact: true, element: <AddCompoundUnit/> },
+      { path: '/unit/compound', exact: true, element: <ListCompoundUnit/> },
+      { path: '/unit/compound/edit/:id', exact: true, element: <AddCompoundUnit/> },
 
       // for Sales
       { path: '/sales-invoice/new', exact: true, element: <AddSalesInvoice/> },

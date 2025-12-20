@@ -292,7 +292,7 @@ const AddProductGroup = () => {
                 />
               </TabItem>
               <TabItem title="Product" active={activeTab == 1}>
-                <ProductAddEdit id={productId}></ProductAddEdit>
+                <ProductAddEdit id={productId} setId={setProductId}></ProductAddEdit>
               </TabItem>
             </Tabs>
           </div>

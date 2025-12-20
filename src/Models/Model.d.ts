@@ -8,7 +8,7 @@ export interface Product {
   remarks: string;
   unitID: number;
   unitName: string;
-  unitSymbol: string,
+  unitSymbol: string;
   salesRate: number;
   purchaseRate: number;
   purchaseDiscount: number;
@@ -40,51 +40,59 @@ export interface Product {
   units: RelatedUnit[];
 }
 
-export interface ProductGroup{
-  id: number,
-  engName: string,
-  nepName: string,
-  parentGroupID: number,
-  level: number,
-  isBuiltIn: int,
-  remarks: string
+export interface ProductGroup {
+  id: number;
+  engName: string;
+  nepName: string;
+  parentGroupID: number;
+  level: number;
+  isBuiltIn: int;
+  remarks: string;
 }
 
-export interface Unit{
-  id: number,
-  name: string,
-  symbol: string,
-  remarks: string
+export interface Unit {
+  id: number;
+  name: string;
+  symbol: string;
+  remarks: string;
+}
+
+export interface CompoundUnit {
+  id: number;
+  unitName: string;
+  unitID: number;
+  parentUnitName: string;
+  parentUnitID: number;
+  relationValue: number;
+  remarks: string;
 }
 
 export interface RelatedUnit {
   id: number;
   name: string; // ISO Date string
   conversionRate: number; // ISO Date string
- 
 }
 
-export interface Tax{
-  id: number,
-  name: string,
-  code: string,
-  remarks: string,
-  rate: float
+export interface Tax {
+  id: number;
+  name: string;
+  code: string;
+  remarks: string;
+  rate: float;
 }
 
-export interface Depot{
-  id: number,
-  name: string
+export interface Depot {
+  id: number;
+  name: string;
 }
 
-export interface UserLogin{
-  userName: string,
-  password: string
+export interface UserLogin {
+  userName: string;
+  password: string;
 }
 
-export interface SalesMinimal{
-  id: number,
-  
+export interface SalesMinimal {
+  id: number;
 }
 
 export interface Base {
@@ -123,7 +131,7 @@ export interface SalesInvoiceDetail {
   // this is just for the tracking
   uid: string;
 
-   unitDetails: RelatedUnit[];
+  unitDetails: RelatedUnit[];
 }
 
 export interface SalesInvoiceMaster extends Base {
@@ -162,4 +170,21 @@ export interface Tree {
   isProduct: boolean;
   children?: Tree[];
 }
- 
+
+export interface GrossProfit {
+  productId: number;
+  productCode: string;
+  productName: string;
+  quantitySold: number;
+  totalRevenue: number;
+  totalCost: number;
+  profit: number;
+  margin: number;
+}
+
+export interface GrossProfitSummary {
+  grossProfitList: GrossProfit[];
+  totalRevenue: number;
+  totalCost: number;
+  totalProfit: number;
+}
