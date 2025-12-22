@@ -7,12 +7,25 @@ const styles = StyleSheet.create({
   page: { padding: 30, fontSize: 10, fontFamily: 'Helvetica' },
   title: { fontSize: 18, marginBottom: 20, textAlign: 'center', fontWeight: 'bold' },
   // Table Styles
-  table: { display: 'table', width: 'auto', borderStyle: 'solid', borderWidth: 1, borderRightWidth: 0, borderBottomWidth: 0 },
+  table: { width: 'auto', borderStyle: 'solid', borderWidth: 1, borderRightWidth: 0, borderBottomWidth: 0 },
   tableRow: { margin: 'auto', flexDirection: 'row' },
-  tableColHeader: { width: '16.6%', borderStyle: 'solid', borderWidth: 1, borderLeftWidth: 0, borderTopWidth: 0, backgroundColor: '#f0f0f0' },
-  tableCol: { width: '16.6%', borderStyle: 'solid', borderWidth: 1, borderLeftWidth: 0, borderTopWidth: 0 },
+  tableColNameHeader: { width: '20%', borderStyle: 'solid', borderWidth: 1, borderLeftWidth: 0, 
+              borderTopWidth: 0, backgroundColor: '#f0f0f0' },
+    tableColCodeHeader: { width: '10%', borderStyle: 'solid', borderWidth: 1, borderLeftWidth: 0, 
+              borderTopWidth: 0, backgroundColor: '#f0f0f0' },
+  tableColQtyHeader: { width: '10%', borderStyle: 'solid', borderWidth: 1, borderLeftWidth: 0, 
+              borderTopWidth: 0, backgroundColor: '#f0f0f0' },
+  tableColNumHeader: { width: '15%', borderStyle: 'solid', borderWidth: 1, borderLeftWidth: 0, 
+              borderTopWidth: 0, backgroundColor: '#f0f0f0' },
+
+  tableColName: { width: '25%', borderStyle: 'solid', borderWidth: 1, borderLeftWidth: 0, borderTopWidth: 0 },
+  tableColCode: { width: '10%', borderStyle: 'solid', borderWidth: 1, borderLeftWidth: 0, borderTopWidth: 0 },
+  tableColQty: { width: '5%', borderStyle: 'solid', borderWidth: 1, borderLeftWidth: 0, borderTopWidth: 0, textAlign:"right" },
+  
+  tableNumberedCol: { width: '15%', borderStyle: 'solid', borderWidth: 1, borderLeftWidth: 0, borderTopWidth: 0, textAlign:"right" },
   tableCellHeader: { margin: 5, fontSize: 10, fontWeight: 'bold' },
   tableCell: { margin: 5, fontSize: 9 },
+
   // Totals Styles
   totalsRow: { flexDirection: 'row', marginTop: 10, borderTopWidth: 2, paddingTop: 5 },
   footer: { marginTop: 20, textAlign: 'center', color: 'grey', fontSize: 8 }
@@ -30,23 +43,25 @@ const ProfitReportPDF = (props: Props) => (
       <View style={styles.table}>
         {/* Table Header */}
         <View style={styles.tableRow}>
-          <View style={styles.tableColHeader}><Text style={styles.tableCellHeader}>Product</Text></View>
-          <View style={styles.tableColHeader}><Text style={styles.tableCellHeader}>Qty</Text></View>
-          <View style={styles.tableColHeader}><Text style={styles.tableCellHeader}>Revenue</Text></View>
-          <View style={styles.tableColHeader}><Text style={styles.tableCellHeader}>Cost</Text></View>
-          <View style={styles.tableColHeader}><Text style={styles.tableCellHeader}>Profit</Text></View>
-          <View style={styles.tableColHeader}><Text style={styles.tableCellHeader}>Margin%</Text></View>
+          <View style={styles.tableColCodeHeader}><Text style={styles.tableCellHeader}>Product Code</Text></View>
+          <View style={styles.tableColNameHeader}><Text style={styles.tableCellHeader}>Product</Text></View>
+          <View style={styles.tableColQtyHeader}><Text style={styles.tableCellHeader}>Qty</Text></View>
+          <View style={styles.tableColNumHeader}><Text style={styles.tableCellHeader}>Revenue</Text></View>
+          <View style={styles.tableColNumHeader}><Text style={styles.tableCellHeader}>Cost</Text></View>
+          <View style={styles.tableColNumHeader}><Text style={styles.tableCellHeader}>Profit</Text></View>
+          <View style={styles.tableColNumHeader}><Text style={styles.tableCellHeader}>Margin%</Text></View>
         </View>
 
         {/* Table Rows */}
         {props.data?.grossProfitList.map((item, index) => (
           <View style={styles.tableRow} key={index}>
-            <View style={styles.tableCol}><Text style={styles.tableCell}>{item.productName}</Text></View>
-            <View style={styles.tableCol}><Text style={styles.tableCell}>{item.quantitySold}</Text></View>
-            <View style={styles.tableCol}><Text style={styles.tableCell}>{item.totalRevenue.toFixed(2)}</Text></View>
-            <View style={styles.tableCol}><Text style={styles.tableCell}>{item.totalCost.toFixed(2)}</Text></View>
-            <View style={styles.tableCol}><Text style={styles.tableCell}>{item.profit.toFixed(2)}</Text></View>
-            <View style={styles.tableCol}><Text style={styles.tableCell}>{item.margin.toFixed(2)}%</Text></View>
+            <View style={styles.tableColCode}><Text style={styles.tableCell}>{item.productCode}</Text></View>
+            <View style={styles.tableColName}><Text style={styles.tableCell}>{item.productName}</Text></View>
+            <View style={styles.tableColQty}><Text style={styles.tableCell}>{item.quantitySold}</Text></View>
+            <View style={styles.tableNumberedCol}><Text style={styles.tableCell}>{item.totalRevenue.toFixed(2)}</Text></View>
+            <View style={styles.tableNumberedCol}><Text style={styles.tableCell}>{item.totalCost.toFixed(2)}</Text></View>
+            <View style={styles.tableNumberedCol}><Text style={styles.tableCell}>{item.profit.toFixed(2)}</Text></View>
+            <View style={styles.tableNumberedCol}><Text style={styles.tableCell}>{item.margin.toFixed(2)}%</Text></View>
           </View>
         ))}
       </View>
@@ -54,9 +69,9 @@ const ProfitReportPDF = (props: Props) => (
       {/* Grand Totals Section */}
       <View style={styles.totalsRow}>
         <Text style={{ flex: 1, fontWeight: 'bold' }}>GRAND TOTALS:</Text>
-        <Text style={{ width: '16.6%', fontWeight: 'bold' }}>{props.data?.totalRevenue.toFixed(2)}</Text>
-        <Text style={{ width: '16.6%', fontWeight: 'bold' }}>{props.data?.totalCost.toFixed(2)}</Text>
-        <Text style={{ width: '16.6%', fontWeight: 'bold' }}>{props.data?.totalProfit.toFixed(2)}</Text>
+        <Text style={{ width: '16.6%', fontWeight: 'bold' }}>Total Revenue: {props.data?.totalRevenue.toFixed(2)}</Text>
+        <Text style={{ width: '16.6%', fontWeight: 'bold' }}>Total Cost: {props.data?.totalCost.toFixed(2)}</Text>
+        <Text style={{ width: '16.6%', fontWeight: 'bold' }}>Total Profit: {props.data?.totalProfit.toFixed(2)}</Text>
       </View>
 
       <Text style={styles.footer}>Report Generated on {new Date().toLocaleDateString()}</Text>

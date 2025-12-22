@@ -533,7 +533,21 @@ export const userLogin = async (userLogin: UserLogin) => {
 // for reports
 export const getProfitSummaryReport = async () => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}GrossProfitSummary`);
+    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Report/GrossProfit`);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const getInventorySummaryReport = async () => {
+  try {
+    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Report/Inventory`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

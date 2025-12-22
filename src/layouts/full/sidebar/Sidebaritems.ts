@@ -207,9 +207,9 @@ const SidebarContent: MenuItem[] = [
             isPro: false,
           },
           {
-            name: 'List',
+            name: 'Inventory Valuation',
             id: uniqueId(),
-            url: '/tax',
+            url: '/report/inventory-valuation',
             isPro: false,
           },
         ]

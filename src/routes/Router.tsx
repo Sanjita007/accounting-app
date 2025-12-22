@@ -30,6 +30,7 @@ const ListSalesInvoice = Loadable(lazy(() => import('src/components/Sales/ListSa
 
 // for report
 const GrossProfitReport = Loadable(lazy(() => import('src/components/Reports/Profitability/GrossProfitSummary')));
+const InventoryValuationReport = Loadable(lazy(() => import('src/components/Reports/Inventory/InventorySummary')));
 
 // For tax
 const AddTax = Loadable(lazy(() => import('src/components/Tax/AddTax')));
@@ -82,6 +83,7 @@ const Router = [
      
       // for reports
       { path: '/report/gross-profit', exact: true, element: <GrossProfitReport/> },
+      { path: '/report/inventory-valuation', exact: true, element: <InventoryValuationReport/> },
 
       // for tax
       { path: '/tax/new/', exact: true, element: <AddTax/> },

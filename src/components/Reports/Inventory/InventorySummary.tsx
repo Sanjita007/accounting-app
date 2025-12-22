@@ -1,76 +1,79 @@
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { useEffect, useState } from 'react';
-import { getProfitSummaryReport } from 'src/api';
-import { GrossProfit, GrossProfitSummary } from 'src/Models/Model';
-import ProfitReportPDF from './GrossProfitSummaryPdf';
+import { getInventorySummaryReport, } from 'src/api';
+import { InventoryDetails, InventorySummary } from 'src/Models/Model';
+import ProfitReportPDF from './InventorySummaryPdf';
 
 interface Config {
   label: string;
-  render: (product: GrossProfit) => React.ReactNode;
+  render: (product: InventoryDetails) => React.ReactNode;
 }
 
-const GrossProfitReport = () => {
-  const [grossProfitSummary, setGrossProfitSummary] = useState<GrossProfitSummary | null>(null);
+const InventoryReport = () => {
+  const [reportSummary, setReportSummary] = useState<InventorySummary | null>(null);
 
   const configs: Config[] = [
     { label: 'id', render: (p) => p.productId },
     { label: 'Code', render: (p) => p.productCode },
     { label: 'Product', render: (p) => p.productName },
     {
-      label: 'Qty Sold',
+      label: 'Qty In',
       render: (p) => (
         <div className="text-right rtl:text-left text-body">
-          <span> {p.quantitySold} </span>
+          <span> {p.quantityIn} </span>
         </div>
       ),
     },
     {
-      label: 'Revenue',
+      label: 'Qty Out',
       render: (p) => {
         return (
           <div className="text-right rtl:text-left text-body">
-            <span> {p.totalRevenue} </span>
+            <span> {p.quantityOut} </span>
           </div>
         );
       },
     },
     {
-      label: 'Cost',
+      label: 'Qty On Hand',
       render: (p) => {
         return (
           <div className="text-right rtl:text-left text-body">
-            <span> {p.totalCost} </span>
+            <span> {p.quantityOnHand} </span>
           </div>
         );
       },
     },
     {
-      label: 'Profit',
-      render: (p) => (
-        <div className="text-right rtl:text-left text-body">
-          <span> {p.profit} </span>
-        </div>
-      ),
+      label: 'Avg Sales Price',
+      render: (p) => {
+        return (
+          <div className="text-right rtl:text-left text-body">
+            <span> {p.averageSalesPrice} </span>
+          </div>
+        );
+      },
     },
     {
-      label: 'Margin',
+      label: 'Total In Value',
       render: (p) => (
         <div className="text-right rtl:text-left text-body">
-          <span> {p.margin} </span>
+          <span> {p.totalInValue} </span>
         </div>
       ),
     },
+  
   ];
   useEffect(() => {
     const fetchData = async () => {
-      const result = await getProfitSummaryReport();
-      setGrossProfitSummary(result);
+      const result = await getInventorySummaryReport();
+      setReportSummary(result);
     };
     fetchData();
   }, []);
 
-  const renderRows = grossProfitSummary
-    ? grossProfitSummary.grossProfitList.map((d) => (
+  const renderRows = reportSummary
+    ? reportSummary.inventoryDetail.map((d) => (
         <tr key={d.productId}>
           {configs.map((config) => (
             <td
@@ -101,7 +104,7 @@ const GrossProfitReport = () => {
     <div className="bg-white rounded-lg p-4 sm:p-6 xl:p-8">
       <div>
         <PDFDownloadLink
-          document={<ProfitReportPDF data={grossProfitSummary} />}
+          document={<ProfitReportPDF data={reportSummary} />}
           fileName="Gross_Profit_Report.pdf"
           className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
         >
@@ -115,21 +118,25 @@ const GrossProfitReport = () => {
 
           <tr>
             <td></td>
-            <td></td>
             <td className="text-center text-body font-bold">Total</td>
             <td>
               <div className="text-right rtl:text-left text-body font-bold">
-                {grossProfitSummary?.totalRevenue}
+                {reportSummary?.totalQuantityIn}
               </div>
             </td>
             <td>
               <div className="text-right rtl:text-left text-body font-bold">
-                {grossProfitSummary?.totalCost}
+                {reportSummary?.totalQuantityOut}
               </div>
             </td>
             <td>
               <div className="text-right rtl:text-left text-body font-bold">
-                {grossProfitSummary?.totalProfit}
+                {reportSummary?.totalQuantityOnHand}
+              </div>
+            </td>
+            <td>
+              <div className="text-right rtl:text-left text-body font-bold">
+                {reportSummary?.totalInValue}
               </div>
             </td>
           </tr>
@@ -140,4 +147,4 @@ const GrossProfitReport = () => {
   );
 };
 
-export default GrossProfitReport;
+export default InventoryReport;

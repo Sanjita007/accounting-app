@@ -188,3 +188,22 @@ export interface GrossProfitSummary {
   totalCost: number;
   totalProfit: number;
 }
+
+export interface InventoryDetails {
+  productId: number;
+  productCode: string;
+  productName: string;
+  quantityIn: number;
+  quantityOut: number;
+  quantityOnHand: number;
+  averageSalesPrice: number;
+  totalInValue: number;
+}
+
+export interface InventorySummary {
+  inventoryDetail: InventoryDetails[];
+  totalQuantityIn: number;
+  totalQuantityOut: number;
+  totalQuantityOnHand: number;
+  totalInValue: number;
+}
