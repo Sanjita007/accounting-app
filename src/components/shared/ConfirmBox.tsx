@@ -1,14 +1,9 @@
-// New props interface for the controlled modal
-interface ConfirmBoxProps {
-  isVisible: boolean;
-  title: string;
-  message: string;
-  onClose: (confirmed: boolean) => void; // This replaces onConfirm
-}
+import { useContext } from "react";
+import { CustomBoxContext } from "./useConfirmation";
 
-
-const ConfirmBox = (props: ConfirmBoxProps) => {
-const { isVisible, title, message, onClose } = props;
+const ConfirmBox = () => {
+  // Replaced the props with the values from the Context, cleaner and easier to handle, without props-drilling
+  const {isVisible, handleClose: onClose, message} = useContext(CustomBoxContext)
 
 // If not visible, return null immediately
   if (!isVisible) {
@@ -17,19 +12,20 @@ const { isVisible, title, message, onClose } = props;
 
   // Handlers to call the parent's onClose with the result
   const handleConfirm = () => {
-    onClose(true); // Confirmed
+    onClose(); // Confirmed
   };
 
   const handleCancel = () => {
-    onClose(false); // Cancelled
+    onClose(); // Cancelled
   };
 
 
   return (
     <div>
+      {/* Here the component had "hidden" property, which was removed */}
       <div
         id="popup-modal"
-        className="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+        className="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
       >
         <div className="relative p-4 w-full max-w-md max-h-full">
           <div className="relative bg-neutral-primary-soft border border-default rounded-base shadow-sm p-4 md:p-6">
