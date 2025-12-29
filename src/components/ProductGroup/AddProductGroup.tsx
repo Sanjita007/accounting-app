@@ -80,7 +80,6 @@ const AddProductGroup = () => {
   };
 
   const handleNew = (e: React.MouseEvent<HTMLButtonElement>) => {
-    alert('new click');
     setGroup(null);
   };
 

@@ -23,13 +23,28 @@ import {
   putSalesInvoice,
 } from 'src/api';
 
-import { Product, RelatedUnit, InvoiceDetail, InvoiceMaster, Tax } from 'src/Models/Model';
+import { InvoiceDetail, InvoiceMaster, Product, RelatedUnit, Tax } from 'src/Models/Model';
 import { NumberInput } from '../shared/CustomNumberInput';
 import { useCustomAlertBox } from '../shared/CustomAlertBox';
 import { FormatIntoNumber } from 'src/utils/utils';
 import { ProductListModal } from '../Product/ProductListModal';
 
-const AddSalesInvoice = () => {
+interface BaseInvoiceProps {
+  type: 'SALE' | 'PURCHASE';
+  api: {
+    get: (id: number) => Promise<any>;
+    save: (data: any) => Promise<any>;
+    update: (data: any) => Promise<any>;
+  };
+  labels: {
+    entityName: string; // "Customer" or "Supplier"
+    priceLabel: string; // "Sales Price" or "Unit Cost"
+    invoiceName: string; // purchase invoice or sales invoice
+  };
+  redirectPath: string; ///sales-invoice or //purchase-invoice
+}
+
+const SharedInvoice = (props: BaseInvoiceProps) => {
   let { id } = useParams();
   const navigate = useNavigate();
   const isInitialized = useRef(false);
@@ -46,26 +61,26 @@ const AddSalesInvoice = () => {
 
   const [productList, setProductList] = useState<Product[]>([]);
 
-  const [salesInvoice, setSalesInvoice] = useState<InvoiceMaster | null>(null);
+  const [invoice, setInvoice] = useState<InvoiceMaster | null>(null);
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (salesInvoice) {
-      if (salesInvoice.id) {
+    if (invoice) {
+      if (invoice.id) {
         //alert("updating");
-        apiWithToast(putSalesInvoice(salesInvoice), {
-          loading: 'Updating sales invoice..',
-          success: 'Sales Invoice updated successfully!',
-          error: 'Failed to update a Sales Invoice.',
+        apiWithToast(putSalesInvoice(invoice), {
+          loading: `Updating ${props.labels.invoiceName}..`,
+          success: `${props.labels.invoiceName} updated successfully!`,
+          error: `Failed to update ${props.labels.invoiceName}.`,
         });
       } else {
-        apiWithToast(postSalesInvoice(salesInvoice), {
-          loading: 'Creating sales invoice',
-          success: 'Sales Invoice created successfully!',
-          error: 'Failed to create a sales invoice.',
+        apiWithToast(postSalesInvoice(invoice), {
+          loading: `Creating ${props.labels.invoiceName}`,
+          success: `${props.labels.invoiceName} created successfully!`,
+          error: `Failed to create ${props.labels.invoiceName}.`,
         });
       }
 
-      navigate('/sales-invoice');
+      navigate(props.redirectPath);
     }
   };
 
@@ -91,7 +106,7 @@ const AddSalesInvoice = () => {
       taxes?.find((t) => String(t.id) === String(taxId)),
     );
 
-    setSalesInvoice((prev) => {
+    setInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
       const updatedDetails = prev.details.map((d, i) => {
@@ -137,7 +152,7 @@ const AddSalesInvoice = () => {
       });
     });
 
-    setSalesInvoice((prev) => {
+    setInvoice((prev) => {
       if (!prev) return prev; // nothing to update
       debugger;
 
@@ -200,7 +215,7 @@ const AddSalesInvoice = () => {
 
   const handleQuantityChanges = (index: number, value: string | null) => {
       if (!isInitialized.current) return;
-    setSalesInvoice((prev) => {
+    setInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
       const updatedDetails = prev.details.map((d, i) => {
@@ -236,8 +251,8 @@ const AddSalesInvoice = () => {
 
   const handleUnitChanges = async (index: number, value: number | null) => {
     if (!isInitialized.current) return;
-    if (!salesInvoice) return;
-    let copyDetail = salesInvoice?.details ?? [];
+    if (!invoice) return;
+    let copyDetail = invoice?.details ?? [];
     const d = copyDetail[index];
 
     // const actualQty = await convertUnit(
@@ -245,7 +260,7 @@ const AddSalesInvoice = () => {
     //           value??0,
     //           d?.quantity??0
     //         );
-    const unit = d.unitDetails.find(r => r.id == value);
+    const unit = d.unitDetails.filter((r) => r.id == value);
 
     if (unit == null) {
       alert('No relation between the units');
@@ -253,7 +268,7 @@ const AddSalesInvoice = () => {
     }
 
     let qty = d?.quantity;
-    let amt = qty * (unit?.conversionRate ?? 0) * d?.price;
+    let amt = qty * (unit[0]?.conversionRate ?? 0) * d?.price;
 
     const disc = (amt * (d?.discPercent ?? 0)) / 100;
     const netAmt = amt - disc;
@@ -267,8 +282,8 @@ const AddSalesInvoice = () => {
       ...calculateTax(d.taxID, netAmt),
     };
 
-    setSalesInvoice({
-      ...salesInvoice,
+    setInvoice({
+      ...invoice,
       details: copyDetail,
       ...calculateAllAmounts(copyDetail),
     });
@@ -276,7 +291,7 @@ const AddSalesInvoice = () => {
 
   const handlePriceChanges = (index: number, value: string | null) => {
     if (!isInitialized.current) return;
-    setSalesInvoice((prev) => {
+    setInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
       const updatedDetails = prev.details.map((d, i) => {
@@ -310,7 +325,7 @@ const AddSalesInvoice = () => {
 
   const handleDiscountChanges = (index: number, value: string | null) => {
     if (!isInitialized.current) return;
-    setSalesInvoice((prev) => {
+    setInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
       const updatedDetails = prev.details.map((d, i) => {
@@ -335,7 +350,7 @@ const AddSalesInvoice = () => {
   };
 
   const handleRemarksChanges = (index: number, value: string | null) => {
-    setSalesInvoice((prev) => {
+    setInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
       const updatedDetails = prev.details.map((d, i) => {
@@ -347,7 +362,7 @@ const AddSalesInvoice = () => {
   };
 
   const handleRowDelete = (key: string | null) => {
-    setSalesInvoice((prev) => {
+    setInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
       let updatedDetails = prev.details.filter((item) => item.uid != key);
@@ -393,7 +408,7 @@ const AddSalesInvoice = () => {
   };
 
   const handleAddRow = (row: number) => {
-    setSalesInvoice((prev) => {
+    setInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
       // if the last row does not have any product then donot add more rows below it
@@ -434,7 +449,7 @@ const AddSalesInvoice = () => {
 
   const handleVoucherNoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const res = e.target.value;
-    setSalesInvoice(
+    setInvoice(
       (prev) =>
         ({
           ...(prev ?? {}),
@@ -444,7 +459,7 @@ const AddSalesInvoice = () => {
   };
 
   const handleDateChange = (value: Date | null) => {
-    setSalesInvoice(
+    setInvoice(
       (prev) =>
         ({
           ...(prev ?? {}),
@@ -455,7 +470,7 @@ const AddSalesInvoice = () => {
 
   const handleCustomerNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const res = e.target.value;
-    setSalesInvoice(
+    setInvoice(
       (prev) =>
         ({
           ...(prev ?? {}),
@@ -718,7 +733,7 @@ const AddSalesInvoice = () => {
 
     if (id) {
       const invoice = await getSalesInvoice(Number(id));
-      setSalesInvoice(invoice);
+      setInvoice(invoice);
     } else {
       resetForm();
     }
@@ -732,7 +747,7 @@ const AddSalesInvoice = () => {
 
 
   const resetForm = () => {
-    setSalesInvoice({
+    setInvoice({
       id: 0,
       seriesID: 0,
       cashLedgerID: 0,
@@ -794,9 +809,9 @@ const AddSalesInvoice = () => {
     });
   };
 
-  console.log(salesInvoice);
-  const renderRows = salesInvoice?.details
-    ? salesInvoice.details.map((detail, index) => {
+  console.log(invoice);
+  const renderRows = invoice?.details
+    ? invoice.details.map((detail, index) => {
         console.log(detail);
 
         detail.uid =
@@ -853,7 +868,7 @@ const AddSalesInvoice = () => {
                   placeholder="Voucher No"
                   required
                   className="form-control form-rounded-xl"
-                  value={salesInvoice?.voucherNo ?? ''}
+                  value={invoice?.voucherNo ?? ''}
                   onChange={handleVoucherNoChange}
                 />
               </div>
@@ -863,7 +878,7 @@ const AddSalesInvoice = () => {
                 </div>
                 <Datepicker
                   weekStart={1} // Monday
-                  value={salesInvoice?.date ?? new Date()}
+                  value={invoice?.date ?? new Date()}
                   onChange={(value) => handleDateChange(value)}
                 />
               </div>
@@ -879,7 +894,7 @@ const AddSalesInvoice = () => {
               placeholder="Customer Name"
               required
               className="form-control form-rounded-xl"
-              value={salesInvoice?.customerName ?? ''}
+              value={invoice?.customerName ?? ''}
               onChange={handleCustomerNameChange}
             />
           </div>
@@ -895,39 +910,39 @@ const AddSalesInvoice = () => {
           <div className="col-span-12 flex gap-3">
             <div>
               <label>Total Quantity: </label>
-              <span>{Number(salesInvoice?.totalQty.toFixed(2) ?? 0)}</span>
+              <span>{Number(invoice?.totalQty.toFixed(2) ?? 0)}</span>
             </div>
           </div>
 
           <div className="col-span-12 flex gap-3">
             <div>
               <label>Gross Amount: </label>
-              <span>{Number(salesInvoice?.grossAmount.toFixed(2) ?? 0)}</span>
+              <span>{Number(invoice?.grossAmount.toFixed(2) ?? 0)}</span>
             </div>
           </div>
 
           <div className="col-span-12 flex gap-3">
             <div>
               <label>Total Discount: </label>
-              <span>{Number(salesInvoice?.specialDiscount.toFixed(2) ?? 0)}</span>
+              <span>{Number(invoice?.specialDiscount.toFixed(2) ?? 0)}</span>
             </div>
           </div>
           <div className="col-span-12 flex gap-3">
             <div>
               <label>Net Amount: </label>
-              <span>{Number(salesInvoice?.netAmount.toFixed(2) ?? 0)}</span>
+              <span>{Number(invoice?.netAmount.toFixed(2) ?? 0)}</span>
             </div>
           </div>
           <div className="col-span-12 flex gap-3">
             <div>
               <label>Tax Amount: </label>
-              <span>{Number(salesInvoice?.totalTCAmount.toFixed(2) ?? 0)}</span>
+              <span>{Number(invoice?.totalTCAmount.toFixed(2) ?? 0)}</span>
             </div>
           </div>
           <div className="col-span-12 flex gap-3">
             <div>
               <label>Total Amount: </label>
-              <span>{Number(salesInvoice?.totalAmount.toFixed(2) ?? 0)}</span>
+              <span>{Number(invoice?.totalAmount.toFixed(2) ?? 0)}</span>
             </div>
           </div>
           <div className="col-span-12 flex gap-3">
@@ -942,4 +957,4 @@ const AddSalesInvoice = () => {
   );
 };
 
-export default AddSalesInvoice;
+export default SharedInvoice;

@@ -69,6 +69,7 @@ export interface CompoundUnit {
 
 export interface RelatedUnit {
   id: number;
+  defaultUnitID: number;
   name: string; // ISO Date string
   conversionRate: number; // ISO Date string
 }
@@ -105,14 +106,14 @@ export interface Base {
   remarks?: string | null;
 }
 
-export interface SalesInvoiceDetail {
+export interface InvoiceDetail {
   id: number;
   masterID: number;
   productCode: string;
   productID: number;
   productName: string;
   quantity: number;
-  salesPrice: float;
+  price: float; // change the field name to just 'price', so that it can be used by both the sales and purchase invoice form
   amount: float;
   discPercent: number;
   discount: number;
@@ -134,7 +135,7 @@ export interface SalesInvoiceDetail {
   unitDetails: RelatedUnit[];
 }
 
-export interface SalesInvoiceMaster extends Base {
+export interface InvoiceMaster extends Base {
   seriesID?: number | null;
   cashLedgerID?: number | null;
   salesLedgerID?: number | null;
@@ -159,7 +160,7 @@ export interface SalesInvoiceMaster extends Base {
   tenderAmount?: number;
   changeAmount?: number;
   adjustmentAmount?: number;
-  details: SalesInvoiceDetail[];
+  details: InvoiceDetail[];
 }
 
 export interface Tree {
