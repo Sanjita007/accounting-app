@@ -1,5 +1,5 @@
 import { Label, TextInput, Select, Button, Checkbox } from 'flowbite-react';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import {
@@ -17,6 +17,7 @@ import { Product, ProductGroup, Tax, Unit } from 'src/Models/Model';
 import { NumberInput } from '../shared/CustomNumberInput';
 import { useCustomAlertBox } from '../shared/CustomAlertBox';
 import CustomButtons from '../shared/CustomButtons';
+import { CustomBoxContext } from '../shared/useConfirmation';
 
 type Props = {
   id: number;
@@ -37,6 +38,9 @@ const ProductAddEdit = (props: Props) => {
 
   const [product, setProduct] = useState<Product | null>(null);
 
+  // Got the fuction from the context
+  const { showConfirmation } = useContext(CustomBoxContext)
+  
   const handleGroupChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const res = parseInt(e.target.value);
     setProduct(
@@ -50,6 +54,7 @@ const ProductAddEdit = (props: Props) => {
 
   const handleNew = (e: React.MouseEvent<HTMLButtonElement>) => {
     setProduct(null);
+    showConfirmation("Love Bomb", "Stop love bombing mee!")
     props.setId(0);
   };
 
