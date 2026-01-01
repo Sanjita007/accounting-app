@@ -1,4 +1,4 @@
-import { Label, TextInput, Select, Button, Checkbox } from 'flowbite-react';
+import { Label, TextInput, Select, Checkbox } from 'flowbite-react';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
@@ -52,9 +52,10 @@ const ProductAddEdit = (props: Props) => {
     );
   };
 
-  const handleNew = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleNew = async (e: React.MouseEvent<HTMLButtonElement>) => {
     setProduct(null);
-    showConfirmation("Love Bomb", "Stop love bombing mee!")
+    const res = await showConfirmation("Love Bomb", "Stop love bombing mee!");
+    alert("value is : " + res);
     props.setId(0);
   };
 

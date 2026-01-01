@@ -1,22 +1,20 @@
-// useConfirmation.ts
-
 import { useState, createContext, ReactElement } from 'react';
-
-// could have created this context on the main.tsx file itself, but wanted to keep it separate for a cleaner code.
 
 interface CustomBoxContextProviderProps {
   children: ReactElement;
 }
+
 interface ConfirmationState {
   isVisible: boolean;
   message: string;
   title: string;
+  resolve: ((value: boolean) => void) | null;
 }
 
 interface CustomBoxContextProps {
   isVisible: boolean;
-  handleClose: () => void;
-  showConfirmation: (title: string, message: string) => void;
+  handleClose: (result: boolean) => void;
+  showConfirmation: (title: string, message: string) => Promise<boolean>;
   message: string;
   title: string;
 }
@@ -24,7 +22,7 @@ interface CustomBoxContextProps {
 export const CustomBoxContext = createContext<CustomBoxContextProps>({
   isVisible: false,
   handleClose: () => null,
-  showConfirmation: () => null,
+  showConfirmation: () => Promise.resolve(false),
   title: '',
   message: '',
 });
@@ -34,21 +32,32 @@ export const CustomBoxContextProvider = ({ children }: CustomBoxContextProviderP
     isVisible: false,
     message: '',
     title: '',
+    resolve: null,
   });
 
-  const showConfirmation = (title: string, message: string) =>
-    setState({
-      isVisible: true,
-      title,
-      message,
+  const showConfirmation = (title: string, message: string): Promise<boolean> => {
+    return new Promise((resolve) => {
+      setState({
+        isVisible: true,
+        title,
+        message,
+        resolve, 
+      });
     });
+  };
 
-  const handleClose = () =>
+  const handleClose = (result: boolean) => {
+    if (state.resolve) {
+      state.resolve(result);
+    }
+    
     setState({
       isVisible: false,
       message: '',
       title: '',
+      resolve: null,
     });
+  };
 
   return (
     <CustomBoxContext.Provider

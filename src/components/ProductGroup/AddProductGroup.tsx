@@ -14,7 +14,6 @@ import { ProductGroup, Tree } from 'src/Models/Model';
 import { useCustomAlertBox } from '../shared/CustomAlertBox';
 import TreeView from '../shared/TreeView';
 import ProductAddEdit from '../Product/EditProduct';
-import { useConfirmation } from '../shared/useConfirmation';
 import CustomButtons from '../shared/CustomButtons';
 
 const AddProductGroup = () => {
