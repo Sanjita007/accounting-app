@@ -31,6 +31,7 @@ export interface Product {
   taxID: number;
   companyID: number;
   conversionRate: number;
+  image: string;
 
   //         public int CompanyID { get; set; } = 1;
   //         public string ParentProductID { get; set; }
@@ -143,7 +144,7 @@ export interface InvoiceMaster extends Base {
   orderNo?: string | null;
   voucherNo?: string | null;
   customerName?: string | null;
-  date?: Date; // ISO Date string
+  date: Date; // ISO Date string
   projectID?: number | null;
   totalQty: number;
   grossAmount: number;

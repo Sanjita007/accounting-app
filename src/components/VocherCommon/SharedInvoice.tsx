@@ -17,10 +17,7 @@ import Dropdown from 'react-dropdown-select';
 import {
   getProducts,
   getRelatedUnits,
-  getSalesInvoice,
   getTaxes,
-  postSalesInvoice,
-  putSalesInvoice,
 } from 'src/api';
 
 import { InvoiceDetail, InvoiceMaster, Product, RelatedUnit, Tax } from 'src/Models/Model';
@@ -67,13 +64,13 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
     if (invoice) {
       if (invoice.id) {
         //alert("updating");
-        apiWithToast(putSalesInvoice(invoice), {
+        apiWithToast(props.api.update(invoice), {
           loading: `Updating ${props.labels.invoiceName}..`,
           success: `${props.labels.invoiceName} updated successfully!`,
           error: `Failed to update ${props.labels.invoiceName}.`,
         });
       } else {
-        apiWithToast(postSalesInvoice(invoice), {
+        apiWithToast(props.api.save(invoice), {
           loading: `Creating ${props.labels.invoiceName}`,
           success: `${props.labels.invoiceName} created successfully!`,
           error: `Failed to create ${props.labels.invoiceName}.`,
@@ -583,17 +580,17 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
       label: 'Price',
       render: (p, index) => {
         return (
-          <div className="flex gap-4 w-20 overflow-hidden">
+          <div className="flex gap-1 w-30 overflow-hidden">
             <NumberInput
               decimalPrecision={{ integerDigits: 5, decimalDigits: 2 }}
               id="price"
               placeholder="Price"
               required
-              className="flex gap-4 w-full h-full"
+              className="flex gap-1 w-full h-full"
               value={p?.price ?? 0.0}
               onChange={(value) => handlePriceChanges(index, value)}
             />
-            <span>{p.defaultUnitSymbol === '' ? '' : '/' + p.defaultUnitSymbol}</span>
+            <span className='flex items-center'>{p.defaultUnitSymbol === '' ? '' : '/' + p.defaultUnitSymbol}</span>
           </div>
         );
       },
@@ -732,7 +729,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
     setTaxes(taxRes);
 
     if (id) {
-      const invoice = await getSalesInvoice(Number(id));
+      const invoice = await props.api.get(Number(id));
       setInvoice(invoice);
     } else {
       resetForm();
@@ -853,7 +850,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
         onRowClick={(index, productID) => handleProductChange(index, productID)}
       ></ProductListModal>
 
-      <h5 className="card-title">{id ? 'Edit' : 'Add'} a Sales Invoice</h5>
+      <h5 className="card-title">{id ? 'Edit' : 'Add'} a {props.labels.invoiceName}</h5>
       <div className="mt-6">
         <div className="grid grid-cols-12 gap-6">
           <div className="lg:col-span-6 col-span-12">
@@ -886,12 +883,12 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
           </div>
           <div className="lg:col-span-6 col-span-12">
             <div className="mb-2 block">
-              <Label>Customer Name</Label>
+              <Label>{props.labels.entityName}</Label>
             </div>
             <TextInput
               id="name"
               type="text"
-              placeholder="Customer Name"
+              placeholder={props.labels.entityName}
               required
               className="form-control form-rounded-xl"
               value={invoice?.customerName ?? ''}

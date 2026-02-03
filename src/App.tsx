@@ -7,6 +7,12 @@ import { ToastContainer } from 'react-toastify';
 import ConfirmBox from './components/shared/ConfirmBox';
 
 function App() {
+//   useEffect(() => {
+//   if(!localStorage.getItem("accessToken")) {
+//       window.location.href = 'auth/login'; 
+//   }
+// }, [])
+
   return (
     <>
       <ToastContainer

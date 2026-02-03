@@ -39,8 +39,8 @@ const ProductAddEdit = (props: Props) => {
   const [product, setProduct] = useState<Product | null>(null);
 
   // Got the fuction from the context
-  const { showConfirmation } = useContext(CustomBoxContext)
-  
+  const { showConfirmation } = useContext(CustomBoxContext);
+
   const handleGroupChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const res = parseInt(e.target.value);
     setProduct(
@@ -54,8 +54,8 @@ const ProductAddEdit = (props: Props) => {
 
   const handleNew = async (e: React.MouseEvent<HTMLButtonElement>) => {
     setProduct(null);
-    const res = await showConfirmation("Love Bomb", "Stop love bombing mee!");
-    alert("value is : " + res);
+    const res = await showConfirmation('Love Bomb', 'Stop love bombing mee!');
+    alert('value is : ' + res);
     props.setId(0);
   };
 
@@ -448,7 +448,17 @@ const ProductAddEdit = (props: Props) => {
                 ))}
               </Select>
             </div>
+            <div>
+              <div className="mb-2 block">
+                <Label>Image</Label>
+              </div>
+              <img
+                src='.../src/assets/images/no-image-icon-6.png'
+                alt="Dynamic binary content"
+              />
+            </div>
           </div>
+
           <div className="col-span-12 justify-end flex gap-3">
             {/* <Button color={'green'} onClick={handleNew}>
               New

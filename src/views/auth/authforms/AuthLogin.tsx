@@ -1,33 +1,73 @@
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-import { Link, useNavigate } from "react-router";
+import { Button, Label, TextInput } from 'flowbite-react';
+import { ChangeEvent, useState } from 'react';
+import { Link, useNavigate } from 'react-router';
+import { userLogin } from 'src/api';
+import { useAlertBox } from 'src/components/shared/AlertBox';
+import { UserLogin } from 'src/Models/Model';
 
-
+const { useApiWithToast } = useAlertBox();
 
 const AuthLogin = () => {
+  localStorage.setItem('accessToken', '');
   const navigate = useNavigate();
-  const handleSubmit = (event:React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log(event);
-     navigate("/");
+  const [user, setUser] = useState<UserLogin>();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // this is the only thing that stopped the browser from throwing ns_binding_aborted error
+    if (user) {
+      // //alert("updating");
+      // apiWithToast(userLogin(user), {
+      //   loading: `Logging in as ${user.userName}..`,
+      //   success: `$Logged in as ${user.userName} successfully!`,
+      //   error: `Failed to log in as ${user.userName}.`,
+      //debugger;
+      const res = await useApiWithToast(userLogin(user), null);
+      if (res == true) {
+        navigate('/');
+      }
+    }
+  };
+
+  function handleUserNameChange(e: ChangeEvent<HTMLInputElement>): void {
+    setUser(
+      (prev) =>
+        ({
+          ...(prev ?? {}),
+          userName: e.target.value,
+        }) as UserLogin,
+    );
   }
+
+  function handlePasswordChange(e: ChangeEvent<HTMLInputElement>): void {
+    setUser(
+      (prev) =>
+        ({
+          ...(prev ?? {}),
+          password: e.target.value,
+        }) as UserLogin,
+    );
+  }
+
   return (
     <>
-      <form onSubmit={handleSubmit} >
+      <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <div className="mb-2 block">
-            <Label >Username</Label>
+            <Label>Username</Label>
           </div>
           <TextInput
-            id="Username"
+            id="User Name"
             type="text"
             sizing="md"
             required
             className="form-control "
+            value={user?.userName}
+            placeholder="userName"
+            onChange={handleUserNameChange}
           />
         </div>
         <div className="mb-4">
           <div className="mb-2 block">
-             <Label >Password</Label>
+            <Label>Password</Label>
           </div>
           <TextInput
             id="userpwd"
@@ -35,10 +75,13 @@ const AuthLogin = () => {
             sizing="md"
             required
             className="form-control "
+            value={user?.password}
+            placeholder="password"
+            onChange={handlePasswordChange}
           />
         </div>
         <div className="flex justify-between my-5">
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <Checkbox id="accept" className="checkbox" />
             <Label
               htmlFor="accept"
@@ -46,12 +89,12 @@ const AuthLogin = () => {
             >
               Remeber this Device
             </Label>
-          </div>
-          <Link to={"/"} className="text-primary text-sm font-medium">
+          </div> */}
+          <Link to={'/'} className="text-primary text-sm font-medium">
             Forgot Password ?
           </Link>
         </div>
-        <Button type="submit" color={"primary"}  className="w-full bg-primary text-white">
+        <Button type="submit" color={'primary'} className="w-full bg-primary text-white">
           Sign in
         </Button>
       </form>

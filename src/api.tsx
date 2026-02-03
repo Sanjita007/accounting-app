@@ -1,9 +1,19 @@
 import axios from 'axios';
-import { CompoundUnit, Product, ProductGroup, SalesInvoiceMaster, Tax, Unit, UserLogin } from './Models/Model';
+
+import {
+  CompoundUnit,
+  Product,
+  ProductGroup,
+  InvoiceMaster,
+  Tax,
+  Unit,
+  UserLogin,
+} from './Models/Model';
+import api from './axiosInstance';
 
 export const getProducts = async () => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Product`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Product`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -17,7 +27,7 @@ export const getProducts = async () => {
 
 export const getProduct = async (id: number) => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Product/${id}`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Product/${id}`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -31,7 +41,7 @@ export const getProduct = async (id: number) => {
 
 export const postProduct = async (product: Product) => {
   try {
-    const data = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}Product`, product);
+    const data = await api.post(`${import.meta.env.VITE_API_ENDPOINT}Product`, product);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -45,7 +55,7 @@ export const postProduct = async (product: Product) => {
 
 export const putProduct = async (product: Product) => {
   try {
-    const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}Product`, product);
+    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}Product`, product);
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -59,7 +69,7 @@ export const putProduct = async (product: Product) => {
 
 export const deleteProduct = async (id: number) => {
   try {
-    const data = await axios.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Product/${id}`);
+    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Product/${id}`);
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -75,7 +85,7 @@ export const deleteProduct = async (id: number) => {
 
 export const getProductGroups = async () => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -89,7 +99,7 @@ export const getProductGroups = async () => {
 
 export const getProductTree = async () => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Product/Tree`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Product/Tree`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -103,7 +113,7 @@ export const getProductTree = async () => {
 
 export const getProductGroup = async (id: number) => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup/${id}`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup/${id}`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -117,7 +127,7 @@ export const getProductGroup = async (id: number) => {
 
 export const postProductGroup = async (group: ProductGroup) => {
   try {
-    const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`, group);
+    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`, group);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -129,9 +139,9 @@ export const postProductGroup = async (group: ProductGroup) => {
   }
 };
 
-export const putProductGroup  = async (group: ProductGroup) => {
+export const putProductGroup = async (group: ProductGroup) => {
   try {
-    const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`, group);
+    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`, group);
     return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -145,7 +155,7 @@ export const putProductGroup  = async (group: ProductGroup) => {
 
 export const deleteProductGroup = async (id: number) => {
   try {
-    const data = await axios.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup/${id}`);
+    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup/${id}`);
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -160,7 +170,7 @@ export const deleteProductGroup = async (id: number) => {
 // for Depot
 export const getDepots = async () => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Depot`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Depot`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -174,7 +184,7 @@ export const getDepots = async () => {
 
 export const getDepot = async (id: number) => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Depot/${id}`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Depot/${id}`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -190,7 +200,7 @@ export const getDepot = async (id: number) => {
 
 export const getUnits = async () => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Unit`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Unit`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -204,7 +214,7 @@ export const getUnits = async () => {
 
 export const getUnit = async (id: number) => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/${id}`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/${id}`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -216,9 +226,15 @@ export const getUnit = async (id: number) => {
   }
 };
 
-export const convertUnits = async (defaultUnitID: number, currentUnitID: number, valueToConvert: number) => {
+export const convertUnits = async (
+  defaultUnitID: number,
+  currentUnitID: number,
+  valueToConvert: number,
+) => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/Convert?defaultUnitID=${defaultUnitID}&currentUnitID=${currentUnitID}&valueToConvert=${valueToConvert}`);
+    const data = await api.get(
+      `${import.meta.env.VITE_API_ENDPOINT}Unit/Convert?defaultUnitID=${defaultUnitID}&currentUnitID=${currentUnitID}&valueToConvert=${valueToConvert}`,
+    );
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -232,7 +248,9 @@ export const convertUnits = async (defaultUnitID: number, currentUnitID: number,
 
 export const getRelatedUnits = async (baseUnitID: number) => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/Related?baseUnitID=${baseUnitID}`);
+    const data = await api.get(
+      `${import.meta.env.VITE_API_ENDPOINT}Unit/Related?baseUnitID=${baseUnitID}`,
+    );
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -246,7 +264,7 @@ export const getRelatedUnits = async (baseUnitID: number) => {
 
 export const deleteUnit = async (id: number) => {
   try {
-    const data = await axios.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Unit/${id}`);
+    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Unit/${id}`);
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -260,7 +278,7 @@ export const deleteUnit = async (id: number) => {
 
 export const postUnit = async (unit: Unit) => {
   try {
-    const data = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}Unit`, unit);
+    const data = await api.post(`${import.meta.env.VITE_API_ENDPOINT}Unit`, unit);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -274,7 +292,7 @@ export const postUnit = async (unit: Unit) => {
 
 export const putUnit = async (unit: Unit) => {
   try {
-    const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}Unit`, unit);
+    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}Unit`, unit);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -290,7 +308,7 @@ export const putUnit = async (unit: Unit) => {
 
 export const getCompoundUnits = async () => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -304,7 +322,7 @@ export const getCompoundUnits = async () => {
 
 export const getCompoundUnit = async (id: number) => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound/${id}`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound/${id}`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -318,7 +336,7 @@ export const getCompoundUnit = async (id: number) => {
 
 export const deleteCompoundUnit = async (id: number) => {
   try {
-    const data = await axios.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound/${id}`);
+    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound/${id}`);
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -332,7 +350,7 @@ export const deleteCompoundUnit = async (id: number) => {
 
 export const postCompoundUnit = async (unit: CompoundUnit) => {
   try {
-    const data = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound`, unit);
+    const data = await api.post(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound`, unit);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -346,7 +364,102 @@ export const postCompoundUnit = async (unit: CompoundUnit) => {
 
 export const putCompoundUnit = async (unit: CompoundUnit) => {
   try {
-    const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound`, unit);
+    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound`, unit);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+// related to purchase invoice
+export const getPurchaseInvoices = async () => {
+  try {
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice`);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const navigatePurchaseInvoices = async (pageNo: number, rowPerPage: number) => {
+  try {
+    const data = await api.get(
+      `${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice/Navigate?pageNo=${pageNo}&rowPerPage=${rowPerPage}`,
+    );
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const getPurchaseInvoice = async (id: number) => {
+  try {
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice/${id}`);
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const deletePurchaseInvoice = async (id: number) => {
+  try {
+    const data = await api.delete<any>(
+      `${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice/${id}`,
+    );
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const postPurchaseInvoice = async (purchInvoice: InvoiceMaster) => {
+  try {
+    const data = await api.post(
+      `${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice`,
+      purchInvoice,
+    );
+    return data.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const putPurchaseInvoice = async (purchInvoice: InvoiceMaster) => {
+  try {
+    const data = await api.put(
+      `${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice`,
+      purchInvoice,
+    );
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -361,7 +474,7 @@ export const putCompoundUnit = async (unit: CompoundUnit) => {
 // related to invoice
 export const getSalesInvoices = async () => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -373,9 +486,11 @@ export const getSalesInvoices = async () => {
   }
 };
 
-export const navigateSalesInvoices = async (pageNo: number, rowPerPage: number ) => {
+export const navigateSalesInvoices = async (pageNo: number, rowPerPage: number) => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice/Navigate?pageNo=${pageNo}&rowPerPage=${rowPerPage}`);
+    const data = await api.get(
+      `${import.meta.env.VITE_API_ENDPOINT}SalesInvoice/Navigate?pageNo=${pageNo}&rowPerPage=${rowPerPage}`,
+    );
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -389,7 +504,7 @@ export const navigateSalesInvoices = async (pageNo: number, rowPerPage: number )
 
 export const getSalesInvoice = async (id: number) => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice/${id}`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice/${id}`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -403,7 +518,7 @@ export const getSalesInvoice = async (id: number) => {
 
 export const deleteSalesInvoice = async (id: number) => {
   try {
-    const data = await axios.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice/${id}`);
+    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice/${id}`);
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -415,9 +530,9 @@ export const deleteSalesInvoice = async (id: number) => {
   }
 };
 
-export const postSalesInvoice = async (salesInvoice: SalesInvoiceMaster) => {
+export const postSalesInvoice = async (salesInvoice: InvoiceMaster) => {
   try {
-    const data = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice`, salesInvoice);
+    const data = await api.post(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice`, salesInvoice);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -429,9 +544,9 @@ export const postSalesInvoice = async (salesInvoice: SalesInvoiceMaster) => {
   }
 };
 
-export const putSalesInvoice = async (salesInvoice: SalesInvoiceMaster) => {
+export const putSalesInvoice = async (salesInvoice: InvoiceMaster) => {
   try {
-    const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice`, salesInvoice);
+    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice`, salesInvoice);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -446,7 +561,7 @@ export const putSalesInvoice = async (salesInvoice: SalesInvoiceMaster) => {
 // for Taxes
 export const getTaxes = async () => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Tax`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Tax`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -460,7 +575,7 @@ export const getTaxes = async () => {
 
 export const getTax = async (id: number) => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Tax/${id}`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Tax/${id}`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -474,7 +589,7 @@ export const getTax = async (id: number) => {
 
 export const postTax = async (tax: Tax) => {
   try {
-    const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}Tax`, tax);
+    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}Tax`, tax);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -488,7 +603,7 @@ export const postTax = async (tax: Tax) => {
 
 export const putTax = async (tax: Tax) => {
   try {
-    const data = await axios.put(`${import.meta.env.VITE_API_ENDPOINT}Tax`, tax);
+    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}Tax`, tax);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -502,7 +617,7 @@ export const putTax = async (tax: Tax) => {
 
 export const deleteTax = async (id: number) => {
   try {
-    const data = await axios.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Tax/${id}`);
+    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Tax/${id}`);
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -514,26 +629,35 @@ export const deleteTax = async (id: number) => {
   }
 };
 
-//related to user login and authetication   
+//related to user login and authetication
 
 export const userLogin = async (userLogin: UserLogin) => {
   try {
-    const data = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}Login`, userLogin);
-    return data.data.data;
+    //debugger;
+    const data = await api.post(`${import.meta.env.VITE_API_ENDPOINT}Login`, userLogin, {
+      withCredentials: true,
+    });
+
+    if (data.data.statusCode == 200) {
+      localStorage.setItem('accessToken', data.data?.data?.token);
+    }
+    
+    //console.log(data);
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
     } else {
       console.log('unexpected error: ', error);
     }
-    return null;
+    throw error;
   }
 };
 
 // for reports
 export const getProfitSummaryReport = async () => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Report/GrossProfit`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Report/GrossProfit`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -547,7 +671,7 @@ export const getProfitSummaryReport = async () => {
 
 export const getInventorySummaryReport = async () => {
   try {
-    const data = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}Report/Inventory`);
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Report/Inventory`);
     return data.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

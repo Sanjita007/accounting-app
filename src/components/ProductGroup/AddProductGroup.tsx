@@ -6,8 +6,10 @@ import {
   getProductGroup,
   getProductGroups,
   getProductTree,
+  getTax,
   postProductGroup,
   putProductGroup,
+  userLogin,
 } from 'src/api';
 
 import { ProductGroup, Tree } from 'src/Models/Model';
@@ -15,8 +17,11 @@ import { useCustomAlertBox } from '../shared/CustomAlertBox';
 import TreeView from '../shared/TreeView';
 import ProductAddEdit from '../Product/EditProduct';
 import CustomButtons from '../shared/CustomButtons';
+import { useAlertBox } from '../shared/AlertBox';
 
 const AddProductGroup = () => {
+  // useApiWithToast is the actual method that we use from the interface useAlertBox()..
+  const {useApiWithToast} = useAlertBox();
   const { apiWithToast } = useCustomAlertBox();
   const [groupId, setGroupId] = useState(0);
   const [productId, setProductId] = useState(0);
@@ -78,7 +83,10 @@ const AddProductGroup = () => {
     setGroup(null);
   };
 
-  const handleNew = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleNew = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    debugger;
+    const res = await useApiWithToast(getTax(1));
+    alert(res);
     setGroup(null);
   };
 

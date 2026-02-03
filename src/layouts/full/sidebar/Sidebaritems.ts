@@ -129,6 +129,35 @@ const SidebarContent: MenuItem[] = [
           },
         ],
       },
+      
+      {
+        name: 'Purchase',
+        id: uniqueId(),
+        icon: 'solar:home-angle-linear',
+        isPro: false,
+        children: [
+          {
+            name: 'Invoice',
+            id: uniqueId(),
+            icon: 'solar:home-angle-linear',
+            isPro: false,
+            children: [
+              {
+                name: 'New',
+                id: uniqueId(),
+                url: '/purchase-invoice/new',
+                isPro: false,
+              },
+              {
+                name: 'List',
+                id: uniqueId(),
+                url: '/purchase-invoice',
+                isPro: false,
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
    {

@@ -1,21 +1,16 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
-import wrappixel_logo from '/src/assets/images/logos/logo-wrappixel.svg';
 import { Link } from 'react-router';
 import { Dropdown, DropdownItem } from 'flowbite-react/components/Dropdown';
 
 import img1 from 'src/assets/images/svgs/react-cat-icon.svg';
 import img2 from 'src/assets/images/svgs/angular-cat-icon.svg';
-import img3 from 'src/assets/images/svgs/vue-cat-icon.svg';
-import img4 from 'src/assets/images/svgs/nuxt-cat-icon.svg';
-import img5 from 'src/assets/images/svgs/next-cat-icon.svg';
-import img6 from 'src/assets/images/svgs/bt-cat-icon.svg';
 
 const Topbar = () => {
   const dropdownItems = [
     {
       id: 1,
       img: img1,
-      title: 'Log In',
+      title: 'Log Out',
       href: '/auth/login',
     },
     {

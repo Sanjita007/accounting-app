@@ -33,8 +33,8 @@ const NumberInput = React.forwardRef<HTMLInputElement, CustomNumberInputProps>(
     ...props
   }, ref) => {
     const [valueInput, setValueInput] = React.useState("")
-    const [displayValue, setDisplayValue] = React.useState("")
-    const [isFocus, setIsFocus] = React.useState(false)
+    // const [displayValue, setDisplayValue] = React.useState("")
+    // const [isFocus, setIsFocus] = React.useState(false)
    
     // Sync internal state with external value
     React.useEffect(() => {
