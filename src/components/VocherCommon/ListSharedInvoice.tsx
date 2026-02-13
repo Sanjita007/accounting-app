@@ -100,9 +100,9 @@ const ListSharedInvoice = (props: BaseInvoiceProps) => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await props.api.navigate(pageNo, rowPerPage);
-      setInvoices(result.entity);
+      setInvoices(result.data.entity);
       
-      setPageCount(result.pageCount);
+      setPageCount(result.data.pageCount);
     };
     fetchData();
   }, [pageNo]); // only need to fetch new data when the selected page number changes

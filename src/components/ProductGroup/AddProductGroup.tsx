@@ -9,7 +9,6 @@ import {
   getTax,
   postProductGroup,
   putProductGroup,
-  userLogin,
 } from 'src/api';
 
 import { ProductGroup, Tree } from 'src/Models/Model';
@@ -21,7 +20,7 @@ import { useAlertBox } from '../shared/AlertBox';
 
 const AddProductGroup = () => {
   // useApiWithToast is the actual method that we use from the interface useAlertBox()..
-  const {useApiWithToast} = useAlertBox();
+  const { useApiWithToast } = useAlertBox();
   const { apiWithToast } = useCustomAlertBox();
   const [groupId, setGroupId] = useState(0);
   const [productId, setProductId] = useState(0);
@@ -40,24 +39,27 @@ const AddProductGroup = () => {
 
     if (group) {
       try {
+        let res = false;
         if (group.id) {
-          await apiWithToast(putProductGroup(group), {
+          res = await useApiWithToast(putProductGroup(group), {
             loading: 'Updating product group..',
             success: 'Product Group updated successfully!',
             error: 'Failed to update a product group.',
           });
         } else {
-          await apiWithToast(postProductGroup(group), {
+          res = await useApiWithToast(postProductGroup(group), {
             loading: 'Creating product group..',
             success: 'Product Group created successfully!',
             error: 'Failed to create a product group.',
           });
         }
 
-        // Navigate only if the API call succeeded
-        //navigate('/product-group');
-        setGroupId(0);
-        setGroup(null);
+        if (res == true) {
+          // Navigate only if the API call succeeded
+          //navigate('/product-group');
+          setGroupId(0);
+          setGroup(null);
+        }
       } catch (error) {
         // Error handled by apiWithToast, no navigation on failure
         console.error('Submission failed:', error);
@@ -85,7 +87,7 @@ const AddProductGroup = () => {
 
   const handleNew = async (e: React.MouseEvent<HTMLButtonElement>) => {
     debugger;
-    const res = await useApiWithToast(getTax(1));
+    const res = await useApiWithToast(getTax(1), null);
     alert(res);
     setGroup(null);
   };
@@ -97,7 +99,7 @@ const AddProductGroup = () => {
         ({
           ...(prev ?? {}),
           parentGroupId: res,
-        } as ProductGroup),
+        }) as ProductGroup,
     );
   };
 
@@ -108,7 +110,7 @@ const AddProductGroup = () => {
         ({
           ...(prev ?? {}),
           engName: res,
-        } as ProductGroup),
+        }) as ProductGroup,
     );
   };
 
@@ -119,7 +121,7 @@ const AddProductGroup = () => {
         ({
           ...(prev ?? {}),
           remarks: res,
-        } as ProductGroup),
+        }) as ProductGroup,
     );
   };
 
@@ -144,7 +146,7 @@ const AddProductGroup = () => {
         ({
           ...(prev ?? {}),
           nepName: res,
-        } as ProductGroup),
+        }) as ProductGroup,
     );
   };
 
@@ -152,8 +154,8 @@ const AddProductGroup = () => {
     const fetchAllData = async () => {
       const [groupRes, treeRes] = await Promise.all([getProductGroups(), getProductTree()]);
 
-      setProductGroups(groupRes);
-      setProductTree(treeRes);
+      setProductGroups(groupRes.data);
+      setProductTree(treeRes.data);
       // if (id) {
       // 	const result = await getProduct(parseInt(id));
       // 	setProduct(result);
@@ -167,7 +169,7 @@ const AddProductGroup = () => {
     if (groupId > 0) {
       const fetchGroupData = async () => {
         const result = await getProductGroup(groupId);
-        setGroup(result);
+        setGroup(result.data);
       };
       fetchGroupData();
       setMode(1);

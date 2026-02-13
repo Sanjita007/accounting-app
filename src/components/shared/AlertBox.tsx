@@ -4,14 +4,14 @@ import { toast } from 'react-toastify';
     const useApiWithToast = async (promise: Promise<any>, message: { loading: string; success: string; error: string }| null): Promise<boolean>=>{
         const id = toast.loading("loading");
         try{
-          debugger;
           const res = await promise;
-          if(res.statusCode == 200){
-            toast.update(id, { render: message?.success ? res.message : "success", type: 'success', isLoading: false, autoClose: 5000 });
+
+          if(res.status == 200 || res.status == 204){
+            toast.update(id, { render: message != null ? res.message : "success", type: 'success', isLoading: false, autoClose: 5000 });
             return true;
           }
           else{
-            toast.update(id, { render: message?.error  ? res.message : "error", type: 'error', isLoading: false, autoClose: 5000 });
+            toast.update(id, { render: message != null  ? res.message : "error", type: 'error', isLoading: false, autoClose: 5000 });
             return false;
           }
         }

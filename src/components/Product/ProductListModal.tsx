@@ -43,7 +43,7 @@ export const ProductListModal = (props: Props) => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await getProducts();
-      setProducts(result);
+      setProducts(result.data);
     };
     fetchData();
   }, []);

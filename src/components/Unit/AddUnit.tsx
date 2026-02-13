@@ -74,7 +74,7 @@ const AddUnit = () => {
     if (id) {
       const fetchUnitData = async () => {
         const result = await getUnit(parseInt(id));
-        setUnit(result);
+        setUnit(result.data);
       };
       fetchUnitData();
     }

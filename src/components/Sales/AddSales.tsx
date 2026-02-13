@@ -712,13 +712,13 @@ const AddSalesInvoice = () => {
       getTaxes(),
     ]);
 
-    setProducts(prodRes);
-    setProductList(prodRes);
-    setTaxes(taxRes);
+    setProducts(prodRes.data);
+    setProductList(prodRes.data);
+    setTaxes(taxRes.data);
 
     if (id) {
       const invoice = await getSalesInvoice(Number(id));
-      setSalesInvoice(invoice);
+      setSalesInvoice(invoice.data);
     } else {
       resetForm();
     }

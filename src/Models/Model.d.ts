@@ -209,3 +209,10 @@ export interface InventorySummary {
   totalQuantityOnHand: number;
   totalInValue: number;
 }
+
+export interface ProfitLossDashboard{
+  salesAmounts: number[],
+  purchAmounts: number[],
+  months: string[]
+}
+

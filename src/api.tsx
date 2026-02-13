@@ -13,8 +13,9 @@ import api from './axiosInstance';
 
 export const getProducts = async () => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Product`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Product`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -27,8 +28,9 @@ export const getProducts = async () => {
 
 export const getProduct = async (id: number) => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Product/${id}`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Product/${id}`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -41,8 +43,9 @@ export const getProduct = async (id: number) => {
 
 export const postProduct = async (product: Product) => {
   try {
-    const data = await api.post(`${import.meta.env.VITE_API_ENDPOINT}Product`, product);
-    return data.data.data;
+    const data = await api.post(`${import.meta.env.VITE_API_ENDPOINT}Product`, product, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -55,7 +58,8 @@ export const postProduct = async (product: Product) => {
 
 export const putProduct = async (product: Product) => {
   try {
-    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}Product`, product);
+    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}Product`, product, { 
+      withCredentials: true });
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -69,7 +73,8 @@ export const putProduct = async (product: Product) => {
 
 export const deleteProduct = async (id: number) => {
   try {
-    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Product/${id}`);
+    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Product/${id}`, { 
+      withCredentials: true });
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -85,8 +90,9 @@ export const deleteProduct = async (id: number) => {
 
 export const getProductGroups = async () => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -99,8 +105,9 @@ export const getProductGroups = async () => {
 
 export const getProductTree = async () => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Product/Tree`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Product/Tree`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -113,8 +120,9 @@ export const getProductTree = async () => {
 
 export const getProductGroup = async (id: number) => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup/${id}`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup/${id}`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -127,8 +135,9 @@ export const getProductGroup = async (id: number) => {
 
 export const postProductGroup = async (group: ProductGroup) => {
   try {
-    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`, group);
-    return data.data.data;
+    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`, group, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -141,7 +150,8 @@ export const postProductGroup = async (group: ProductGroup) => {
 
 export const putProductGroup = async (group: ProductGroup) => {
   try {
-    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`, group);
+    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup`, group, { 
+      withCredentials: true });
     return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -155,7 +165,8 @@ export const putProductGroup = async (group: ProductGroup) => {
 
 export const deleteProductGroup = async (id: number) => {
   try {
-    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup/${id}`);
+    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}ProductGroup/${id}`, { 
+      withCredentials: true });
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -170,8 +181,9 @@ export const deleteProductGroup = async (id: number) => {
 // for Depot
 export const getDepots = async () => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Depot`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Depot`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -184,8 +196,9 @@ export const getDepots = async () => {
 
 export const getDepot = async (id: number) => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Depot/${id}`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Depot/${id}`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -200,8 +213,9 @@ export const getDepot = async (id: number) => {
 
 export const getUnits = async () => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Unit`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Unit`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -214,8 +228,9 @@ export const getUnits = async () => {
 
 export const getUnit = async (id: number) => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/${id}`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/${id}`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -234,8 +249,9 @@ export const convertUnits = async (
   try {
     const data = await api.get(
       `${import.meta.env.VITE_API_ENDPOINT}Unit/Convert?defaultUnitID=${defaultUnitID}&currentUnitID=${currentUnitID}&valueToConvert=${valueToConvert}`,
-    );
-    return data.data.data;
+     { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -249,9 +265,10 @@ export const convertUnits = async (
 export const getRelatedUnits = async (baseUnitID: number) => {
   try {
     const data = await api.get(
-      `${import.meta.env.VITE_API_ENDPOINT}Unit/Related?baseUnitID=${baseUnitID}`,
+      `${import.meta.env.VITE_API_ENDPOINT}Unit/Related?baseUnitID=${baseUnitID}`, { 
+      withCredentials: true }
     );
-    return data.data.data;
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -264,7 +281,8 @@ export const getRelatedUnits = async (baseUnitID: number) => {
 
 export const deleteUnit = async (id: number) => {
   try {
-    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Unit/${id}`);
+    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Unit/${id}`, { 
+      withCredentials: true });
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -278,8 +296,9 @@ export const deleteUnit = async (id: number) => {
 
 export const postUnit = async (unit: Unit) => {
   try {
-    const data = await api.post(`${import.meta.env.VITE_API_ENDPOINT}Unit`, unit);
-    return data.data.data;
+    const data = await api.post(`${import.meta.env.VITE_API_ENDPOINT}Unit`, unit, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -292,8 +311,9 @@ export const postUnit = async (unit: Unit) => {
 
 export const putUnit = async (unit: Unit) => {
   try {
-    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}Unit`, unit);
-    return data.data.data;
+    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}Unit`, unit, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -308,8 +328,9 @@ export const putUnit = async (unit: Unit) => {
 
 export const getCompoundUnits = async () => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -322,8 +343,9 @@ export const getCompoundUnits = async () => {
 
 export const getCompoundUnit = async (id: number) => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound/${id}`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound/${id}`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -336,7 +358,8 @@ export const getCompoundUnit = async (id: number) => {
 
 export const deleteCompoundUnit = async (id: number) => {
   try {
-    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound/${id}`);
+    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound/${id}`, { 
+      withCredentials: true });
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -350,8 +373,9 @@ export const deleteCompoundUnit = async (id: number) => {
 
 export const postCompoundUnit = async (unit: CompoundUnit) => {
   try {
-    const data = await api.post(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound`, unit);
-    return data.data.data;
+    const data = await api.post(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound`, unit, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -364,8 +388,9 @@ export const postCompoundUnit = async (unit: CompoundUnit) => {
 
 export const putCompoundUnit = async (unit: CompoundUnit) => {
   try {
-    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound`, unit);
-    return data.data.data;
+    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}Unit/Compound`, unit, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -379,8 +404,9 @@ export const putCompoundUnit = async (unit: CompoundUnit) => {
 // related to purchase invoice
 export const getPurchaseInvoices = async () => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -394,9 +420,10 @@ export const getPurchaseInvoices = async () => {
 export const navigatePurchaseInvoices = async (pageNo: number, rowPerPage: number) => {
   try {
     const data = await api.get(
-      `${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice/Navigate?pageNo=${pageNo}&rowPerPage=${rowPerPage}`,
+      `${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice/Navigate?pageNo=${pageNo}&rowPerPage=${rowPerPage}`, { 
+      withCredentials: true }
     );
-    return data.data.data;
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -409,8 +436,9 @@ export const navigatePurchaseInvoices = async (pageNo: number, rowPerPage: numbe
 
 export const getPurchaseInvoice = async (id: number) => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice/${id}`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice/${id}`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -424,7 +452,8 @@ export const getPurchaseInvoice = async (id: number) => {
 export const deletePurchaseInvoice = async (id: number) => {
   try {
     const data = await api.delete<any>(
-      `${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice/${id}`,
+      `${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice/${id}`, { 
+      withCredentials: true }
     );
     return data;
   } catch (error) {
@@ -441,9 +470,10 @@ export const postPurchaseInvoice = async (purchInvoice: InvoiceMaster) => {
   try {
     const data = await api.post(
       `${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice`,
-      purchInvoice,
+      purchInvoice, { 
+      withCredentials: true }
     );
-    return data.data.data;
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -458,9 +488,10 @@ export const putPurchaseInvoice = async (purchInvoice: InvoiceMaster) => {
   try {
     const data = await api.put(
       `${import.meta.env.VITE_API_ENDPOINT}PurchaseInvoice`,
-      purchInvoice,
+      purchInvoice, { 
+      withCredentials: true }
     );
-    return data.data.data;
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -474,8 +505,9 @@ export const putPurchaseInvoice = async (purchInvoice: InvoiceMaster) => {
 // related to invoice
 export const getSalesInvoices = async () => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -489,9 +521,10 @@ export const getSalesInvoices = async () => {
 export const navigateSalesInvoices = async (pageNo: number, rowPerPage: number) => {
   try {
     const data = await api.get(
-      `${import.meta.env.VITE_API_ENDPOINT}SalesInvoice/Navigate?pageNo=${pageNo}&rowPerPage=${rowPerPage}`,
+      `${import.meta.env.VITE_API_ENDPOINT}SalesInvoice/Navigate?pageNo=${pageNo}&rowPerPage=${rowPerPage}`, { 
+      withCredentials: true }
     );
-    return data.data.data;
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -504,8 +537,9 @@ export const navigateSalesInvoices = async (pageNo: number, rowPerPage: number) 
 
 export const getSalesInvoice = async (id: number) => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice/${id}`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice/${id}`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -518,7 +552,8 @@ export const getSalesInvoice = async (id: number) => {
 
 export const deleteSalesInvoice = async (id: number) => {
   try {
-    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice/${id}`);
+    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice/${id}`, { 
+      withCredentials: true });
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -532,8 +567,9 @@ export const deleteSalesInvoice = async (id: number) => {
 
 export const postSalesInvoice = async (salesInvoice: InvoiceMaster) => {
   try {
-    const data = await api.post(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice`, salesInvoice);
-    return data.data.data;
+    const data = await api.post(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice`, salesInvoice, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -547,7 +583,7 @@ export const postSalesInvoice = async (salesInvoice: InvoiceMaster) => {
 export const putSalesInvoice = async (salesInvoice: InvoiceMaster) => {
   try {
     const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}SalesInvoice`, salesInvoice);
-    return data.data.data;
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -562,7 +598,7 @@ export const putSalesInvoice = async (salesInvoice: InvoiceMaster) => {
 export const getTaxes = async () => {
   try {
     const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Tax`);
-    return data.data.data;
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -576,7 +612,7 @@ export const getTaxes = async () => {
 export const getTax = async (id: number) => {
   try {
     const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Tax/${id}`);
-    return data.data.data;
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -589,8 +625,9 @@ export const getTax = async (id: number) => {
 
 export const postTax = async (tax: Tax) => {
   try {
-    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}Tax`, tax);
-    return data.data.data;
+    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}Tax`, tax, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -603,8 +640,9 @@ export const postTax = async (tax: Tax) => {
 
 export const putTax = async (tax: Tax) => {
   try {
-    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}Tax`, tax);
-    return data.data.data;
+    const data = await api.put(`${import.meta.env.VITE_API_ENDPOINT}Tax`, tax, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -617,7 +655,8 @@ export const putTax = async (tax: Tax) => {
 
 export const deleteTax = async (id: number) => {
   try {
-    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Tax/${id}`);
+    const data = await api.delete<any>(`${import.meta.env.VITE_API_ENDPOINT}Tax/${id}`, { 
+      withCredentials: true });
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -657,8 +696,9 @@ export const userLogin = async (userLogin: UserLogin) => {
 // for reports
 export const getProfitSummaryReport = async () => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Report/GrossProfit`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Report/GrossProfit`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -671,8 +711,26 @@ export const getProfitSummaryReport = async () => {
 
 export const getInventorySummaryReport = async () => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Report/Inventory`);
-    return data.data.data;
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Report/Inventory`, { 
+      withCredentials: true });
+    return data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+// dashboard related 
+
+export const getDashboardSalesPurch = async () => {
+  try {
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}DahboardSummary/SalesPurch`, { 
+      withCredentials: true });
+    return data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);

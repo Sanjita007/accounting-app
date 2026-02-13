@@ -67,7 +67,7 @@ const InventoryReport = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await getInventorySummaryReport();
-      setReportSummary(result);
+      setReportSummary(result.data);
     };
     fetchData();
   }, []);

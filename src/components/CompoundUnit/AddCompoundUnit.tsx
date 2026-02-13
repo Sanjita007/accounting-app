@@ -47,8 +47,8 @@ const AddCompoundUnit = () => {
     const fetchAllData = async () => {
       const [groupRes] = await Promise.all([getUnits()]);
 
-      setUnits(groupRes);
-      setParentUnits(groupRes);
+      setUnits(groupRes.data);
+      setParentUnits(groupRes.data);
       // if (id) {
       // 	const result = await getProduct(parseInt(id));
       // 	setProduct(result);
@@ -109,7 +109,7 @@ const AddCompoundUnit = () => {
     if (id) {
       const fetchUnitData = async () => {
         const result = await getCompoundUnit(parseInt(id));
-        setCompoundUnit(result);
+        setCompoundUnit(result.data);
       };
       fetchUnitData();
     }

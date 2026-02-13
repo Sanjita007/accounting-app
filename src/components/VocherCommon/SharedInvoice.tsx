@@ -724,9 +724,9 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
       getTaxes(),
     ]);
 
-    setProducts(prodRes);
-    setProductList(prodRes);
-    setTaxes(taxRes);
+    setProducts(prodRes.data);
+    setProductList(prodRes.data);
+    setTaxes(taxRes.data);
 
     if (id) {
       const invoice = await props.api.get(Number(id));

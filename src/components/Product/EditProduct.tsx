@@ -1,6 +1,7 @@
-import { Label, TextInput, Select, Checkbox } from 'flowbite-react';
-import { useContext, useEffect, useState } from 'react';
+import { Label, TextInput, Select, Checkbox, Button } from 'flowbite-react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
+import img_empty from '/src/assets/images/no-image-icon-6.png';
 
 import {
   deleteProduct,
@@ -15,9 +16,9 @@ import {
 
 import { Product, ProductGroup, Tax, Unit } from 'src/Models/Model';
 import { NumberInput } from '../shared/CustomNumberInput';
-import { useCustomAlertBox } from '../shared/CustomAlertBox';
 import CustomButtons from '../shared/CustomButtons';
 import { CustomBoxContext } from '../shared/useConfirmation';
+import { useAlertBox } from '../shared/AlertBox';
 
 type Props = {
   id: number;
@@ -27,9 +28,11 @@ type Props = {
 const ProductAddEdit = (props: Props) => {
   let id = props.id;
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const navigate = useNavigate();
 
-  const { apiWithToast } = useCustomAlertBox();
+  const { useApiWithToast } = useAlertBox();
 
   const [productGroups, setProductGroups] = useState<ProductGroup[] | null>(null);
   const [units, setUnits] = useState<Unit[] | null>(null);
@@ -48,15 +51,18 @@ const ProductAddEdit = (props: Props) => {
         ({
           ...(prev ?? {}),
           groupID: res,
-        } as Product),
+        }) as Product,
     );
   };
 
   const handleNew = async (e: React.MouseEvent<HTMLButtonElement>) => {
     setProduct(null);
-    const res = await showConfirmation('Love Bomb', 'Stop love bombing mee!');
-    alert('value is : ' + res);
+    const res = await showConfirmation('Confirmation', 'Are you sure you want to clear all data?');
     props.setId(0);
+  };
+
+  const handleFileButtonClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    fileInputRef.current?.click();
   };
 
   const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -64,9 +70,9 @@ const ProductAddEdit = (props: Props) => {
     props.setId(0);
   };
 
-  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
     if (product?.id) {
-      apiWithToast(deleteProduct(product.id), {
+      await useApiWithToast(deleteProduct(product.id), {
         loading: 'Deleting product..',
         success: 'Product deleted successfully!',
         error: 'Failed to delte the product.',
@@ -75,23 +81,34 @@ const ProductAddEdit = (props: Props) => {
     }
   };
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     if (product) {
+      let res = false;
+      debugger;
       if (product.id) {
-        apiWithToast(putProduct(product), {
+        res = await useApiWithToast(putProduct(product), {
           loading: 'Updating product..',
           success: 'Product updated successfully!',
           error: 'Failed to update a product.',
         });
       } else {
-        apiWithToast(postProduct(product), {
+        res = await useApiWithToast(postProduct(product), {
           loading: 'Creating product',
           success: 'Product created successfully!',
           error: 'Failed to create a product.',
         });
       }
-
-      navigate('/product');
+      alert(res);
+      if (res == true) {
+        // trigger the new button click event..
+        // it is not possible to do it with useRef because we cannot access buttns as
+        // they are in the component
+        // maybe look for ways to solve this issue next
+        setProduct(null);
+        props.setId(0);
+      }
+      //navigate('/product');
     }
   };
 
@@ -102,7 +119,7 @@ const ProductAddEdit = (props: Props) => {
         ({
           ...(prev ?? {}),
           taxID: res,
-        } as Product),
+        }) as Product,
     );
   };
 
@@ -113,7 +130,7 @@ const ProductAddEdit = (props: Props) => {
         ({
           ...(prev ?? {}),
           unitID: res,
-        } as Product),
+        }) as Product,
     );
   };
 
@@ -125,7 +142,7 @@ const ProductAddEdit = (props: Props) => {
         ({
           ...(prev ?? {}),
           salesRate: res,
-        } as Product),
+        }) as Product,
     );
 
     console.log(product?.salesRate);
@@ -137,7 +154,7 @@ const ProductAddEdit = (props: Props) => {
         ({
           ...(prev ?? {}),
           isInventoryApplicable: e.target.checked,
-        } as Product),
+        }) as Product,
     );
   };
 
@@ -147,7 +164,7 @@ const ProductAddEdit = (props: Props) => {
         ({
           ...(prev ?? {}),
           isDecimalApplicable: e.target.checked,
-        } as Product),
+        }) as Product,
     );
   };
 
@@ -157,7 +174,7 @@ const ProductAddEdit = (props: Props) => {
         ({
           ...(prev ?? {}),
           isActive: e.target.checked,
-        } as Product),
+        }) as Product,
     );
   };
 
@@ -169,7 +186,7 @@ const ProductAddEdit = (props: Props) => {
         ({
           ...(prev ?? {}),
           purchaseRate: res,
-        } as Product),
+        }) as Product,
     );
   };
 
@@ -180,7 +197,7 @@ const ProductAddEdit = (props: Props) => {
         ({
           ...(prev ?? {}),
           engName: res,
-        } as Product),
+        }) as Product,
     );
   };
 
@@ -191,7 +208,7 @@ const ProductAddEdit = (props: Props) => {
         ({
           ...(prev ?? {}),
           nepName: res,
-        } as Product),
+        }) as Product,
     );
   };
 
@@ -202,7 +219,45 @@ const ProductAddEdit = (props: Props) => {
         ({
           ...(prev ?? {}),
           code: res,
-        } as Product),
+        }) as Product,
+    );
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const res = e.target;
+    debugger;
+    const fileReader = new FileReader();
+    if (res?.files != null) {
+      // check for the file
+
+      const file = res?.files[0];
+      if (file.size > 1 * 1024 * 300) {
+        alert('File size cannot be more than 300 KB!');
+        return;
+      }
+      fileReader.readAsDataURL(file);
+
+      //what to do when the file is loaded, without this the image was not shown.. because it take
+      // some time for the file to be read and this tell what to do when the file is completely read
+      // was zu tun wenn die Datei hochladen(?) ist. Ohne diese Method, das Bild ist nicht angeschaut..
+      // weil es braucht ein bisschen Zeit, das Photo lesen(?) und diese Method sagt was zu tun when fertig
+      fileReader.onload = () => {
+        setProduct(
+          (prev) =>
+            ({
+              ...(prev ?? {}),
+              image: fileReader.result as string,
+            }) as Product,
+        );
+      };
+    }
+
+    setProduct(
+      (prev) =>
+        ({
+          ...(prev ?? {}),
+          image: fileReader.result,
+        }) as Product,
     );
   };
 
@@ -225,9 +280,9 @@ const ProductAddEdit = (props: Props) => {
         getDepots(),
       ]);
 
-      setProductGroups(groupRes);
-      setUnits(unitRes);
-      setTaxes(taxRes);
+      setProductGroups(groupRes.data);
+      setUnits(unitRes.data);
+      setTaxes(taxRes.data);
 
       // if (id) {
       //   const result = await getProduct(parseInt(id));
@@ -242,7 +297,7 @@ const ProductAddEdit = (props: Props) => {
     if (id) {
       const fetchProductData = async () => {
         const result = await getProduct(id);
-        setProduct(result);
+        setProduct(result.data);
 
         console.log(product?.groupID);
         console.log(product);
@@ -452,13 +507,26 @@ const ProductAddEdit = (props: Props) => {
               <div className="mb-2 block">
                 <Label>Image</Label>
               </div>
-              <img
-                src='.../src/assets/images/no-image-icon-6.png'
-                alt="Dynamic binary content"
+              <div className="mb-2 block">
+                <img src={product?.image ?? img_empty} alt="Dynamic binary content" />
+              </div>
+            </div>
+            <div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept="image/*"
+                style={{ display: 'none' }}
+                id="contained-button-file"
+                onChange={handleFileChange}
               />
+              <label htmlFor="contained-button-file">
+                <Button color="primary" aria-label="upload Image" onClick={handleFileButtonClick}>
+                  Upload
+                </Button>
+              </label>
             </div>
           </div>
-
           <div className="col-span-12 justify-end flex gap-3">
             {/* <Button color={'green'} onClick={handleNew}>
               New

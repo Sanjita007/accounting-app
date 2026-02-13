@@ -1,23 +1,40 @@
+import Chart from 'react-apexcharts';
+import CardBox from '../shared/CardBox';
+import { ProfitLossDashboard } from 'src/Models/Model';
+import { useEffect, useMemo, useState } from 'react';
+import { getDashboardSalesPurch } from 'src/api';
 
-import Chart from "react-apexcharts";
-import CardBox from "../shared/CardBox";
 const SalesProfit = () => {
+  const [summary, setSummary] = useState<ProfitLossDashboard | null>(null);
 
+  useEffect(() => {
+    const fetchAllData = async () => {
+      const [summ] = await Promise.all([getDashboardSalesPurch()]);
 
-  const optionexpenses: any = {
+      setSummary(summ.data);
+
+      console.log(summ);
+     
+      console.log(summary);
+    };
+    fetchAllData();
+  }, []);
+
+  // use memo is to reload the value when summary is loaded from the api call
+  const optionexpenses: any = useMemo(() => ({
     series: [
       {
-        name: "Profit",
-        data: [9, 5, 3, 7, 5, 10, 3],
+        name: 'Sales',
+        data: summary?.salesAmounts || [],
       },
       {
-        name: "Expenses",
-        data: [6, 3, 9, 5, 4, 6, 4],
+        name: 'Purchase',
+        data: summary?.purchAmounts || [],
       },
     ],
     chart: {
-      fontFamily: "inherit",
-      type: "bar",
+      fontFamily: 'inherit',
+      type: 'bar',
       height: 375,
       offsetY: 10,
       offsetX: -18,
@@ -28,15 +45,15 @@ const SalesProfit = () => {
     grid: {
       show: true,
       strokeDashArray: 3,
-      borderColor: "rgba(0,0,0,.1)",
+      borderColor: 'rgba(0,0,0,.1)',
     },
-    colors: ["var(--color-primary)", "var(--color-error)"],
+    colors: ['var(--color-primary)', 'var(--color-error)'],
     plotOptions: {
       bar: {
         borderRadius: 5,
         horizontal: false,
-        columnWidth: "30%",
-        endingShape: "rounded",
+        columnWidth: '30%',
+        endingShape: 'rounded',
       },
     },
     dataLabels: {
@@ -45,11 +62,11 @@ const SalesProfit = () => {
     stroke: {
       show: true,
       width: 5,
-      colors: ["transparent"],
+      colors: ['transparent'],
     },
     xaxis: {
-      type: "category",
-      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      type: 'category',
+      categories: summary?.months || [],
 
       axisTicks: {
         show: false,
@@ -59,27 +76,27 @@ const SalesProfit = () => {
       },
       labels: {
         style: {
-          colors: "#a1aab2",
+          colors: '#a1aab2',
         },
       },
     },
     yaxis: {
       labels: {
         style: {
-          colors: "#a1aab2",
+          colors: '#a1aab2',
         },
       },
-      min: 0,
-      max: 12,
-      tickAmount: 4,
+      //min: 0,
+      // max: 12,
+      tickAmount: 5,
     },
 
     fill: {
       opacity: 1,
-      colors: ["var(--color-primary)", "var(--color-error)"],
+      colors: ['var(--color-primary)', 'var(--color-error)'],
     },
     tooltip: {
-      theme: "dark",
+      theme: 'dark',
     },
     legend: {
       show: false,
@@ -92,28 +109,27 @@ const SalesProfit = () => {
           stroke: {
             show: false,
             width: 5,
-            colors: ["transparent"],
+            colors: ['transparent'],
           },
         },
       },
     ],
-  };
-
+  }), [summary]);
 
   return (
     <CardBox>
       <div className="flex justify-between items-center">
-        <h5 className="card-title">Profit & Expenses</h5>
+        <h5 className="card-title">Sales & Purchase</h5>
       </div>
-        <div>
-          <Chart
-            options={optionexpenses}
-            series={optionexpenses.series}
-            type="bar"
-            height="375px"
-            width={"100%"}
-          />
-        </div>
+      <div>
+        <Chart
+          options={optionexpenses}
+          series={optionexpenses.series}
+          type="bar"
+          height="375px"
+          width={'100%'}
+        />
+      </div>
     </CardBox>
   );
 };

@@ -24,7 +24,7 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (resp) => {
-    debugger;
+    
     if (resp.data.statusCode == 401) {
       handleUnauthorized();
     }
@@ -32,7 +32,7 @@ api.interceptors.response.use(
     return resp;
   },
   async (error) => {
-    debugger;
+    
     if (error.response.status == 401) {
       handleUnauthorized();
     }

@@ -72,7 +72,7 @@ const ListSalesInvoice_Old = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await navigateSalesInvoices(pageNo, rowPerPage);
-      setSalesInvoices(result);
+      setSalesInvoices(result.data);
     };
     fetchData();
   }, [pageNo]); // only need to fetch new data when the selected page number changes

@@ -218,10 +218,10 @@ const AddProduct = (props: Props) => {
         getDepots(),
       ]);
 
-      setProductGroups(groupRes);
-      setUnits(unitRes);
-      setTaxes(taxRes);
-      setDepots(depotRes);
+      setProductGroups(groupRes.data);
+      setUnits(unitRes.data);
+      setTaxes(taxRes.data);
+      setDepots(depotRes.data);
 
       // if (id) {
       //   const result = await getProduct(parseInt(id));
@@ -236,7 +236,7 @@ const AddProduct = (props: Props) => {
     if (id) {
       const fetchProductData = async () => {
         const result = await getProduct(parseInt(id));
-        setProduct(result);
+        setProduct(result.data);
 
         console.log(product?.groupID);
         console.log(product);

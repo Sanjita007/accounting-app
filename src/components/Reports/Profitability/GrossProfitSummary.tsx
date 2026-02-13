@@ -64,7 +64,7 @@ const GrossProfitReport = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await getProfitSummaryReport();
-      setGrossProfitSummary(result);
+      setGrossProfitSummary(result.data);
     };
     fetchData();
   }, []);

@@ -90,7 +90,7 @@ const AddTax = (props: Props) => {
     if (id) {
       const fetchTaxData = async () => {
         const result = await getTax(parseInt(id));
-        setTax(result);
+        setTax(result.data);
       };
       fetchTaxData();
     }

@@ -64,7 +64,7 @@ const configs: Config[] = [
   useEffect(() => {
     const fetchData = async () => {
       const result = await getUnits();
-      setUnits(result);
+      setUnits(result.data);
     };
     fetchData();
   }, []);

@@ -65,7 +65,7 @@ const configs: Config[] = [
   useEffect(() => {
     const fetchData = async () => {
       const result = await getTaxes();
-      setTaxes(result);
+      setTaxes(result.data);
     };
     fetchData();
   }, []);
