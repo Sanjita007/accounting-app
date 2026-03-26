@@ -11,6 +11,7 @@
     "postinstall": "flowbite-react patch",
     "start": "vite"
   },
+  "proxy": "http://localhost:1225",
   "dependencies": {
     "@react-pdf/renderer": "^4.3.1",
     "@svgr/rollup": "8.1.0",

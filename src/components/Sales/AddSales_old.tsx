@@ -17,38 +17,24 @@ import Dropdown from 'react-dropdown-select';
 import {
   getProducts,
   getRelatedUnits,
+  getSalesInvoice,
   getTaxes,
+  postSalesInvoice,
+  putSalesInvoice,
 } from 'src/api';
 
-import { InvoiceDetail, InvoiceMaster, Product, RelatedUnit, Tax } from 'src/Models/Model';
+import { Product, RelatedUnit, InvoiceDetail, InvoiceMaster, Tax } from 'src/Models/Model';
 import { NumberInput } from '../shared/CustomNumberInput';
 import { useCustomAlertBox } from '../shared/CustomAlertBox';
 import { FormatIntoNumber } from 'src/utils/utils';
 import { ProductListModal } from '../Product/ProductListModal';
-import { useAlertBox } from '../shared/AlertBox';
 
-interface BaseInvoiceProps {
-  type: 'SALE' | 'PURCHASE';
-  api: {
-    get: (id: number) => Promise<any>;
-    save: (data: any) => Promise<any>;
-    update: (data: any) => Promise<any>;
-  };
-  labels: {
-    entityName: string; // "Customer" or "Supplier"
-    priceLabel: string; // "Sales Price" or "Unit Cost"
-    invoiceName: string; // purchase invoice or sales invoice
-  };
-  redirectPath: string; ///sales-invoice or //purchase-invoice
-}
-
-const SharedInvoice = (props: BaseInvoiceProps) => {
+const AddSalesInvoice_old = () => {
   let { id } = useParams();
   const navigate = useNavigate();
   const isInitialized = useRef(false);
   
-  //const { apiWithToast } = useCustomAlertBox();
-  const { useApiWithToast } = useAlertBox();
+  const { apiWithToast } = useCustomAlertBox();
 
   const [products, setProducts] = useState<Product[] | null>(null);
   //const [units, setUnits] = useState<Unit[] | null>(null);
@@ -60,33 +46,26 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
 
   const [productList, setProductList] = useState<Product[]>([]);
 
-  const [invoice, setInvoice] = useState<InvoiceMaster | null>(null);
+  const [salesInvoice, setSalesInvoice] = useState<InvoiceMaster | null>(null);
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    if (invoice) {
-      var res = false;
-      if (invoice.id) {
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (salesInvoice) {
+      if (salesInvoice.id) {
         //alert("updating");
-         res = await useApiWithToast(props.api.update(invoice), {
-          loading: `Updating ${props.labels.invoiceName}..`,
-          success: `${props.labels.invoiceName} updated successfully!`,
-          error: `Failed to update ${props.labels.invoiceName}.`,
+        apiWithToast(putSalesInvoice(salesInvoice), {
+          loading: 'Updating sales invoice..',
+          success: 'Sales Invoice updated successfully!',
+          error: 'Failed to update a Sales Invoice.',
         });
       } else {
-        res = await useApiWithToast(props.api.save(invoice), {
-          loading: `Creating ${props.labels.invoiceName}`,
-          success: `${props.labels.invoiceName} created successfully!`,
-          error: `Failed to create ${props.labels.invoiceName}.`,
+        apiWithToast(postSalesInvoice(salesInvoice), {
+          loading: 'Creating sales invoice',
+          success: 'Sales Invoice created successfully!',
+          error: 'Failed to create a sales invoice.',
         });
       }
 
-      // only navigate to the list page if the data is saved successfully
-      // otherwise let the user change the data and try saving again
-      if(res == true){
-        navigate(props.redirectPath);
-      }
+      navigate('/sales-invoice');
     }
   };
 
@@ -112,7 +91,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
       taxes?.find((t) => String(t.id) === String(taxId)),
     );
 
-    setInvoice((prev) => {
+    setSalesInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
       const updatedDetails = prev.details.map((d, i) => {
@@ -134,7 +113,6 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
   const handleProductChange = async (index: number, value: any) => {
     console.log('value is ' + value);
     console.log('index is ' + index);
-    debugger;
   if (!isInitialized.current) return;
     debugger;
     const productID = parseInt(value);
@@ -143,8 +121,6 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
 
     const GetUnits = await getRelatedUnits(product?.unitID ?? 0);
 
-    console.log(GetUnits);
-    
     setProducts((prevProducts) => {
       if (!prevProducts) {
         return [];
@@ -154,14 +130,14 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
         if (product.id === productID) {
           return {
             ...product,
-            units: GetUnits.data,
+            units: GetUnits,
           };
         }
         return product;
       });
     });
 
-    setInvoice((prev) => {
+    setSalesInvoice((prev) => {
       if (!prev) return prev; // nothing to update
       debugger;
 
@@ -180,9 +156,9 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
               netAmount: netAmt,
               discount: disc,
               amount: amt,
-              price: product?.salesRate ?? 0,
+              salesPrice: product?.salesRate ?? 0,
               taxID: product?.taxID ?? 0,
-              unitDetails: GetUnits.data,
+              unitDetails: GetUnits,
               defaultUnitID: product?.unitID ?? 0,
               defaultUnitName: product?.unitName ?? '',
               defaultUnitSymbol: product?.unitSymbol ?? '',
@@ -224,7 +200,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
 
   const handleQuantityChanges = (index: number, value: string | null) => {
       if (!isInitialized.current) return;
-    setInvoice((prev) => {
+    setSalesInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
       const updatedDetails = prev.details.map((d, i) => {
@@ -260,8 +236,8 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
 
   const handleUnitChanges = async (index: number, value: number | null) => {
     if (!isInitialized.current) return;
-    if (!invoice) return;
-    let copyDetail = invoice?.details ?? [];
+    if (!salesInvoice) return;
+    let copyDetail = salesInvoice?.details ?? [];
     const d = copyDetail[index];
 
     // const actualQty = await convertUnit(
@@ -269,7 +245,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
     //           value??0,
     //           d?.quantity??0
     //         );
-    const unit = d.unitDetails.filter((r) => r.id == value);
+    const unit = d.unitDetails.find(r => r.id == value);
 
     if (unit == null) {
       alert('No relation between the units');
@@ -277,7 +253,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
     }
 
     let qty = d?.quantity;
-    let amt = qty * (unit[0]?.conversionRate ?? 0) * d?.price;
+    let amt = qty * (unit?.conversionRate ?? 0) * d?.price;
 
     const disc = (amt * (d?.discPercent ?? 0)) / 100;
     const netAmt = amt - disc;
@@ -291,8 +267,8 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
       ...calculateTax(d.taxID, netAmt),
     };
 
-    setInvoice({
-      ...invoice,
+    setSalesInvoice({
+      ...salesInvoice,
       details: copyDetail,
       ...calculateAllAmounts(copyDetail),
     });
@@ -300,7 +276,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
 
   const handlePriceChanges = (index: number, value: string | null) => {
     if (!isInitialized.current) return;
-    setInvoice((prev) => {
+    setSalesInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
       const updatedDetails = prev.details.map((d, i) => {
@@ -313,7 +289,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
         return i === index
           ? {
               ...d,
-              price: price,
+              salesPrice: price,
               amount: amt,
               //discount: disc,
               netAmount: netAmt,
@@ -334,7 +310,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
 
   const handleDiscountChanges = (index: number, value: string | null) => {
     if (!isInitialized.current) return;
-    setInvoice((prev) => {
+    setSalesInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
       const updatedDetails = prev.details.map((d, i) => {
@@ -359,7 +335,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
   };
 
   const handleRemarksChanges = (index: number, value: string | null) => {
-    setInvoice((prev) => {
+    setSalesInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
       const updatedDetails = prev.details.map((d, i) => {
@@ -371,7 +347,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
   };
 
   const handleRowDelete = (key: string | null) => {
-    setInvoice((prev) => {
+    setSalesInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
       let updatedDetails = prev.details.filter((item) => item.uid != key);
@@ -417,7 +393,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
   };
 
   const handleAddRow = (row: number) => {
-    setInvoice((prev) => {
+    setSalesInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
       // if the last row does not have any product then donot add more rows below it
@@ -458,7 +434,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
 
   const handleVoucherNoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const res = e.target.value;
-    setInvoice(
+    setSalesInvoice(
       (prev) =>
         ({
           ...(prev ?? {}),
@@ -468,7 +444,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
   };
 
   const handleDateChange = (value: Date | null) => {
-    setInvoice(
+    setSalesInvoice(
       (prev) =>
         ({
           ...(prev ?? {}),
@@ -479,11 +455,11 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
 
   const handleCustomerNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const res = e.target.value;
-    setInvoice(
+    setSalesInvoice(
       (prev) =>
         ({
           ...(prev ?? {}),
-          entityName: res,
+          customerName: res,
         } as InvoiceMaster),
     );
   };
@@ -592,17 +568,17 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
       label: 'Price',
       render: (p, index) => {
         return (
-          <div className="flex gap-1 w-30 overflow-hidden">
+          <div className="flex gap-4 w-20 overflow-hidden">
             <NumberInput
               decimalPrecision={{ integerDigits: 5, decimalDigits: 2 }}
               id="price"
               placeholder="Price"
               required
-              className="flex gap-1 w-full h-full"
+              className="flex gap-4 w-full h-full"
               value={p?.price ?? 0.0}
               onChange={(value) => handlePriceChanges(index, value)}
             />
-            <span className='flex items-center'>{p.defaultUnitSymbol === '' ? '' : '/' + p.defaultUnitSymbol}</span>
+            <span>{p.defaultUnitSymbol === '' ? '' : '/' + p.defaultUnitSymbol}</span>
           </div>
         );
       },
@@ -741,8 +717,8 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
     setTaxes(taxRes.data);
 
     if (id) {
-      const invoice = await props.api.get(Number(id));
-      setInvoice(invoice.data);
+      const invoice = await getSalesInvoice(Number(id));
+      setSalesInvoice(invoice.data);
     } else {
       resetForm();
     }
@@ -756,7 +732,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
 
 
   const resetForm = () => {
-    setInvoice({
+    setSalesInvoice({
       id: 0,
       seriesID: 0,
       cashLedgerID: 0,
@@ -764,7 +740,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
       depotID: 0,
       orderNo: null,
       voucherNo: null,
-      entityName: null,
+      customerName: null,
       date: new Date(),
       projectID: null,
       totalQty: 0,
@@ -783,7 +759,9 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
       changeAmount: 0,
       adjustmentAmount: 0,
       createdBy: 0,
+      createdDate: '',
       modifiedBy: 0,
+      modifiedDate: '',
       companyID: 1,
       details: [
         {
@@ -816,9 +794,9 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
     });
   };
 
-  console.log(invoice);
-  const renderRows = invoice?.details
-    ? invoice.details.map((detail, index) => {
+  console.log(salesInvoice);
+  const renderRows = salesInvoice?.details
+    ? salesInvoice.details.map((detail, index) => {
         console.log(detail);
 
         detail.uid =
@@ -860,7 +838,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
         onRowClick={(index, productID) => handleProductChange(index, productID)}
       ></ProductListModal>
 
-      <h5 className="card-title">{id ? 'Edit' : 'Add'} a {props.labels.invoiceName}</h5>
+      <h5 className="card-title">{id ? 'Edit' : 'Add'} a Sales Invoice</h5>
       <div className="mt-6">
         <div className="grid grid-cols-12 gap-6">
           <div className="lg:col-span-6 col-span-12">
@@ -875,7 +853,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
                   placeholder="Voucher No"
                   required
                   className="form-control form-rounded-xl"
-                  value={invoice?.voucherNo ?? ''}
+                  value={salesInvoice?.voucherNo ?? ''}
                   onChange={handleVoucherNoChange}
                 />
               </div>
@@ -885,7 +863,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
                 </div>
                 <Datepicker
                   weekStart={1} // Monday
-                  value={invoice?.date ?? new Date()}
+                  value={salesInvoice?.date ?? new Date()}
                   onChange={(value) => handleDateChange(value)}
                 />
               </div>
@@ -893,15 +871,15 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
           </div>
           <div className="lg:col-span-6 col-span-12">
             <div className="mb-2 block">
-              <Label>{props.labels.entityName}</Label>
+              <Label>Customer Name</Label>
             </div>
             <TextInput
               id="name"
               type="text"
-              placeholder={props.labels.entityName}
+              placeholder="Customer Name"
               required
               className="form-control form-rounded-xl"
-              value={invoice?.entityName ?? ''}
+              value={salesInvoice?.customerName ?? ''}
               onChange={handleCustomerNameChange}
             />
           </div>
@@ -917,39 +895,39 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
           <div className="col-span-12 flex gap-3">
             <div>
               <label>Total Quantity: </label>
-              <span>{Number(invoice?.totalQty.toFixed(2) ?? 0)}</span>
+              <span>{Number(salesInvoice?.totalQty.toFixed(2) ?? 0)}</span>
             </div>
           </div>
 
           <div className="col-span-12 flex gap-3">
             <div>
               <label>Gross Amount: </label>
-              <span>{Number(invoice?.grossAmount.toFixed(2) ?? 0)}</span>
+              <span>{Number(salesInvoice?.grossAmount.toFixed(2) ?? 0)}</span>
             </div>
           </div>
 
           <div className="col-span-12 flex gap-3">
             <div>
               <label>Total Discount: </label>
-              <span>{Number(invoice?.specialDiscount.toFixed(2) ?? 0)}</span>
+              <span>{Number(salesInvoice?.specialDiscount.toFixed(2) ?? 0)}</span>
             </div>
           </div>
           <div className="col-span-12 flex gap-3">
             <div>
               <label>Net Amount: </label>
-              <span>{Number(invoice?.netAmount.toFixed(2) ?? 0)}</span>
+              <span>{Number(salesInvoice?.netAmount.toFixed(2) ?? 0)}</span>
             </div>
           </div>
           <div className="col-span-12 flex gap-3">
             <div>
               <label>Tax Amount: </label>
-              <span>{Number(invoice?.totalTCAmount.toFixed(2) ?? 0)}</span>
+              <span>{Number(salesInvoice?.totalTCAmount.toFixed(2) ?? 0)}</span>
             </div>
           </div>
           <div className="col-span-12 flex gap-3">
             <div>
               <label>Total Amount: </label>
-              <span>{Number(invoice?.totalAmount.toFixed(2) ?? 0)}</span>
+              <span>{Number(salesInvoice?.totalAmount.toFixed(2) ?? 0)}</span>
             </div>
           </div>
           <div className="col-span-12 flex gap-3">
@@ -964,4 +942,4 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
   );
 };
 
-export default SharedInvoice;
+export default AddSalesInvoice_old;

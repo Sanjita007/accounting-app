@@ -20,7 +20,11 @@ const AuthLogin = () => {
       //   success: `$Logged in as ${user.userName} successfully!`,
       //   error: `Failed to log in as ${user.userName}.`,
       //debugger;
-      const res = await useApiWithToast(userLogin(user), null);
+      const res = await useApiWithToast(userLogin(user),  {
+            loading: 'logging in..',
+            success: 'Login successful !',
+            error: 'Failed to log in !',
+          });
       if (res == true) {
         navigate('/');
       }

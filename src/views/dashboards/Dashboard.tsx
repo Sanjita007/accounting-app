@@ -10,10 +10,10 @@ const Dashboard = () => {
   return (
     <>
       <div className="grid grid-cols-12 gap-6">
-        <div className="lg:col-span-8 col-span-12">
+        <div className="lg:col-span-12 col-span-12">
           <SalesProfit />
         </div>
-        <div className="lg:col-span-4 col-span-12">
+        {/* <div className="lg:col-span-4 col-span-12">
           <div className="grid grid-cols-12 ">
             <div className="col-span-12 mb-6">
               <TrafficDistribution />
@@ -22,13 +22,13 @@ const Dashboard = () => {
               <ProductSales />
             </div>
           </div>
-        </div>
-        <div className="lg:col-span-4 col-span-12">
+        </div> */}
+        <div className="lg:col-span-12 col-span-12">
           <RecentTransactionCard />
         </div>
-        <div className="lg:col-span-8 col-span-12">
+        {/* <div className="lg:col-span-8 col-span-12">
           <TopPayingClients />
-        </div>
+        </div> */}
         <div className="col-span-12">
           <ProductCards />
         </div>

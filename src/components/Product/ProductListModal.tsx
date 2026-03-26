@@ -117,7 +117,7 @@ export const ProductListModal = (props: Props) => {
         <ModalHeader>List of Products</ModalHeader>
         <ModalBody>
           <div className="bg-white rounded-lg p-4 sm:p-6 xl:p-8" tabIndex={-1}>
-            <Table striped className="min-w-full divide-y divide-gray-200" ref = {refTable} tabIndex={0}>
+            <Table hoverable striped ref = {refTable} tabIndex={0}>
               <TableHead>{renderHeaders}</TableHead>
               <TableBody className="divide-y">{renderRows}</TableBody>
             </Table>

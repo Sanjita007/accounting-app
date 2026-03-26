@@ -57,38 +57,39 @@ const AddCompoundUnit = () => {
     fetchAllData();
   }, [id]);
 
-  const handleParentUnitChange = (value: any) => {
-    let res = parseFloat(value);
+  const handleParentUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    debugger;
+    let res = parseInt(e.target.value);
     setCompoundUnit(
       (prev) =>
         ({
           ...(prev ?? {}),
-          parentGroupId: res,
+          parentUnitID: res,
         } as CompoundUnit),
     );
   };
 
   const handleRelationValueChange = (value: any) => {
-    console.log(value);
+    debugger;
     let res = parseFloat(value); //FormatIntoNumber(e.target.value);
     setCompoundUnit(
       (prev) =>
         ({
           ...(prev ?? {}),
-          salesRate: res,
+          relationValue: res,
         } as CompoundUnit),
     );
 
     console.log(compoundUnit?.relationValue);
   };
 
-  const handleUnitChange = (value: any) => {
-    let res = parseFloat(value);
+  const handleUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    let res = parseInt(e.target.value);
     setCompoundUnit(
       (prev) =>
         ({
           ...(prev ?? {}),
-          unitId: res,
+          unitID: res,
         } as CompoundUnit),
     );
   };

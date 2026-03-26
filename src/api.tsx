@@ -473,7 +473,7 @@ export const postPurchaseInvoice = async (purchInvoice: InvoiceMaster) => {
       purchInvoice, { 
       withCredentials: true }
     );
-    return data.data;
+    return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -682,7 +682,7 @@ export const userLogin = async (userLogin: UserLogin) => {
     }
     
     //console.log(data);
-    return data.data;
+    return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message);
@@ -728,7 +728,40 @@ export const getInventorySummaryReport = async () => {
 
 export const getDashboardSalesPurch = async () => {
   try {
-    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}DahboardSummary/SalesPurch`, { 
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Dashboard/SalesPurch`, { 
+      withCredentials: true });
+    return data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+
+// dashboard related 
+
+export const getDashboardProducts = async () => {
+  try {
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Dashboard/Products`, { 
+      withCredentials: true });
+    return data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+    } else {
+      console.log('unexpected error: ', error);
+    }
+    return null;
+  }
+};
+
+export const getDashboardRecent = async () => {
+  try {
+    const data = await api.get(`${import.meta.env.VITE_API_ENDPOINT}Dashboard/Recent`, { 
       withCredentials: true });
     return data.data;
   } catch (error) {

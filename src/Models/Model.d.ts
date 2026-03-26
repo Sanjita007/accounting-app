@@ -99,8 +99,6 @@ export interface SalesMinimal {
 
 export interface Base {
   id: number;
-  createdDate: string; // ISO Date string
-  modifiedDate: string; // ISO Date string
   createdBy: number;
   modifiedBy: number;
   companyID: number;
@@ -143,7 +141,7 @@ export interface InvoiceMaster extends Base {
   depotID?: number | null;
   orderNo?: string | null;
   voucherNo?: string | null;
-  customerName?: string | null;
+  entityName?: string | null;
   date: Date; // ISO Date string
   projectID?: number | null;
   totalQty: number;
@@ -210,9 +208,29 @@ export interface InventorySummary {
   totalInValue: number;
 }
 
+export interface ProductDashboard{
+  productName: string;
+  salesPrice: number;
+  image: string;
+}
+
+export interface RecentDashboard{
+  date: string;
+  details: string;
+  // get all these values from api later, fix value for now
+  textcolor: "primary";
+  boldtext: false,
+  line: false,
+
+}
+
 export interface ProfitLossDashboard{
   salesAmounts: number[],
   purchAmounts: number[],
   months: string[]
 }
 
+export interface Dashboard{
+  salesPurch: ProductDash;
+  product: ProductDash[];
+}
