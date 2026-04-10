@@ -1,7 +1,7 @@
 // src/components/TreeView.tsx
 import  { useState } from 'react';
 import { Tree } from 'src/Models/Model';
-import styles from './TreeView.module.css'; // Importing the CSS Module
+import styles from './treeview.module.css'; // Importing the CSS Module
 
 interface Props {
   treeData: Tree | null;
