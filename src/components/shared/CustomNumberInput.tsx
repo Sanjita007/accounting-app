@@ -18,11 +18,12 @@ export interface CustomNumberInputProps
 
 const DEFAULT_PRECISION: DecimalPrecision = {
   integerDigits: 10,
-  decimalDigits: 2,
+  decimalDigits: 2
   //defaultValue: 0.00
 }
 
 const DECIMAL_SEPARATOR = "."
+const CURRENCY = "$";
 
 const NumberInput = React.forwardRef<HTMLInputElement, CustomNumberInputProps>(
   ({
@@ -44,6 +45,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, CustomNumberInputProps>(
         setValueInput('');
       }
     }, [value]);
+
 
     const formatValue = React.useCallback((input: string): string => {
       let formatted = input.replace(/[^\d-+,.]/, "")
@@ -107,13 +109,25 @@ const NumberInput = React.forwardRef<HTMLInputElement, CustomNumberInputProps>(
       const formattedValue = formatValue(valueInput);
 
       console.log("custom blur")
-      setValueInput(FormatIntoNumber(formattedValue));
+      const num = FormatIntoNumber(formattedValue);
+      setValueInput(AddCurrency(num));
 
       onChange?.(formattedValue === '' ? null : formattedValue);
     };
 
+    const AddCurrency =(num: string)=>{
+      console.log(CURRENCY)
+      return CURRENCY + num.toString();
+    }
+
+      const RemoveCurrency =(num: string)=>{
+      return num.replace(CURRENCY , "");
+    }
+
     const handleFocus = (e: React.ChangeEvent<HTMLInputElement>) => {
       e.target.select();
+      
+      setValueInput(RemoveCurrency(e.target.value));
     };
 
     const cn = (...inputs: ClassValue[]) => {
