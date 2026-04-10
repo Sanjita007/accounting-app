@@ -1,46 +1,42 @@
-# Getting Started with Create React App
+Full-Stack Inventory Manager
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A professional-grade React application built to manage the complexities of modern commerce. This project demonstrates advanced state management, complex data calculation (Tax/Conversions), and dynamic reporting.
 
-## Available Scripts
+🚀 Key Front-End Implementation
 
-In the project directory, you can run:
+    Complex Forms & Validation: Managed multi-line invoice creation (Sales/Purchase) with real-time tax and total calculations.
 
-### `npm start`
+    Dynamic Data Visualizations: Integrated Profit & Inventory Valuation reports using interactive charts and sortable data tables.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+    Unit Conversion Engine: Built logic to handle polymorphic units (e.g., converting "Cases" to "Units").
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+    Modern UI/UX: Leveraged the WrapPixel dashboard template for a clean, enterprise-ready aesthetic.
 
-### `npm test`
+🛠 Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    Frontend: React (Hooks, Context API/Redux)
 
-### `npm run build`
+    Styling: Bootstrap & SCSS (Customized WrapPixel Template)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    Routing: React Router 6
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    Data Handling: [e.g., Axios / Fetch API]
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    Reporting: [e.g., Chart.js / Recharts]
 
-### `npm run eject`
+🎨 Credits & Design
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+The UI shell and dashboard components are Designed and Developed by WrapPixel.com. I integrated their professional templates with my React logic to create a production-ready experience.
+📥 How to Run Locally
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    Clone & Install:
+    Bash
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+    git clone https://github.com/Sanjita007/accounting-app.git
+    cd your-repo-name
+    npm install
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+    Start Development Server:
+    Bash
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+    npm start
