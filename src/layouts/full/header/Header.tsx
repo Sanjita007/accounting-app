@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { Button, DrawerItems, Navbar } from 'flowbite-react';
+import { DrawerItems, Navbar } from 'flowbite-react';
 import { Icon } from '@iconify/react';
-import Profile from './Profile';
 import Notification from './notification';
 import { Drawer } from 'flowbite-react';
 import MobileSidebar from '../sidebar/MobileSidebar';
-import { Link } from 'react-router';
 
 const Header = () => {
   // mobile-sidebar

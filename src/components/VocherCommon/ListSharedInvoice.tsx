@@ -28,7 +28,7 @@ const ListSharedInvoice = (props: BaseInvoiceProps) => {
   const [invoices, setInvoices] = useState<InvoiceMaster[] | null>(null);
   const [pageCount, setPageCount] = useState(10);
   const [pageNo, setPageNo] = useState(1);
-  const [rowPerPage, setRowPerPage] = useState(10);
+  const [rowPerPage] = useState(10);
 
   const navigate = useNavigate();
 

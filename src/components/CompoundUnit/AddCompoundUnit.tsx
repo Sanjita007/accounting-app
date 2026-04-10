@@ -23,7 +23,7 @@ const AddCompoundUnit = () => {
   const [units, setUnits] = useState<Unit[] | null>(null);
   const [parentUnits, setParentUnits] = useState<Unit[] | null>(null);
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = () => {
     if (compoundUnit) {
       if (compoundUnit.id) {
         apiWithToast(putCompoundUnit(compoundUnit), {

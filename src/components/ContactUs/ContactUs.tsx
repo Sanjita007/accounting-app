@@ -1,6 +1,6 @@
 type Props = {};
 
-const ContactUs = (props: Props) => {
+const ContactUs = (_props: Props) => {
   return <div></div>;
 };
 

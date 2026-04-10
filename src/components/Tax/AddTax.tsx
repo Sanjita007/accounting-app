@@ -1,4 +1,4 @@
-import { Label, TextInput, Select, Button, Checkbox } from 'flowbite-react';
+import { Label, TextInput, Button } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
@@ -12,7 +12,7 @@ type Props = {
   //product: Product;
 };
 
-const AddTax = (props: Props) => {
+const AddTax = (_props: Props) => {
   let { id } = useParams();
   const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ const AddTax = (props: Props) => {
 
   const [tax, setTax] = useState<Tax | null>(null);
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = (_e: React.MouseEvent<HTMLButtonElement>) => {
     if (tax) {
       if (tax.id) {
         apiWithToast(putTax(tax), {

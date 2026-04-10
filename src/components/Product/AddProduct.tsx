@@ -16,11 +16,9 @@ import { Depot, Product, ProductGroup, Tax, Unit } from 'src/Models/Model';
 import { NumberInput } from '../shared/CustomNumberInput';
 import { useCustomAlertBox } from '../shared/CustomAlertBox';
 
-type Props = {
-  //product: Product;
-};
 
-const AddProduct = (props: Props) => {
+
+const AddProduct = () => {
   let { id } = useParams();
   const navigate = useNavigate();
 
@@ -44,7 +42,7 @@ const AddProduct = (props: Props) => {
     );
   };
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = () => {
     if (product) {
       if (product.id) {
          apiWithToast(putProduct(product),

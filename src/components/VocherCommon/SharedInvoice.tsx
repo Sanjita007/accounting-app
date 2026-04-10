@@ -22,7 +22,6 @@ import {
 
 import { InvoiceDetail, InvoiceMaster, Product, RelatedUnit, Tax } from 'src/Models/Model';
 import { NumberInput } from '../shared/CustomNumberInput';
-import { useCustomAlertBox } from '../shared/CustomAlertBox';
 import { FormatIntoNumber } from 'src/utils/utils';
 import { ProductListModal } from '../Product/ProductListModal';
 import { useAlertBox } from '../shared/AlertBox';
@@ -53,7 +52,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
   const [products, setProducts] = useState<Product[] | null>(null);
   //const [units, setUnits] = useState<Unit[] | null>(null);
   const [taxes, setTaxes] = useState<Tax[] | null>(null);
-  const [isReady, setIsReady] = useState(false);
+  //const [isReady, setIsReady] = useState(false);
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [index, setIndex] = useState(0);
@@ -416,7 +415,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
     });
   };
 
-  const handleAddRow = (row: number) => {
+  const handleAddRow = () => {
     setInvoice((prev) => {
       if (!prev) return prev; // nothing to update
 
@@ -500,7 +499,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
     // },
     {
       label: 'S.N.',
-      render: (p, index) => index + 1,
+      render: (_p, index) => index + 1,
     },
 
     {
@@ -676,7 +675,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
         return (
           <div className="flex gap-2">
             <button
-              onClick={() => handleAddRow(p.id)}
+              onClick={() => handleAddRow()}
               className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
               +
@@ -728,7 +727,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
 
   useEffect(() => {
   const load = async () => {
-    setIsReady(false);
+    //setIsReady(false);
     isInitialized.current = false;
 
     const [prodRes, taxRes] = await Promise.all([
@@ -748,7 +747,7 @@ const SharedInvoice = (props: BaseInvoiceProps) => {
     }
 
     isInitialized.current = true; // handlers allowed
-    setIsReady(true);                // UI allowed
+   // setIsReady(true);                // UI allowed
   };
 
   load();

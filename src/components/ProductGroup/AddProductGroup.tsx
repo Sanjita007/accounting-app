@@ -1,4 +1,4 @@
-import { Label, TextInput, Select, Button, Tabs, TabItem, TabsRef } from 'flowbite-react';
+import { Label, TextInput, Select, Tabs, TabItem, TabsRef } from 'flowbite-react';
 import { useEffect, useRef, useState } from 'react';
 
 import {
@@ -34,7 +34,7 @@ const AddProductGroup = () => {
   const [productGroups, setProductGroups] = useState<ProductGroup[] | null>(null);
   const [productTree, setProductTree] = useState<Tree[] | null>(null);
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (_e: React.MouseEvent<HTMLButtonElement>) => {
     //e.preventDefault();
 
     if (group) {
@@ -67,7 +67,7 @@ const AddProductGroup = () => {
     }
   };
 
-  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDelete = async (_e: React.MouseEvent<HTMLButtonElement>) => {
     if (group?.id) {
       console.log('deleting..');
       // lets just comment this one for now.. we will fix it later
@@ -85,7 +85,7 @@ const AddProductGroup = () => {
     setGroup(null);
   };
 
-  const handleNew = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleNew = async (_e: React.MouseEvent<HTMLButtonElement>) => {
     debugger;
     const res = await useApiWithToast(getTax(1), null);
     alert(res);
@@ -178,7 +178,7 @@ const AddProductGroup = () => {
     }
   }, [groupId]);
 
-  const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCancel = (_e: React.MouseEvent<HTMLButtonElement>) => {
     setGroup(null);
   };
 

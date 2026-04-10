@@ -1,10 +1,10 @@
-import BasicAlerts from "src/components/alerts/BasicAlerts"
+// import BasicAlerts from "src/components/alerts/BasicAlerts"
 
 
-const Alerts = () => {
-  return (
-    <BasicAlerts/>
-  )
-}
+// const Alerts = () => {
+//   return (
+//     <BasicAlerts/>
+//   )
+// }
 
-export default Alerts
+// export default Alerts

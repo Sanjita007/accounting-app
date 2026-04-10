@@ -1,10 +1,7 @@
 import { Link } from 'react-router';
 import ProductCards from 'src/components/dashboard/ProductCards';
-import ProductSales from 'src/components/dashboard/ProductSales';
 import RecentTransactionCard from 'src/components/dashboard/RecentTransactions';
 import SalesProfit from 'src/components/dashboard/SalesProfit';
-import TopPayingClients from 'src/components/dashboard/TopPayingClients';
-import TrafficDistribution from 'src/components/dashboard/TrafficDistribution';
 
 const Dashboard = () => {
   return (

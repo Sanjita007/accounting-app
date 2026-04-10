@@ -2,7 +2,7 @@ import { Label, TextInput, Button } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
-import { getTax, getUnit, postUnit, putUnit } from 'src/api';
+import { getUnit, postUnit, putUnit } from 'src/api';
 
 import { Unit } from 'src/Models/Model';
 import { useCustomAlertBox } from '../shared/CustomAlertBox';
@@ -15,7 +15,7 @@ const AddUnit = () => {
 
   const [unit, setUnit] = useState<Unit | null>(null);
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = (_e: React.MouseEvent<HTMLButtonElement>) => {
     if (unit) {
       if (unit.id) {
         apiWithToast(putUnit(unit), {

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { getProducts } from 'src/api';
 import { Product } from 'src/Models/Model';
 
-type Props = {};
 
 const configs = [
   {
@@ -27,7 +26,7 @@ const configs = [
   },
 ];
 
-const Table = (prop: Props) => {
+const Table = () => {
   const [products, setProducts] = useState<Product[] | null>(null);
 
   useEffect(() => {

@@ -31,7 +31,7 @@ export const ProductListModal = (props: Props) => {
   //const [openModal, setOpenModal] = useState(props.isModalOpen);
   const [products, setProducts] = useState<Product[]>([])
   const refTable = useRef<HTMLTableElement>(null);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  //const [selectedIndex, setSelectedIndex] = useState(0);
 
   const configs: Config[] = [
     { label: 'id', render: (p) => p.id },
@@ -56,24 +56,24 @@ export const ProductListModal = (props: Props) => {
     }
   }, []);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!products?.length) return;
+  // const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  //   if (!products?.length) return;
 
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setSelectedIndex((prev) => Math.min(prev + 1, products?.length??0 - 1));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setSelectedIndex((prev) => Math.max(prev - 0, 0));
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      const selectedProduct = products??[selectedIndex][0];
-      if(selectedProduct) {
-      props.onRowClick(props.index, selectedProduct[0]?.id);
-      }
-      props.onClose();
-    }
-  };
+  //   if (e.key === 'ArrowDown') {
+  //     e.preventDefault();
+  //     setSelectedIndex((prev) => Math.min(prev + 1, products?.length??0 - 1));
+  //   } else if (e.key === 'ArrowUp') {
+  //     e.preventDefault();
+  //     setSelectedIndex((prev) => Math.max(prev - 0, 0));
+  //   } else if (e.key === 'Enter') {
+  //     e.preventDefault();
+  //     const selectedProduct = products??[selectedIndex][0];
+  //     if(selectedProduct) {
+  //     props.onRowClick(props.index, selectedProduct[0]?.id);
+  //     }
+  //     props.onClose();
+  //   }
+  // };
 
   const renderRows = products
     ? products.map((product) => (

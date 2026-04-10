@@ -1,6 +1,6 @@
 import { Label, TextInput, Select, Checkbox, Button } from 'flowbite-react';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
+//import { useNavigate } from 'react-router';
 import img_empty from '/src/assets/images/no-image-icon-6.png';
 
 import {
@@ -30,7 +30,7 @@ const ProductAddEdit = (props: Props) => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const navigate = useNavigate();
+ // const navigate = useNavigate();
 
   const { useApiWithToast } = useAlertBox();
 
@@ -56,21 +56,24 @@ const ProductAddEdit = (props: Props) => {
   };
 
   const handleNew = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setProduct(null);
     const res = await showConfirmation('Confirmation', 'Are you sure you want to clear all data?');
+    if(res){
     props.setId(0);
+    }
   };
 
-  const handleFileButtonClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleFileButtonClick = async () => {
     fileInputRef.current?.click();
   };
 
-  const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCancel = () => {
     setProduct(null);
     props.setId(0);
   };
 
-  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDelete = async () => {
     if (product?.id) {
       await useApiWithToast(deleteProduct(product.id), {
         loading: 'Deleting product..',

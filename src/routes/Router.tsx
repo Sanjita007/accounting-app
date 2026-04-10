@@ -54,8 +54,7 @@ const ListCompoundUnit = Loadable(
 
 // utilities
 const Table = Loadable(lazy(() => import('../views/tables/Table')));
-const Form = Loadable(lazy(() => import('../views/forms/Form')));
-const Alert = Loadable(lazy(() => import('../views/alerts/Alerts')));
+// const Alert = Loadable(lazy(() => import('../views/alerts/Alerts')));
 const Buttons = Loadable(lazy(() => import('../views/buttons/Buttons')));
 
 // icons
@@ -77,8 +76,7 @@ const Router = [
         children: [
           { path: '/', exact: true, element: <Dashboard /> },
           { path: '/ui/table', exact: true, element: <Table /> },
-          { path: '/ui/form', exact: true, element: <Form /> },
-          { path: '/ui/alert', exact: true, element: <Alert /> },
+          // { path: '/ui/alert', exact: true, element: <Alert /> },
           { path: '/ui/buttons', exact: true, element: <Buttons /> },
           { path: '/home', exact: true, element: <Home /> },
           { path: '/about-us', exact: true, element: <AboutUs /> },
